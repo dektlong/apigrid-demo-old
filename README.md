@@ -10,8 +10,8 @@ This repo contains artifacts to run a demo illustrating the vision of Tanzu Micr
 
 ## Consistent Builds                                                    
 - Local dev to pipeline-initiated builds                          
-- Follows standard Boot tools (no docker files required               
-- Prod-optimized images, air-gaped artifacts, lifecyle support        
+- Follows standard Boot tools (no docker files required)               
+- Prod-optimized images, air-gapped artifacts, lifecycle support        
 
 ## Collaborative micro-APIs 
 - Deploy backend service and expose its internal APIs through a dev-friendly 'app' Gateway, including simple to use SSO
@@ -36,7 +36,7 @@ This repo contains artifacts to run a demo illustrating the vision of Tanzu Micr
 
 ## Installing the demo
 
-- ./init-demo [aks | tkg]
+- ./init-demo.sh [aks | tkg]
 
 ## Suggested demo flow
 
@@ -54,16 +54,27 @@ This repo contains artifacts to run a demo illustrating the vision of Tanzu Micr
     - ./run-pipeline.sh info 
     - ./run-pipeline.sh deploy-backend
     - Access API Hub on localhost:8080/apis
-    - Show the Anim
-
-
-========== check-adopter api =========
-    - predicates:
-        - Path=/api/check-adopter
-        - Method=GET
-    ssoEnabled: true
-    tokenRelay: true
-
+        - Show the dekt4Pets API group auto-populated with the API spec you defined
+         (now the frontend team can easily discover and test the backend APIs and reuse)
+        - Show the 'brownfield' API groups
+    - ./run-pipeline.sh deploy-frontend
+        - Show the new frontend APIs that where auto-populated to the hub
+    - ./run-pipeline.sh open-store
+        - Explain now, via the ingress rule to the micro-gateway, is the only time external traffic can be enabled
+    - Access the application on dekt4pets.apps.<DEMO_DOMAIN>
+        - demo login and show the token relay
+- Changes in production
+    - 'now the backend team will leverage the 'brownfield' APIs to add background check functionality on potential adopters
+    - In backend/routes/dekt4pets-backend-routes.yaml add
+    ```json
+        - predicates:
+            - Path=/api/check-adopter
+            - Method=GET
+          ssoEnabled: true
+          tokenRelay: true        
+    ```
+    - In backend/src/main/.../AnimalController.java add
+    ```
     @GetMapping("/check-adopter")
 	public String checkAdopter(Principal adopter) {
 
@@ -77,4 +88,15 @@ This repo contains artifacts to run a demo illustrating the vision of Tanzu Micr
 		
 	    return displayResults;
 	}
+    ```
+    - ./run-pipeline.sh patch-backend "add check-adopter api"
+    - show how build-service is invoking a new image build
+    - run the new check-adopter api 
+        dekt4pets.apps.dekt.io/api/check-adopter
+    - you should see the 'Congratulations...' message with the same token you received following login
+
+## Cleanup
+
+- ./init-demo.sh cleanup
+
 # Enjoy!
