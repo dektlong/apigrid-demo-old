@@ -9,7 +9,7 @@ deploy-backend() {
     echo "=========> Sync local code with remote git $DEKT4PETS_GIT_REPO ..."
     echo
     git-push "local-development-completed"
-    codechanges=$?
+    #codechanges=$?
 
     echo
     echo "=========> Invoke image build (if needed)..."
