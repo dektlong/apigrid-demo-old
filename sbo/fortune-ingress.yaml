@@ -1,0 +1,15 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: fortune-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+    - host: fortune.apps.dekt.io
+      http:
+        paths:
+          - path: "/"
+            backend:
+              serviceName: fortune-service
+              servicePort: 8080
