@@ -57,6 +57,13 @@ create-namespaces-and-secrets () {
         --namespace $APP_NAMESPACE 
  
 
+    #enable TBS to access a private git repo
+    export GIT_PASSWORD=$GITHUB_PASSWORD
+    kp secret create git-secret \
+        --git-url https://github.com \
+        --git-user $GITHUB_USER \
+        --namespace $APP_NAMESPACE 
+
     #enable SCGW to access image registry (has to be that specific name)
     kubectl create secret docker-registry spring-cloud-gateway-image-pull-secret \
         --docker-server=$IMG_REGISTRY_URL \
