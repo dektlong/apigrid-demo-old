@@ -77,8 +77,9 @@ patch-backend() {
     
     if  [ "$1" == "" ]; then 
         echo
-	    echo "Incorrect usage. Comment for git commit is required."
+	    echo "Incorrect usage. A message for this git commit is required."
 	    echo
+        exit
     fi
     
     echo

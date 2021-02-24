@@ -30,20 +30,6 @@ public class AnimalController {
 		this.animalRepository = animalRepository;
 	}
 	
-	@GetMapping("/check-adopter")
-	public String checkAdopter(Principal adopter) {
-
-    	String adopterId = adopter.getName();
-    
-		//verify adoption history via datacheck api
-
-    	//run background check  via datacheck api
-
-		String displayResults = "<B>Congratulations !!!</B><BR><BR>You are cleared to adopt your next best friend<BR><BR><I>token:"+adopterId+"</I>";
-		
-		return displayResults;
-	}
-
 	@GetMapping("/whoami")
 	public String whoami(Principal principal) {
 		if (principal == null) {
