@@ -5,8 +5,8 @@ metadata:
 spec:
   api:
     serverUrl: https://dekt4pets.apps.dekt.io
-    title: Animals rescue
-    description: APIs for building the animal rescue online store. 
+    title: Dekt4Pets
+    description: APIs for building the dekt4pets online store. 
     version: 0.1.0
   count: 2
   sso:

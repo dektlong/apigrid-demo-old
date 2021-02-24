@@ -38,9 +38,43 @@ This repo contains artifacts to run a demo illustrating the vision of Tanzu Micr
 
 - ./init-demo [aks | tkg]
 
-## Running the demo
+## Suggested demo flow
 
-- access TSS
-- run-pipeline info 
+- The starting experience
+    - Access TSS on tss.apps.<DEMO_DOMAIN>
+    - Admin view: Show available Starters and Generators
+    - Admin view: Create a new backend-api-for-online-stores with online-store as the tag
+        (see example of Starter source repo here: https://github.com/dektlong/store-backend-api)
+    - Developer view: Click on online-store tag and show both frontend and backend Starters
+    - Developer view: Select the new backend-api-for-online-stores Starter and provide your own name (e.g. dekt4pets-backend)
+    - Generate and open the zip in your local IDE
+    - Show immediate local build with mvn clean spring-boot:build-image
+    - Show the pre-generated API configs
+- The path-to-prod
+    - ./run-pipeline.sh info 
+    - ./run-pipeline.sh deploy-backend
+    - Access API Hub on localhost:8080/apis
+    - Show the Anim
 
+
+========== check-adopter api =========
+    - predicates:
+        - Path=/api/check-adopter
+        - Method=GET
+    ssoEnabled: true
+    tokenRelay: true
+
+    @GetMapping("/check-adopter")
+	public String checkAdopter(Principal adopter) {
+
+    	String adopterId = adopter.getName();
+    
+	    //verify adoption history via datacheck api
+
+    	//run background check  via datacheck api
+
+		String displayResults = "<B>Congratulations !!!</B><BR><BR>You are cleared to adopt your next best friend<BR><BR><I>token:"+adopterId+"</I>";
+		
+	    return displayResults;
+	}
 # Enjoy!

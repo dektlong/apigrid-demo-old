@@ -205,8 +205,8 @@ setup-demo-artifacts() {
     #frontend
     #"!! since animals-frontend does *not* currently compile with TBS, as a workaround we relocate the image from springcloudservices/animal-rescue-frontend"
     docker pull springcloudservices/animal-rescue-frontend
-    docker tag springcloudservices/animal-rescue-frontend:latest $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE
-    docker push $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE
+    docker tag springcloudservices/animal-rescue-frontend:latest $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION
+    docker push $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION
 
     #kp image create $FRONTEND_TBS_IMAGE \
 	#--tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION \
