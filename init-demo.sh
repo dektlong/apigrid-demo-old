@@ -188,7 +188,7 @@ setup-demo-artifacts() {
     #backend (git commits to the main branch will be auto-built by TBS)
     kp image create $BACKEND_TBS_IMAGE \
 	--tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION \
-    --git $GIT_REPO \
+    --git $DEKT4PETS_GIT_REPO  \
 	--git-revision main \
 	--sub-path ./backend \
 	--namespace $APP_NAMESPACE \
@@ -207,7 +207,7 @@ setup-demo-artifacts() {
 
     #kp image create $FRONTEND_TBS_IMAGE \
 	#--tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION \
-	#--git https://github.com/spring-cloud-services-samples/animal-rescue.git \
+	#--git $DEKT4PETS_GIT_REPO\
     #--git-revision main \
    	#--sub-path ./frontend \
 	#--namespace $APP_NAMESPACE \
