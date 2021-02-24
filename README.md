@@ -1,17 +1,24 @@
 
+# dekt4Pets ♥️😺 ♥️🐶
+
 This repo contains artifacts to run a demo illustrating the vision of Tanzu Micro API Fabric on any k8s substrate.
 
-1. Curated Start                                                   3. Collaborative APIs 
-    Architects create patterns                                      Internal APIs
-    Devs start quickly via curated ‘starters’                           Deploy backend service and expose its internal APIs 
-    API-first design boiler-plate code                                  A dev-friendly 'app' Gateway
-                                                                        API endpoints are auto populated to the Hub 
-2. Consistent Builds                                                    Frontend devs reuses backend APIs via a Hub
-    Local dev to pipeline-initiated builds                          External APIs
-    follows standard Boot tools (no docker files required               Publish app and configure live traffic via the gateway
-    Prod-optimized images, air-gaped artifacts, lifecyle support        Secret management and including simple to use SSO
+## Curated Start                                                   
+- Architects create patterns                                      
+- Devs start quickly via curated ‘starters’                           
+- API-first design boiler-plate code                                  
 
+## Consistent Builds                                                    
+- Local dev to pipeline-initiated builds                          
+- Follows standard Boot tools (no docker files required               
+- Prod-optimized images, air-gaped artifacts, lifecyle support        
 
+## Collaborative micro-APIs 
+- Deploy backend service and expose its internal APIs through a dev-friendly 'app' Gateway, including simple to use SSO
+- Frontend devs discover, test and reuse backend APIs via an auto-populated Hub
+- Backend team add 'backgroud-checks' leveraging 'brownfield APIs' from off-platform services 
+
+- Publish app and configure live traffic via the gateway
 
 ######### COMPLETE BEFORE STARTING !! #########
 
