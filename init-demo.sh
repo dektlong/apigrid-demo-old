@@ -26,7 +26,7 @@ install-core-services() {
 
     install-tss
     
-    install-tbs
+    #install-tbs
     
     install-apihub
     
@@ -51,7 +51,10 @@ create-namespaces-and-secrets () {
     #need to be created with tbs cli and not kubectl to register the secret in TBS
     #can be reused by all other app deployments
     export REGISTRY_PASSWORD=$IMG_REGISTRY_PASSWORD
-    kp secret create imagereg-secret --registry $IMG_REGISTRY_URL--registry-user $IMG_REGISTRY_USER -n $APP_NAMESPACE
+    kp secret create imagereg-secret 
+        --registry $IMG_REGISTRY_URL 
+        --registry-user $IMG_REGISTRY_USER 
+        -n $APP_NAMESPACE
 
     #enable SCGW to access image registry (has to be that specific name)
     kubectl create secret docker-registry spring-cloud-gateway-image-pull-secret -n $GW_NAMESPACE \
@@ -156,23 +159,23 @@ install-sbo () {
 setup-demo-artifacts() {
 
     echo
-    echo "===> Setup demo artifact 1/4 : brownfield APIs ..."
+    echo "===> Setup demo artifact: brownfield APIs ..."
     echo
     kustomize build hub/brownfield-apis | kubectl apply -f -
 
-    echo
-    echo "===> Setup demo artifact 2/4 : spring-boot-observer fortune-service..."
-    echo
-    kubectl apply -f sbo/fortune-sidecar-example.yaml -n $APP_NAMESPACE 
+    #echo
+    #echo "===> Setup demo artifact: spring-boot-observer fortune-service..."
+    #echo
+    #kubectl apply -f sbo/fortune-sidecar-example.yaml -n $APP_NAMESPACE 
 
     echo
-    echo "===> Setup demo artifact 3/4 : tss generators and starters..."
+    echo "===> Setup demo artifact: tss generators and starters..."
     echo
-    #tss/dekt-starters/add-starters.sh
-    tss/msft-starters/add-starters.sh
+    tss/dekt-starters/add-starters.sh
+    #tss/msft-starters/add-starters.sh
 
     echo
-    echo "===> Setup demo artifact  4/4 : create dekt4pets TBS backend images..."
+    echo "===> Setup demo artifact: create dekt4pets TBS backend images..."
     echo
     #create a builder that can only run in dekt-apps ns and used to build java and nodejs apps
     #kp builder create $BUILDER_NAME \
@@ -182,9 +185,6 @@ setup-demo-artifacts() {
     #--store default \
     #--namespace $APP_NAMESPACE
     
-    echo
-    echo "===> Setup demo artifact  4/5 : create dekt4pets TBS backend images..."
-    echo
     #backend (git commits to the main branch will be auto-built by TBS)
     kp image create $BACKEND_TBS_IMAGE \
 	--tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION \
@@ -201,17 +201,17 @@ setup-demo-artifacts() {
     
     #frontend
     #"!! since animals-frontend does *not* currently compile with TBS, as a workaround we relocate the image from springcloudservices/animal-rescue-frontend"
-    #docker pull springcloudservices/animal-rescue-frontend
-    #docker tag springcloudservices/animal-rescue-frontend:latest $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE
-    #docker push $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE
+    docker pull springcloudservices/animal-rescue-frontend
+    docker tag springcloudservices/animal-rescue-frontend:latest $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE
+    docker push $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE
 
-    kp image create $FRONTEND_TBS_IMAGE \
-	--tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION \
-	--git https://github.com/spring-cloud-services-samples/animal-rescue.git \
-    --git-revision main \
-   	--sub-path ./frontend \
-	--namespace $APP_NAMESPACE \
-	--wait
+    #kp image create $FRONTEND_TBS_IMAGE \
+	#--tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION \
+	#--git https://github.com/spring-cloud-services-samples/animal-rescue.git \
+    #--git-revision main \
+   	#--sub-path ./frontend \
+	#--namespace $APP_NAMESPACE \
+	#--wait
 }
 
 #start local utilities
@@ -220,7 +220,7 @@ start-local-utilities() {
     #temp unitl Hub as a k8s deployment
     open -a Terminal hub/run-local-api-hub-server.sh
 
-    open -a Terminal ../k8s-builder/start_octant.sh
+    open -a Terminal k8s-builders/start_octant.sh
 }
 
 #cleanup
@@ -238,8 +238,8 @@ cleanup() {
   	    ;;
     esac
 
-    rm -r ~/Downloads/dekt4pets-backend
-    rm ~/Downloads/dekt4pets-backend.zip
+    #rm -r ~/Downloads/dekt4pets-backend
+    #rm ~/Downloads/dekt4pets-backend.zip
     osascript -e 'quit app "Terminal"'
 }
 
