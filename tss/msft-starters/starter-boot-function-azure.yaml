@@ -1,0 +1,18 @@
+actionNames:
+- github-repo-create
+- github-repo-create-two-X
+description: A sample Boot function, that runs on Azure Functions, and is configured
+  with Spring Cloud Function.
+displayName: Simple Boot Function deployed to Azure Functions
+framework: Spring Boot, Spring Cloud
+generatorNames:
+- boot-function-azure
+homeUrl: https://github.com/simple-starters/hello-fun
+iconUrl: https://raw.githubusercontent.com/simple-starters/icons/master/icon-azure.png
+language: Java
+maintainer: https://github.com/trisberg
+name: hello-function
+services: Azure Functions
+sourceUrl: github.com/simple-starters/hello-fun?ref=v0.1.0
+tags:
+version: 0.1.0

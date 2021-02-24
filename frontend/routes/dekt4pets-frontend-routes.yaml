@@ -1,0 +1,19 @@
+apiVersion: "tanzu.vmware.com/v1"
+kind: SpringCloudGatewayRouteConfig
+metadata:
+  name: dekt4pets-frontend-routes-config
+spec:
+  service: 
+    name: dekt4pets-frontend-service
+  routes:
+    - predicates:
+        - Path=/rescue/login
+        - Method=GET
+      filters:
+        - RedirectTo=302, /rescue
+      ssoEnabled: true
+      order: 0
+    - predicates:
+        - Path=/rescue/**
+        - Method=GET
+      order: 1000

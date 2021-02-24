@@ -1,0 +1,18 @@
+actionNames:
+- github-repo-create
+- github-repo-create-two-X
+description: 'A Spring Boot application that connects to an Azure Cosmos DB using
+  Spring Data JPA '
+displayName: Spring Data JPA with Azure Cosmos DB
+framework: Spring Boot
+generatorNames:
+- boot-aks-data
+homeUrl: https://github.com/markpollack/gs-accessing-data-mysql
+iconUrl: https://raw.githubusercontent.com/simple-starters/icons/master/icon-azure.png
+language: Java
+maintainer: https://github.com/dsyer
+name: spring-cosmosdb-jpa
+services: Azure Cosmos DB
+sourceUrl: github.com/markpollack/gs-accessing-data-mysql?ref=v0.9.0
+tags:
+version: 1.0.0

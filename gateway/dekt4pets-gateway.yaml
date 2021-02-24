@@ -1,0 +1,13 @@
+apiVersion: "tanzu.vmware.com/v1"
+kind: SpringCloudGateway
+metadata:
+  name: dekt4pets-gateway
+spec:
+  api:
+    serverUrl: https://dekt4pets.apps.dekt.io
+    title: Animals rescue
+    description: APIs for building the animal rescue online store. 
+    version: 0.1.0
+  count: 2
+  sso:
+    secret: dekt4pets-sso
