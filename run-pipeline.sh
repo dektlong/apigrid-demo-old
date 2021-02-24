@@ -26,7 +26,7 @@ deploy-backend() {
     echo
     echo "=========> Apply backend app, service and routes ..."
     echo    
-    #kubectl set image deployment dekt4pets-backend-app my-nginx=nginx:1.12.0
+    #kubectl set image deployment dekt4pets-backend-app $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION 
     kustomize build backend | kubectl apply -f -
     
 }
