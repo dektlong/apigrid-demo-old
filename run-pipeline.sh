@@ -149,8 +149,6 @@ info() {
 #   param: commit message
 git-push() {
 
-	pushd $DEKT4PETS_FOLDER > /dev/null
-    
     #check if this commit will have actual code changes (for later pipeline operations)
     #git diff --exit-code --quiet
     #local_changes=$? #1 if prior to commit any code changes were made, 0 if no changes made
@@ -159,11 +157,6 @@ git-push() {
     git push  
 	
     _latestCommitId="$(git rev-parse HEAD)"
-	
-    pushd > /dev/null
-
-    #return $local_changes 
-
 }
 
 #incorrect usage
