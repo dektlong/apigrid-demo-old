@@ -76,7 +76,9 @@ open-store() {
 patch-backend() {
     
     if  [ "$1" == "" ]; then 
-        incorrect-usage
+        echo
+	    echo "Incorrect usage. Comment for git commit is required."
+	    echo
     fi
     
     echo
