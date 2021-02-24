@@ -1,7 +1,7 @@
 
 This repo contains artifacts to run a demo illustrating the vision of Tanzu Micro API Fabric on any k8s substrate.
 
-See the demo-slide.pdf for 
+<img src="dekt4pets_demo_overview.png">
 
 ######### COMPLETE BEFORE STARTING !! #########
 
