@@ -85,7 +85,7 @@ patch-backend() {
     git-push "$1"
     
     echo
-    echo "=========> Auto-build $BACKEND_TBS_IMAGE image on latest git-commit (id: $_latestCommitId ) ..."
+    echo "=========> Auto-build $BACKEND_TBS_IMAGE image on latest git commit (commit: $_latestCommitId) ..."
     echo
     
     kp image patch $BACKEND_TBS_IMAGE --git-revision $_latestCommitId -n $APP_NAMESPACE
@@ -111,7 +111,7 @@ patch-backend() {
     echo
     
     #workaround for image refresh issue
-    kubectl delete -f backend/dekt4pets-backend.yaml -n $APP_NAMESPACE > /dev/null 
+    kubectl delete -f backend/dekt4pets-backend-app.yaml -n $APP_NAMESPACE > /dev/null 
         
     kustomize build backend | kubectl apply -f -
 

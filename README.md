@@ -90,7 +90,7 @@ This repo contains artifacts to run a demo illustrating the vision of Tanzu Micr
 	}
     ```
     - ./run-pipeline.sh patch-backend "add check-adopter api"
-    - show how build-service is invoking a new image build
+    - show how build-service is invoking a new image build based on the git-commit-id
     - run the new check-adopter api 
         dekt4pets.apps.dekt.io/api/check-adopter
     - you should see the 'Congratulations...' message with the same token you received following login
