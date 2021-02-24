@@ -17,10 +17,9 @@ This repo contains artifacts to run a demo illustrating the vision of Tanzu Micr
 - Deploy backend service and expose its internal APIs through a dev-friendly 'app' Gateway, including simple to use SSO
 - Frontend devs discover, test and reuse backend APIs via an auto-populated Hub
 - Backend team add 'backgroud-checks' leveraging 'brownfield APIs' from off-platform services 
-
 - Publish app and configure live traffic via the gateway
 
-######### COMPLETE BEFORE STARTING !! #########
+## COMPLETE BEFORE STARTING !!
 
 1. Update with your own values
 
