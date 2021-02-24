@@ -1,7 +1,17 @@
 
 This repo contains artifacts to run a demo illustrating the vision of Tanzu Micro API Fabric on any k8s substrate.
 
-<img src="dekt4pets_demo_overview.png">
+1. Curated Start                                                   3. Collaborative APIs 
+    Architects create patterns                                      Internal APIs
+    Devs start quickly via curated ‘starters’                           Deploy backend service and expose its internal APIs 
+    API-first design boiler-plate code                                  A dev-friendly 'app' Gateway
+                                                                        API endpoints are auto populated to the Hub 
+2. Consistent Builds                                                    Frontend devs reuses backend APIs via a Hub
+    Local dev to pipeline-initiated builds                          External APIs
+    follows standard Boot tools (no docker files required               Publish app and configure live traffic via the gateway
+    Prod-optimized images, air-gaped artifacts, lifecyle support        Secret management and including simple to use SSO
+
+
 
 ######### COMPLETE BEFORE STARTING !! #########
 
