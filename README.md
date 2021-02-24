@@ -34,9 +34,13 @@ This repo contains artifacts to run a demo illustrating the vision of Tanzu Micr
 
 6. update image locations in deployment yamls
 
+## Installing the demo
+
+- ./init-demo [aks | tkg]
+
 ## Running the demo
 
-- init-demo.sh [aks | tkg]
+- access TSS
 - run-pipeline info 
 
 # Enjoy!

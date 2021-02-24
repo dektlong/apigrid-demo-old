@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+NGINX_NAMESPACE="nginx-system"
+
+
 #################### functions #######################
 
 #install with loadbalancer available in your cluster
@@ -12,8 +15,11 @@ install-with-lb () {
     # Add the ingress-nginx repository
     helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 
+    kubectl create ns $NGINX_NAMESPACE 
+
     # Use Helm to deploy an NGINX ingress controller
     helm install dekt4pets ingress-nginx/ingress-nginx \
+        --namespace $NGINX_NAMESPACE \
         --set controller.replicaCount=2 \
         --set controller.nodeSelector."beta\.kubernetes\.io/os"=linux \
         --set defaultBackend.nodeSelector."beta\.kubernetes\.io/os"=linux \
@@ -33,7 +39,9 @@ install-static-ip () {
     ingress_static_ip=$(kubectl get nodes --selector=kubernetes.io/role!=master -o jsonpath={.items[0].status.addresses[?\(@.type==\"ExternalIP\"\)].address})
 
     # Use Helm to deploy an NGINX ingress controller with static ip
+
     helm install dekt4pets ingress-nginx/ingress-nginx \
+        --namespace $NGINX_NAMESPACE 
         --set controller.replicaCount=2 \
         --set controller.nodeSelector."beta\.kubernetes\.io/os"=linux \
         --set defaultBackend.nodeSelector."beta\.kubernetes\.io/os"=linux \
@@ -59,14 +67,45 @@ update-dns () {
     while [ "$ingress_public_ip" == "" ]
     do
 	    printf "."
-	    ingress_public_ip="$(kubectl get svc $APP_NAME-ingress-nginx-controller -n nginx-system -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')"
+	    ingress_public_ip="$(kubectl get svc dekt4pets-ingress-nginx-controller -n $NGINX_NAMESPACE  -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')"
 	    sleep 1
     done
     
-    echo "updating this A record: $APP_RECORD_NAME.$APP_DOMAIN --> $ingress_public_ip using this API call $DNS_PROVIDER_DOMAIN_UPDATE_API_URI..."
+    echo
+
+    record_name="*.apps"
+    api_sso_key="$GODADDY_API_KEY:$GODADDY_API_SECRET"
+    update_domain_api_call="https://api.godaddy.com/v1/domains/dekt.io/records/A/$record_name"
+
+    echo "updating this A record in GoDaddy:  $record_name.dekt.io --> $ingress_public_ip..."
 
     # Create DNS A Record
-    curl -X PUT -H 'Content-Type: application/json' -H 'Accept: application/json' -H "Authorization: sso-key $DNS_PROVIDER_API_KEY:$DNS_PROVIDER_API_SECRET" "$DNS_PROVIDER_DOMAIN_UPATE_API_URI/$DOMAIN/records/A/$RECORD_NAME" -d "[{\"data\": \"$ingress_public_ip\"}]"
+    curl -X PUT -H 'Content-Type: application/json' -H 'Accept: application/json' -H "Authorization: sso-key $api_sso_key" "$update_domain_api_call" -d "[{\"data\": \"$ingress_public_ip\"}]"
+}
+
+#incorrect usage
+incorrect-usage() {
+	echo "Incorrect usage. Required: private-helm-staticIP | private-helm-LB | public-helm"
+  	exit   
+}
+
+#################### main #######################
+
+source secrets/config-values.txt
+
+case $1 in
+with-lb)
+	install-with-lb
+    ;;
+without-lb)
+    install-without-lb
+	;;
+*)
+  	echo "Incorrect usage. Please specify: with-lb | without-lb "
+    exit 
+  	;;
+esac
+
 }
 
 #incorrect usage
