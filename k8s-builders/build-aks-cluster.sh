@@ -20,7 +20,7 @@ create-cluster() {
 
 	az aks get-credentials --resource-group $RESOURCE_GROUP --name $1
 	
-	k8s-builders/install-ingress-controller.sh
+	k8s-builders/install-ingress-controller.sh with-lb
 	
 }
 

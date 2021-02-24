@@ -95,7 +95,7 @@ create-pks() {
 
     kubectl config set-cluster $1 --insecure-skip-tls-verify=1
 
-    k8s-builders/install-ingress-controller.sh
+    k8s-builders/install-ingress-controller.sh without-lb
 
 }  
   
