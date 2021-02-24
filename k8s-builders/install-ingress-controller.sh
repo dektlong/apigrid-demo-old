@@ -83,36 +83,6 @@ update-dns () {
     curl -X PUT -H 'Content-Type: application/json' -H 'Accept: application/json' -H "Authorization: sso-key $api_sso_key" "$update_domain_api_call" -d "[{\"data\": \"$ingress_public_ip\"}]"
 }
 
-#incorrect usage
-incorrect-usage() {
-	echo "Incorrect usage. Required: private-helm-staticIP | private-helm-LB | public-helm"
-  	exit   
-}
-
-#################### main #######################
-
-source secrets/config-values.txt
-
-case $1 in
-with-lb)
-	install-with-lb
-    ;;
-without-lb)
-    install-without-lb
-	;;
-*)
-  	echo "Incorrect usage. Please specify: with-lb | without-lb "
-    exit 
-  	;;
-esac
-
-}
-
-#incorrect usage
-incorrect-usage() {
-	echo "Incorrect usage. Required: private-helm-staticIP | private-helm-LB | public-helm"
-  	exit   
-}
 
 #################### main #######################
 

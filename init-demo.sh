@@ -51,22 +51,25 @@ create-namespaces-and-secrets () {
     #need to be created with tbs cli and not kubectl to register the secret in TBS
     #can be reused by all other app deployments
     export REGISTRY_PASSWORD=$IMG_REGISTRY_PASSWORD
-    kp secret create imagereg-secret 
-        --registry $IMG_REGISTRY_URL 
-        --registry-user $IMG_REGISTRY_USER 
-        -n $APP_NAMESPACE
+    kp secret create imagereg-secret \
+        --registry $IMG_REGISTRY_URL \
+        --registry-user $IMG_REGISTRY_USER \
+        --namespace $APP_NAMESPACE 
+ 
 
     #enable SCGW to access image registry (has to be that specific name)
-    kubectl create secret docker-registry spring-cloud-gateway-image-pull-secret -n $GW_NAMESPACE \
-        --docker-server=$IMG_REGISTRY_URL\
-        --docker-username=$IMG_REGISTRY_USER\
-        --docker-password=$IMG_REGISTRY_PASSWORD
+    kubectl create secret docker-registry spring-cloud-gateway-image-pull-secret \
+        --docker-server=$IMG_REGISTRY_URL \
+        --docker-username=$IMG_REGISTRY_USER \
+        --docker-password=$IMG_REGISTRY_PASSWORD \
+        --namespace $GW_NAMESPACE
     
     #enable SBO to access image registry
-    kubectl create secret docker-registry imagereg-secret -n $SBO_NAMESPACE \
+    kubectl create secret docker-registry imagereg-secret -n \
         --docker-server=$IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO \
-        --docker-username=$IMG_REGISTRY_USER\
-        --docker-password=$IMG_REGISTRY_PASSWORD
+        --docker-username=$IMG_REGISTRY_USER \
+        --docker-password=$IMG_REGISTRY_PASSWORD \
+        --namespace $SBO_NAMESPACE 
    
     #sso secret for dekt4pets-gatway 
     kubectl create secret generic dekt4pets-sso --from-env-file=secrets/dekt4pets-sso.txt -n $APP_NAMESPACE
