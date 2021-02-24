@@ -163,10 +163,10 @@ setup-demo-artifacts() {
     echo
     kustomize build hub/brownfield-apis | kubectl apply -f -
 
-    #echo
-    #echo "===> Setup demo artifact: spring-boot-observer fortune-service..."
-    #echo
-    #kubectl apply -f sbo/fortune-sidecar-example.yaml -n $APP_NAMESPACE 
+    echo
+    echo "===> Setup demo artifact: spring-boot-observer fortune-service..."
+    echo
+    kubectl apply -f sbo/fortune-sidecar-example.yaml -n $APP_NAMESPACE 
 
     echo
     echo "===> Setup demo artifact: tss generators and starters..."
@@ -238,8 +238,8 @@ cleanup() {
   	    ;;
     esac
 
-    #rm -r ~/Downloads/dekt4pets-backend
-    #rm ~/Downloads/dekt4pets-backend.zip
+    rm -r ~/Downloads/dekt4pets-backend
+    rm ~/Downloads/dekt4pets-backend.zip
     osascript -e 'quit app "Terminal"'
 }
 

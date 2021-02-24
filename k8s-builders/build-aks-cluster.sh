@@ -6,7 +6,7 @@
 #	params: cluster-name, number-of-nodes
 create-cluster() {
 	
-	#rm ~/.kube/config
+	rm ~/.kube/config
 
 	echo
 	echo "==========> Creating AKS cluster named $1 with $2 nodes ..."
