@@ -21,18 +21,23 @@ This repo contains artifacts to run a demo illustrating the vision of Tanzu Micr
 
 ## COMPLETE BEFORE STARTING !!
 
-1. Update with your own values
+- Update with your own values
 
-2. Create a 'secrets' folder
+- Create a 'secrets' folder
 
-3. Create secrets/dekt4pets-jwk.txt & secrets/dekt4pets-sso.txt credential files
+- Create secrets/dekt4pets-jwk.txt & secrets/dekt4pets-sso.txt credential files
     (see example in https://github.com/spring-cloud-services-samples/animal-rescue/blob/main/k8s/deploy_to_k8s.md)
 
-4. Rename and move config-values-UPDATE_ME.txt to secrets/config-values.txt
+- Rename and move config-values-UPDATE_ME.txt to secrets/config-values.txt
 
-5. Set all variables in config-values.txt
+- Set all variables in config-values.txt
 
-6. update image locations in deployment yamls
+- The ingress setup is based on GoDaddy DNS, if you are using a different one, please modify k8sbuilders/install-ingress-controller.sh 
+
+- Update the image locations in all the deployment yamls with your Image Registy info (feel free to contribue a dynamic setup here)
+
+- Update the ingress urls with your specific domain (feel free to contribue a dynamic setup here)
+
 
 ## Installing the demo
 
