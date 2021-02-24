@@ -21,8 +21,6 @@ This repo contains artifacts to run a demo illustrating the vision of Tanzu Micr
 
 ## COMPLETE BEFORE STARTING !!
 
-- Update with your own values
-
 - Create a 'secrets' folder
 
 - Create secrets/dekt4pets-jwk.txt & secrets/dekt4pets-sso.txt credential files
