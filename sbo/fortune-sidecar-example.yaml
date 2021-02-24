@@ -16,7 +16,7 @@ spec:
         app: fortune-service
     spec:
       imagePullSecrets: 
-        - name: dekt-harbor-secret
+        - name: imagereg-secret
       containers:
       - image: harbor.apps.cf.tanzutime.com/dekt-apps/fortune-service:0.0.1-SNAPSHOT
         name: fortune-service

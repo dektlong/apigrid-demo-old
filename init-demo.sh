@@ -26,7 +26,7 @@ install-core-services() {
 
     install-tss
     
-    #install-tbs
+    install-tbs
     
     install-apihub
     

@@ -17,7 +17,7 @@ spec:
         app: spring-boot-observer-server
     spec:
       imagePullSecrets: 
-      - name: dekt-harbor-secret
+      - name: imagereg-secret
       containers:
       - image: harbor.apps.cf.tanzutime.com/dekt-system/spring-boot-observer-server:0.0.1-SNAPSHOT
         name: spring-boot-observer-server
