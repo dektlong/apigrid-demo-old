@@ -39,4 +39,4 @@ This repo contains artifacts to run a demo illustrating the vision of Tanzu Micr
 - init-demo.sh [aks | tkg]
 - run-pipeline info 
 
-Enjoy your demo!
+# Enjoy!
