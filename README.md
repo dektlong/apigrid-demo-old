@@ -17,8 +17,8 @@ It is designed to run on any k8s substrate.
 
 ## Collaborative micro-APIs 
 - Deploy backend service and expose its internal APIs through a dev-friendly 'app' Gateway, including simple to use SSO
-- Frontend devs discover, test and reuse backend APIs via an auto-populated Hub
-- Backend team add 'backgroud-checks' leveraging 'brownfield APIs' from off-platform services 
+- Frontend developers discover, test and reuse backend APIs via an auto-populated Hub
+- Backend team add 'background-checks' leveraging 'brownfield APIs' from off-platform services 
 - Publish app and configure live traffic via the gateway
 
 ## COMPLETE BEFORE STARTING !!
@@ -36,7 +36,7 @@ It is designed to run on any k8s substrate.
  
 - The ingress setup is based on GoDaddy DNS, if you are using a different one, please modify ```k8sbuilders/install-ingress-controller.sh``` 
 
-- Update the image locations in all k8s Deployments yamls with your Image Registy info 
+- Update the image locations in all k8s Deployments yamls with your Image Registry info 
   - Note that all ingress and gateway yamls are dynamically generated per the specified sub-domain and domain
 	
 - Spring Boot Observer (very early, use at your own risk!) 
