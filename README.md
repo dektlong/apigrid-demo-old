@@ -1,7 +1,9 @@
 
 # dekt4Pets ♥️😺 ♥️🐶
 
-This repo contains artifacts to run a demo illustrating the vision of Tanzu Micro API Fabric on any k8s substrate.
+This repo contains artifacts to run a demo illustrating the vision of Tanzu Micro API Fabric.
+
+It is designed to run on any k8s substrate.
 
 ## Curated Start                                                   
 - Architects create patterns                                      
