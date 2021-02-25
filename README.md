@@ -26,7 +26,7 @@ It is designed to run on any k8s substrate.
 - Create a 'secrets' folder
 
 - Create secrets/dekt4pets-jwk.txt & secrets/dekt4pets-sso.txt credential files
--- (see example in https://github.com/spring-cloud-services-samples/animal-rescue/blob/main/k8s/deploy_to_k8s.md)
+  - see example in https://github.com/spring-cloud-services-samples/animal-rescue/blob/main/k8s/deploy_to_k8s.md
 
 - Rename and move config-values-UPDATE_ME to secrets/config-values.env
 
@@ -37,14 +37,12 @@ It is designed to run on any k8s substrate.
 - The ingress setup is based on GoDaddy DNS, if you are using a different one, please modify k8sbuilders/install-ingress-controller.sh 
 
 - Update the image locations in all k8s Deployments yamls with your Image Registy info 
-	(Note that all ingress and gateway yamls are dynamically generated per the specified sub-domain and domain)
+  - Note that all ingress and gateway yamls are dynamically generated per the specified sub-domain and domain)
 	
 - Spring Boot Observer (very early, use at your own risk!) 
-
   - build and push images to your repo 
   - Update /sbo yamls 
   - The observer UI should be available at http://sbo.<DEMO_APP_SUBDOMAIN>.<DEMO_DOMAIN>/apps
-
 
 ## Installing the demo
 
@@ -56,7 +54,7 @@ It is designed to run on any k8s substrate.
 - Access TSS on tss.apps.<DEMO_DOMAIN>
 - Admin view: Show available Starters and Generators
 - Admin view: Create a new backend-api-for-online-stores with online-store as the tag
-   (see example of Starter source repo here: https://github.com/dektlong/store-backend-api)
+  - see example of Starter source repo here: https://github.com/dektlong/store-backend-api)
 - Developer view: Click on online-store tag and show both frontend and backend Starters
 - Developer view: Select the new backend-api-for-online-stores Starter and provide your own name (e.g. dekt4pets-backend)
 - Generate and open the zip in your local IDE
@@ -68,7 +66,7 @@ It is designed to run on any k8s substrate.
 - ./run-pipeline.sh deploy-backend
 - Access API Hub on localhost:8080/apis
   - Show the dekt4Pets API group auto-populated with the API spec you defined
-    (now the frontend team can easily discover and test the backend APIs and reuse)
+  - now the frontend team can easily discover and test the backend APIs and reuse
   - Show the 'brownfield' API groups
 - ./run-pipeline.sh deploy-frontend
 - Show the new frontend APIs that where auto-populated to the hub
@@ -104,8 +102,7 @@ public String checkAdopter(Principal adopter) {
 ```
 - ./run-pipeline.sh patch-backend "add check-adopter api"
 - show how build-service is invoking a new image build based on the git-commit-id
-- run the new check-adopter api 
-     dekt4pets.<DEMO_APP_SUBDOMAIN>.<DEMO_DOMAIN>/api/check-adopter
+- run the new check-adopter api - dekt4pets.<DEMO_APP_SUBDOMAIN>.<DEMO_DOMAIN>/api/check-adopter
 - you should see the 'Congratulations...' message with the same token you received following login
 
 ## Cleanup
