@@ -30,6 +30,8 @@ This repo contains artifacts to run a demo illustrating the vision of Tanzu Micr
 
 - Set all variables in config-values.env
 
+- (temp) modify hub/run-local-api-hub-server.sh with the location of your api-hub-server-###.jar
+ 
 - The ingress setup is based on GoDaddy DNS, if you are using a different one, please modify k8sbuilders/install-ingress-controller.sh 
 
 - Update the image locations in all the deployment yamls with your Image Registy info (feel free to contribue a dynamic setup here)
