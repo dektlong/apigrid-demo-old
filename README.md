@@ -40,7 +40,7 @@ It is designed to run on any k8s substrate.
 
 - Update the ingress urls with your specific domain (feel free to contribue a dynamic setup here)
 
-- Spring Boot Observer ((very early, use at your own risk!) 
+- Spring Boot Observer (very early, use at your own risk!) 
 
   - build and push images to your repo 
   - Update /sbo yamls 
