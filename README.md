@@ -72,7 +72,10 @@ It is designed to run on any k8s substrate.
 - Show the new frontend APIs that where auto-populated to the hub
 - ./run-pipeline.sh open-store
   - Explain now, via the ingress rule to the micro-gateway, is the only time external traffic can be enabled
-  - Access the application on dekt4pets.<DEMO_APP_SUBDOMAIN>.<DEMO_DOMAIN>
+  - Access the application on 
+  ```
+  https://dekt4pets.<DEMO_APP_SUBDOMAIN>.<DEMO_DOMAIN>
+  ```
 
 ### Changes in production
 - 'now the backend team will leverage the 'brownfield' APIs to add background check functionality on potential adopters
@@ -102,7 +105,10 @@ public String checkAdopter(Principal adopter) {
 ```
 - ./run-pipeline.sh patch-backend "add check-adopter api"
 - show how build-service is invoking a new image build based on the git-commit-id
-- run the new check-adopter api - dekt4pets.<DEMO_APP_SUBDOMAIN>.<DEMO_DOMAIN>/api/check-adopter
+- run the new check-adopter api 
+```
+dekt4pets.<DEMO_APP_SUBDOMAIN>.<DEMO_DOMAIN>/api/check-adopter
+```
 - you should see the 'Congratulations...' message with the same token you received following login
 
 ## Cleanup
