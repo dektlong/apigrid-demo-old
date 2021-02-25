@@ -40,6 +40,12 @@ It is designed to run on any k8s substrate.
 
 - Update the ingress urls with your specific domain (feel free to contribue a dynamic setup here)
 
+- Spring Boot Observer ((very early, use at your own risk!) 
+
+  - build and push images to your repo 
+  - Update /sbo yamls 
+  - The observer UI should be available at http://sbo.apps.dekt.io/apps
+
 
 ## Installing the demo
 

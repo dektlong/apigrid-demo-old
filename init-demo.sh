@@ -30,7 +30,7 @@ install-core-services() {
     
     install-apihub
     
-    #install-sbo
+    install-sbo
 }
 
 #create-namespaces-and-secrets 
@@ -218,9 +218,6 @@ start-local-utilities() {
     open -a Terminal hub/run-local-api-hub-server.sh
 
     open -a Terminal k8s-builders/start_octant.sh
-
-    #!/bin/sh 
-    osascript -e 'tell application "Terminal" echo dekel'
 }
 
 #cleanup
