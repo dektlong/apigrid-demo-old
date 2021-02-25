@@ -90,8 +90,7 @@ install-gateway() {
     echo "===> Installing Spring Cloud Gateway operator..."
     echo
 
-    #only after upgrade of a GW version
-    #$GW_INSTALL_DIR/scripts/relocate-images.sh $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO
+    $GW_INSTALL_DIR/scripts/relocate-images.sh $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO
     
     $GW_INSTALL_DIR/scripts/install-spring-cloud-gateway.sh $GW_NAMESPACE
 }
@@ -104,8 +103,7 @@ install-tss() {
     echo
     
     kustomize build tss | kubectl apply -f -
-    
-    #open -a Terminal tss/run-local-tss-server.sh
+
 }
 
 #install TBS
@@ -143,6 +141,7 @@ install-apihub() {
 #install-sbo (spring boot observer)
 install-sbo () {
 
+    #you need to build and relocate the SBO images to your repo
     #sbo/build-and-relocate-images.sh   
 
     ## Create sbo deployment and ingress rule
