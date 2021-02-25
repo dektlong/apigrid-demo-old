@@ -6,7 +6,7 @@
 deploy-backend() {
 	
     echo
-    echo "=========> Sync local code with remote git $DEKT4PETS_GIT_REPO ..."
+    echo "=========> Sync local code with remote git $DEMO_APP_GIT_REPO ..."
     echo
     git-push "local-development-completed"
     #codechanges=$?
@@ -83,7 +83,7 @@ patch-backend() {
     fi
     
     echo
-    echo "=========> Commit code changes to $DEKT4PETS_GIT_REPO  ..."
+    echo "=========> Commit code changes to $DEMO_APP_GIT_REPO  ..."
     echo
     git-push "$1"
     

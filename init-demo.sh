@@ -57,13 +57,6 @@ create-namespaces-and-secrets () {
         --namespace $APP_NAMESPACE 
  
 
-    #enable TBS to access a private git repo
-    export GIT_PASSWORD=$GITHUB_PASSWORD
-    kp secret create git-secret \
-        --git-url https://github.com \
-        --git-user $GITHUB_USER \
-        --namespace $APP_NAMESPACE 
-
     #enable SCGW to access image registry (has to be that specific name)
     kubectl create secret docker-registry spring-cloud-gateway-image-pull-secret \
         --docker-server=$IMG_REGISTRY_URL \
@@ -198,7 +191,7 @@ setup-demo-artifacts() {
     #backend (git commits to the main branch will be auto-built by TBS)
     kp image create $BACKEND_TBS_IMAGE \
 	--tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION \
-    --git $DEKT4PETS_GIT_REPO  \
+    --git $DEMO_APP_GIT_REPO  \
 	--git-revision main \
 	--sub-path ./backend \
 	--namespace $APP_NAMESPACE \
@@ -217,7 +210,7 @@ setup-demo-artifacts() {
 
     #kp image create $FRONTEND_TBS_IMAGE \
 	#--tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION \
-	#--git $DEKT4PETS_GIT_REPO\
+	#--git $DEMO_APP_GIT_REPO\
     #--git-revision main \
    	#--sub-path ./frontend \
 	#--namespace $APP_NAMESPACE \
