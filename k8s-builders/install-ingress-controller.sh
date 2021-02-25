@@ -75,9 +75,9 @@ update-dns () {
 
     record_name="*.apps"
     api_sso_key="$GODADDY_API_KEY:$GODADDY_API_SECRET"
-    update_domain_api_call="https://api.godaddy.com/v1/domains/dekt.io/records/A/$record_name"
+    update_domain_api_call="https://api.godaddy.com/v1/domains/$DEMO_DOMAIN/records/A/$record_name"
 
-    echo "updating this A record in GoDaddy:  $record_name.dekt.io --> $ingress_public_ip..."
+    echo "updating this A record in GoDaddy:  $record_name.$DEMO_DOMAIN --> $ingress_public_ip..."
 
     # Create DNS A Record
     curl -X PUT -H 'Content-Type: application/json' -H 'Accept: application/json' -H "Authorization: sso-key $api_sso_key" "$update_domain_api_call" -d "[{\"data\": \"$ingress_public_ip\"}]"
