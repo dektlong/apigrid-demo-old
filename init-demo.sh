@@ -133,7 +133,7 @@ install-apihub() {
     echo
     echo "===> Installing API Hub..."
     echo
-    kubectl apply -f hub/openapi-ingress.yaml -n $GW_NAMESPACE
+    kubectl apply -f hub/scg-openapi-ingress.yaml -n $GW_NAMESPACE
 
     #until hub is available as a k8s deployment it will be started localy as part of start-local-utilities 
 }

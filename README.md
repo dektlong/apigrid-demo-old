@@ -36,15 +36,13 @@ It is designed to run on any k8s substrate.
  
 - The ingress setup is based on GoDaddy DNS, if you are using a different one, please modify k8sbuilders/install-ingress-controller.sh 
 
-- Update the image locations in all the deployment yamls with your Image Registy info (feel free to contribue a dynamic setup here)
-
-- Update the ingress urls with your specific domain (feel free to contribue a dynamic setup here)
+- Update the image locations in all k8s Deployments yamls with your Image Registy info (feel free to contribue a dynamic setup here)
 
 - Spring Boot Observer (very early, use at your own risk!) 
 
   - build and push images to your repo 
   - Update /sbo yamls 
-  - The observer UI should be available at http://sbo.apps.dekt.io/apps
+  - The observer UI should be available at http://sbo.<DEMO_APP_SUBDOMAIN>.<DEMO_DOMAIN>/apps
 
 
 ## Installing the demo
@@ -75,7 +73,7 @@ It is designed to run on any k8s substrate.
 - Show the new frontend APIs that where auto-populated to the hub
 - ./run-pipeline.sh open-store
   - Explain now, via the ingress rule to the micro-gateway, is the only time external traffic can be enabled
-  - Access the application on dekt4pets.apps.<DEMO_DOMAIN>
+  - Access the application on dekt4pets.<DEMO_APP_SUBDOMAIN>.<DEMO_DOMAIN>
 
 ### Changes in production
 - 'now the backend team will leverage the 'brownfield' APIs to add background check functionality on potential adopters
@@ -106,7 +104,7 @@ public String checkAdopter(Principal adopter) {
 - ./run-pipeline.sh patch-backend "add check-adopter api"
 - show how build-service is invoking a new image build based on the git-commit-id
 - run the new check-adopter api 
-     dekt4pets.apps.dekt.io/api/check-adopter
+     dekt4pets.<DEMO_APP_SUBDOMAIN>.<DEMO_DOMAIN>/api/check-adopter
 - you should see the 'Congratulations...' message with the same token you received following login
 
 ## Cleanup

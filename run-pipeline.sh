@@ -48,7 +48,6 @@ open-store() {
 	echo
 	echo "=========> Open dekt4pets online store: Configure external traffic via dekt4pets-gateway ..."
 	echo
-
 	kubectl apply -f gateway/dekt4pets-ingress.yaml -n $APP_NAMESPACE
 	
 	echo

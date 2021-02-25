@@ -6,7 +6,7 @@ metadata:
     kubernetes.io/ingress.class: nginx
 spec:
   rules:
-    - host: sbo.apps.dekt.io
+    - host: sbo.dekt-apps-new.dekt.io
       http:
         paths:
           - path: "/"
