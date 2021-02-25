@@ -82,6 +82,7 @@ update-dns () {
     # Create DNS A Record
     curl -X PUT -H 'Content-Type: application/json' -H 'Accept: application/json' -H "Authorization: sso-key $api_sso_key" "$update_domain_api_call" -d "[{\"data\": \"$ingress_public_ip\"}]"
 
+    #generate ingress and gateway yaml files with the config-values sub-domain and domain
     k8s-builders/generate-domain-related-yamls.sh
 }
 
