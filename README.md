@@ -37,7 +37,7 @@ It is designed to run on any k8s substrate.
 - The ingress setup is based on GoDaddy DNS, if you are using a different one, please modify k8sbuilders/install-ingress-controller.sh 
 
 - Update the image locations in all k8s Deployments yamls with your Image Registy info 
-  - Note that all ingress and gateway yamls are dynamically generated per the specified sub-domain and domain)
+  - Note that all ingress and gateway yamls are dynamically generated per the specified sub-domain and domain
 	
 - Spring Boot Observer (very early, use at your own risk!) 
   - build and push images to your repo 
