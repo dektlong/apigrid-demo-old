@@ -26,7 +26,7 @@ It is designed to run on any k8s substrate.
 - Create a 'secrets' folder
 
 - Create secrets/dekt4pets-jwk.txt & secrets/dekt4pets-sso.txt credential files
-    (see example in https://github.com/spring-cloud-services-samples/animal-rescue/blob/main/k8s/deploy_to_k8s.md)
+-- (see example in https://github.com/spring-cloud-services-samples/animal-rescue/blob/main/k8s/deploy_to_k8s.md)
 
 - Rename and move config-values-UPDATE_ME to secrets/config-values.env
 
