@@ -138,13 +138,6 @@ install-apihub() {
     kubectl apply -f hub/openapi-ingress.yaml -n $GW_NAMESPACE
 
     #until hub is available as a k8s deployment it will be started localy as part of start-local-utilities 
-    #temp until hub as k8s deployment is available
-    
-    #TAS backup
-    #cf login -u dekel -p appcloud -a https://api.run.haas-467.pez.vmware.com --skip-ssl-validation -o dekt-lob -s AnimalsRescue
-    #../animal-rescue/scripts/cf_deploy.sh deploy
-    #cf unbind-service dekt-animal-rescue-frontend dekt4pets-gateway
-    #cf push -f ../api-hub/manifest.yml
 }
 
 #install-sbo (spring boot observer)
@@ -203,7 +196,8 @@ setup-demo-artifacts() {
     echo
     
     #frontend
-    #"!! since animals-frontend does *not* currently compile with TBS, as a workaround we relocate the image from springcloudservices/animal-rescue-frontend"
+    #"!! since animals-frontend does *not* currently compile with TBS, 
+    # as a workaround we relocate the image from springcloudservices/animal-rescue-frontend"
     docker pull springcloudservices/animal-rescue-frontend
     docker tag springcloudservices/animal-rescue-frontend:latest $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION
     docker push $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION
@@ -224,6 +218,9 @@ start-local-utilities() {
     open -a Terminal hub/run-local-api-hub-server.sh
 
     open -a Terminal k8s-builders/start_octant.sh
+
+    #!/bin/sh 
+    osascript -e 'tell application "Terminal" echo dekel'
 }
 
 #cleanup
@@ -286,7 +283,7 @@ incorrect-usage() {
 
 #################### main #######################
 
-source secrets/config-values.txt
+source secrets/config-values.env
 
 case $1 in
 aks)

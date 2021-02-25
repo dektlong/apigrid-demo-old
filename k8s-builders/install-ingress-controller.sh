@@ -86,7 +86,7 @@ update-dns () {
 
 #################### main #######################
 
-source secrets/config-values.txt
+source secrets/config-values.env
 
 case $1 in
 with-lb)

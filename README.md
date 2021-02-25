@@ -26,9 +26,9 @@ This repo contains artifacts to run a demo illustrating the vision of Tanzu Micr
 - Create secrets/dekt4pets-jwk.txt & secrets/dekt4pets-sso.txt credential files
     (see example in https://github.com/spring-cloud-services-samples/animal-rescue/blob/main/k8s/deploy_to_k8s.md)
 
-- Rename and move config-values-UPDATE_ME.txt to secrets/config-values.txt
+- Rename and move config-values-UPDATE_ME to secrets/config-values.env
 
-- Set all variables in config-values.txt
+- Set all variables in config-values.env
 
 - The ingress setup is based on GoDaddy DNS, if you are using a different one, please modify k8sbuilders/install-ingress-controller.sh 
 

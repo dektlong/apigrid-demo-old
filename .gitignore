@@ -4,5 +4,5 @@
 # Ignore the secrets folder
 secrets
 
-# Ignore files related to API keys
+# Ignore files related to config values and credentials
 .env
