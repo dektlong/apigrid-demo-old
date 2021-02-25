@@ -6,7 +6,7 @@ metadata:
     kubernetes.io/ingress.class: nginx
 spec:
   rules:
-    - host: tss.dekt-apps-new.dekt.io
+    - host: [THIS FILE IS DYNAMICALLY GENERATED DURING DEMO CREATION]
       http:
         paths:
           - path: "/"
