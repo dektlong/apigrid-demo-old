@@ -73,7 +73,7 @@ update-dns () {
     
     echo
 
-    record_name="*.$DEMO_APP_SUBDOMAIN"
+    record_name="*.$DEMO_SUBDOMAIN"
     api_sso_key="$GODADDY_API_KEY:$GODADDY_API_SECRET"
     update_domain_api_call="https://api.godaddy.com/v1/domains/$DEMO_DOMAIN/records/A/$record_name"
 

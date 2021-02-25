@@ -9,7 +9,7 @@ metadata:
   name: dekt4pets-gateway
 spec:
   api:
-    serverUrl: https://dekt4pets.$DEMO_APP_SUBDOMAIN.$DEMO_DOMAIN
+    serverUrl: https://dekt4pets.$DEMO_SUBDOMAIN.$DEMO_DOMAIN
     title: Dekt4Pets
     description: APIs for building the dekt4pets online store. 
     version: 0.1.0
@@ -26,7 +26,7 @@ metadata:
 spec:
   count: 1
   api:
-    serverUrl: https://datacheck.$DEMO_APP_SUBDOMAIN.$DEMO_DOMAIN
+    serverUrl: https://datacheck.$DEMO_SUBDOMAIN.$DEMO_DOMAIN
     title: Background Check Services
     description: APIs to help with background checks on pet adopters
     version: 0.5.0
@@ -40,7 +40,7 @@ metadata:
 spec:
   count: 1
   api:
-    serverUrl: https://donations.$DEMO_APP_SUBDOMAIN.$DEMO_DOMAIN
+    serverUrl: https://donations.$DEMO_SUBDOMAIN.$DEMO_DOMAIN
     title: Donation Processing 
     description: APIs to help with processing donations 
     version: 0.5.0
@@ -54,7 +54,7 @@ metadata:
 spec:
   count: 1
   api:
-    serverUrl: https://suppliers.$DEMO_APP_SUBDOMAIN.$DEMO_DOMAIN
+    serverUrl: https://suppliers.$DEMO_SUBDOMAIN.$DEMO_DOMAIN
     title: Suppliers Payments
     description: APIs to help with issuing payments to suppliers
     version: 0.5.0
@@ -69,7 +69,7 @@ metadata:
     kubernetes.io/ingress.class: nginx
 spec:
   rules:
-    - host: fortune.$DEMO_APP_SUBDOMAIN.$DEMO_DOMAIN
+    - host: fortune.$DEMO_SUBDOMAIN.$DEMO_DOMAIN
       http:
         paths:
           - path: "/"
@@ -87,7 +87,7 @@ metadata:
     kubernetes.io/ingress.class: nginx
 spec:
   rules:
-    - host: sbo.$DEMO_APP_SUBDOMAIN.$DEMO_DOMAIN
+    - host: sbo.$DEMO_SUBDOMAIN.$DEMO_DOMAIN
       http:
         paths:
           - path: "/"
@@ -105,7 +105,7 @@ metadata:
     kubernetes.io/ingress.class: nginx
 spec:
   rules:
-    - host: tss.$DEMO_APP_SUBDOMAIN.$DEMO_DOMAIN
+    - host: tss.$DEMO_SUBDOMAIN.$DEMO_DOMAIN
       http:
         paths:
           - path: "/"
