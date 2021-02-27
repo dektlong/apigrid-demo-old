@@ -63,15 +63,15 @@ It is designed to run on any k8s substrate.
 - ```./run-pipeline.sh info``` 
 - ```./run-pipeline.sh deploy-backend```
 - Show how build service detects git-repo changes and auto re-build backend-image (if required)
-- Show how the ```dekt4pets-gateway``` micro-gateway starts quickly as 'just a component of your app'
+- Show how the ```dekt4pets-gateway``` micro-gateway starts quickly as just a component of your app
 - Access API Hub on ```localhost:8080/apis```
   - Show the dekt4Pets API group auto-populated with the API spec you defined
   - now the frontend team can easily discover and test the backend APIs and reuse
-  - Show the 'brownfield' API groups
+  - Show the the 3 other API groups ('brownfield APIs')
 - ```./run-pipeline.sh deploy-frontend```
 - Show the new frontend APIs that where auto-populated to the hub
 - ```./run-pipeline.sh open-store```
-  - External traffic can be enabled via the micro-gateway
+  - External traffic can only routed via the micro-gateway
   - Frontend and backend microservices still cannot be accessed directly) 
   - Access the application on 
   ```
