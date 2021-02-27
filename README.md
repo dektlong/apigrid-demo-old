@@ -36,10 +36,7 @@ It is designed to run on any k8s substrate.
 
 - Note: all yaml files that are updated in runtime will be copied to ```.configs``` sub-directory in their respective directories during the init-demo phase
 
-### Current workarounds: 
-- API HUB
-  - obtain ```api-hub-server-###.jar``` and modify ```hub/run-local-api-hub-server.sh```
-- Spring Boot Observer: 
+- Spring Boot Observer (current workaround): 
   - build and push images to your repo 
   - Update /sbo yamls 
   - The observer UI should be available at ```http://sbo.<SUB_DOMAIN>.<DOMAIN>/apps```

@@ -23,5 +23,6 @@ APP_VERSION="e.g 1.0.0"
 DEMO_APP_GIT_REPO="e.g https://github.com/dektlong/_dekt4pets-demo"
 GW_INSTALL_DIR="e.g. ../spring-cloud-gateway-k8s-1.0.0" 
 TBS_INSTALL_DIR="e.g ../build-service-1.1.1"
+RUNTIME_PATH_TO_API_HUB_JAR="e.g. api-hub/api-hub-server/build/libs/api-hub-server-0.0.1-SNAPSHOT.jar
 GODADDY_API_KEY=""
 GODADDY_API_SECRET=""

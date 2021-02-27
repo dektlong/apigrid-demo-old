@@ -9,7 +9,7 @@ install() {
 
     create-secrets
 
-    update-yaml-files
+    setup-dynamic-values
     
     install-core-services
     
@@ -51,8 +51,8 @@ create-namespaces () {
     kubectl create ns $BROWNFIELD_NAMESPACE
 }
 
-#update-yaml-files
-update-yaml-files () {
+#setup-dynamic-values
+setup-dynamic-values () {
 
     echo
     echo "===> Copy and update ingress and depolyment yaml files with domain and image info..."
@@ -92,6 +92,7 @@ update-yaml-files () {
 
     cp hub/run-local-api-hub-server.sh hub/.config/run-local-api-hub-server.sh
     perl -pi -w -e "s|$change_token|$HOST_URI|g;" hub/.config/run-local-api-hub-server.sh
+    perl -pi -w -e "s|{RUNTIME_PATH_TO_API_HUB_JAR}|$RUNTIME_PATH_TO_API_HUB_JAR|g;" hub/.config/run-local-api-hub-server.sh
 
     cp sbo/fortune-ingress.yaml sbo/.config/fortune-ingress.yaml
     perl -pi -w -e "s|$change_token|$HOST_URI|g;" sbo/.config/fortune-ingress.yaml
