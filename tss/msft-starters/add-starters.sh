@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-export tss_client_server_uri=http://tss.apps.dekt.io
+source secrets/config-values.env
+
+export tss_client_server_uri=http://tss.apps.$SUB_DOMAIN.$DOMAIN
 
 #generators
 tss generator create-from-file --file=tss/msft-starters/generator-aks-resource-simple.yaml

@@ -1,11 +1,20 @@
 #!/usr/bin/env bash
 
+BACKEND_IMAGE_NAME=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION
+FRONTEND_IMAGE_NAME=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION
+HOST_URI=$SUB_DOMAIN.$DOMAIN
 
 #################### functions #######################
 
 #install
 install() {
 
+    create-namespaces
+
+    create-secrets
+
+    update-yaml-files
+    
     install-core-services
     
     start-local-utilities
@@ -20,8 +29,6 @@ install() {
 #install core tanzu products
 install-core-services() {
     
-    create-namespaces-and-secrets
-
     install-gateway
 
     install-tss
@@ -33,8 +40,8 @@ install-core-services() {
     install-sbo
 }
 
-#create-namespaces-and-secrets 
-create-namespaces-and-secrets () {
+#create-namespaces
+create-namespaces () {
 
     echo
     echo "===> Creating namespaces and secrets..."
@@ -46,6 +53,45 @@ create-namespaces-and-secrets () {
     kubectl create ns $TSS_NAMESPACE
     kubectl create ns $SBO_NAMESPACE
     kubectl create ns $BROWNFIELD_NAMESPACE
+}
+
+#update-yaml-files
+update-yaml-files () {
+
+    echo
+    echo "===> Update ingress and depolyment yaml files with domain and image info..."
+    echo
+
+    change_token="REPLACED_IN_RUNTIME"
+    
+    perl -pi -w -e "s|$change_token|$BACKEND_IMAGE_NAME|g;" backend/dekt4pets-backend-app.yaml 
+
+    perl -pi -w -e "s|$change_token|$FRONTEND_IMAGE_NAME|g;" frontend/dekt4pets-frontend-app.yaml 
+
+    perl -pi -w -e "s|$change_token|$HOST_URI|g;" gateway/dekt4pets-ingress.yaml
+
+    perl -pi -w -e "s|$change_token|$HOST_URI|g;" hub/brownfield-api/data-check-gateway.yaml
+
+    perl -pi -w -e "s|$change_token|$HOST_URI|g;" hub/brownfield-api/donations-gateway.yaml
+
+    perl -pi -w -e "s|$change_token|$HOST_URI|g;" hub/brownfield-api/suppliers-gateway.yaml
+
+    perl -pi -w -e "s|$change_token|$HOST_URI|g;" hub/scg-openapi-ingress.yaml
+
+    perl -pi -w -e "s|$change_token|$HOST_URI|g;" sbo/fortune-ingress.yaml
+
+    perl -pi -w -e "s|$change_token|$HOST_URI|g;" sbo/sbo-ingress.yaml
+
+    perl -pi -w -e "s|$change_token|$HOST_URI|g;" tss/tss-ingress.yaml
+
+}
+
+#create-secrets 
+create-secrets() {
+
+    echo
+    echo "===> Creating k8s secrets..."
+    echo
 
     #enable deployments in APP_NS to access private image registry 
     #need to be created with tbs cli and not kubectl to register the secret in TBS
@@ -80,6 +126,7 @@ create-namespaces-and-secrets () {
 
     #for local images build and/or relocated to image registry
     docker login -u $IMG_REGISTRY_USER -p $IMG_REGISTRY_PASSWORD $IMG_REGISTRY_URL
+
 
 }
 
@@ -182,7 +229,7 @@ setup-demo-artifacts() {
     
     #backend (git commits to the main branch will be auto-built by TBS)
     kp image create $BACKEND_TBS_IMAGE \
-	--tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION \
+	--tag $BACKEND_IMAGE_NAME \
     --git $DEMO_APP_GIT_REPO  \
 	--git-revision main \
 	--sub-path ./backend \
@@ -198,11 +245,11 @@ setup-demo-artifacts() {
     #"!! since animals-frontend does *not* currently compile with TBS, 
     # as a workaround we relocate the image from springcloudservices/animal-rescue-frontend"
     docker pull springcloudservices/animal-rescue-frontend
-    docker tag springcloudservices/animal-rescue-frontend:latest $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION
-    docker push $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION
+    docker tag springcloudservices/animal-rescue-frontend:latest $FRONTEND_IMAGE_NAME
+    docker push $FRONTEND_IMAGE_NAME
 
     #kp image create $FRONTEND_TBS_IMAGE \
-	#--tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION \
+	#--tag $FRONTEND_IMAGE_NAME \
 	#--git $DEMO_APP_GIT_REPO\
     #--git-revision main \
    	#--sub-path ./frontend \

@@ -42,7 +42,7 @@ It is designed to run on any k8s substrate.
 - Spring Boot Observer (very early, use at your own risk!) 
   - build and push images to your repo 
   - Update /sbo yamls 
-  - The observer UI should be available at ```http://sbo.<DEMO_SUBDOMAIN>.<DEMO_DOMAIN>/apps```
+  - The observer UI should be available at ```http://sbo.<SUB_DOMAIN>.<DOMAIN>/apps```
 
 ## Installing the demo
 
@@ -51,7 +51,7 @@ It is designed to run on any k8s substrate.
 ## Suggested demo flow
 
 ### The starting experience
-- Access TSS on ```tss.<APP_SUB_DOMAIN>.<DEMO_DOMAIN>```
+- Access TSS on ```tss.<APP_SUB_DOMAIN>.<DOMAIN>```
 - Admin view: Show available Starters and Generators
 - Admin view: Create a new backend-api-for-online-stores with online-store as the tag
   - see example of Starter source repo here: ```https://github.com/dektlong/store-backend-api```
@@ -77,7 +77,7 @@ It is designed to run on any k8s substrate.
   - Frontend and backend microservices still cannot be accessed directly) 
   - Access the application on 
   ```
-  https://dekt4pets.<DEMO_SUBDOMAIN>.<DEMO_DOMAIN>
+  https://dekt4pets.<SUB_DOMAIN>.<DOMAIN>
   ```
   - login and show SSO functionality 
 
@@ -111,7 +111,7 @@ public String checkAdopter(Principal adopter) {
 - show how build-service is invoking a new image build based on the git-commit-id
 - run the new check-adopter api 
 ```
-dekt4pets.<DEMO_SUBDOMAIN>.<DEMO_DOMAIN>/api/check-adopter
+dekt4pets.<SUB_DOMAIN>.<DOMAIN>/api/check-adopter
 ```
 - you should see the 'Congratulations...' message with the same token you received following login
 

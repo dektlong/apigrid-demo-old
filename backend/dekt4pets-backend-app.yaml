@@ -15,7 +15,7 @@ spec:
       - name: imagereg-secret
       containers:
         - name: dekt4pets-backend
-          image: harbor.apps.cf.tanzutime.com/dekt-apps/dekt4pets-backend:1.0.0
+          image: REPLACED_IN_RUNTIME
           imagePullPolicy: Always
           env:
             - name: spring.profiles.active
