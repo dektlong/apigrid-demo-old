@@ -38,8 +38,6 @@ public class AnimalController {
 		return principal.getName();
 	}
 	
-	//test commit
-	
 	@GetMapping("/animals")
 	public Iterable<Animal> getAllAnimals() {
 		LOGGER.info("Received get all animals request");
