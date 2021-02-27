@@ -49,7 +49,7 @@ It is designed to run on any k8s substrate.
 ## Suggested demo flow
 
 ### The starting experience
-- Access TSS on ```tss.<APP_SUB_DOMAIN>.<DOMAIN>```
+- Access TSS on ```tss.<SUB_DOMAIN>.<DOMAIN>```
 - Admin view: Show available Starters and Generators
 - Admin view: Create a new backend-api-for-online-stores with online-store as the tag
   - see example of Starter source repo here: ```https://github.com/dektlong/store-backend-api```
