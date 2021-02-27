@@ -5,7 +5,7 @@ metadata:
 spec:
   count: 1
   api:
-    serverUrl: https://donations.new.dekt.io
+    serverUrl: https://donations.{REPLACED_IN_RUNTIME}
     title: Donation Processing 
     description: APIs to help with processing donations 
     version: 0.5.0
