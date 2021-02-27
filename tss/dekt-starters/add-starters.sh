@@ -2,7 +2,7 @@
 
 source secrets/config-values.env
 
-export tss_client_server_uri=http://tss.apps.$SUB_DOMAIN.$DOMAIN
+export tss_client_server_uri=http://tss.$SUB_DOMAIN.$DOMAIN
 
 #generators
 tss generator create-from-file --file=tss/dekt-starters/generator-none.yaml
