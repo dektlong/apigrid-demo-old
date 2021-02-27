@@ -81,6 +81,8 @@ It is designed to run on any k8s substrate.
 
 ### Changes in production
 - now the backend team will leverage the 'brownfield' APIs to add background check functionality on potential adopters
+- access the 'datacheck' API group and test adoption-history and background-check APIs
+- explain that now our backend team can know exactly how to use a verified working version of both APIs (no tickets to off platform teams)
 - In ```backend/routes/dekt4pets-backend-routes.yaml``` add
 ```
 - predicates:
@@ -96,9 +98,9 @@ public String checkAdopter(Principal adopter) {
 
     	String adopterId = adopter.getName();
     
-	//verify adoption history via datacheck api
+	//verify adoption history - use the Hub verified adoption-history API call
 
-    	//run background check  via datacheck api
+    	//run background check - use the Hub verified background-check API call
 
 	String displayResults = "<B>Congratulations !!!</B><BR><BR>You are cleared to adopt your next best friend<BR><BR><I>token:"+adopterId+"</I>";
 		
