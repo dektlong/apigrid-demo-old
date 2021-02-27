@@ -155,7 +155,8 @@ git-push() {
     #git diff --exit-code --quiet
     #local_changes=$? #1 if prior to commit any code changes were made, 0 if no changes made
 
-	git commit -a -m "$1"
+	git commit -o backend/routes
+	git commit -o backend/src
     git push  
 	
     _latestCommitId="$(git rev-parse HEAD)"
