@@ -80,11 +80,15 @@ update-yaml-files () {
 
     perl -pi -w -e "s|$change_token|$HOST_URI|g;" hub/scg-openapi-ingress.yaml
 
+    perl -pi -w -e "s|$change_token|$HOST_URI|g;" hub/run-local-api-hub-server.sh
+
     perl -pi -w -e "s|$change_token|$HOST_URI|g;" sbo/fortune-ingress.yaml
 
     perl -pi -w -e "s|$change_token|$HOST_URI|g;" sbo/sbo-ingress.yaml
 
     perl -pi -w -e "s|$change_token|$HOST_URI|g;" tss/tss-ingress.yaml
+
+    
 
 }
 
