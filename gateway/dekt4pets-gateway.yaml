@@ -4,7 +4,7 @@ metadata:
   name: dekt4pets-gateway
 spec:
   api:
-    serverUrl: https://dekt4pets.{REPLACED_IN_RUNTIME}
+    serverUrl: https://dekt4pets.new.dekt.io
     title: Dekt4Pets
     description: APIs for building the dekt4pets online store. 
     version: 0.1.0
