@@ -34,7 +34,7 @@ It is designed to run on any k8s substrate.
 
 - The ingress setup is based on GoDaddy DNS, if you are using a different one, please modify ```k8sbuilders/install-ingress-controller.sh``` 
 
-###Current workarounds: 
+### Current workarounds: 
 - API HUB
   - obtain ```api-hub-server-###.jar``` and modify ```hub/run-local-api-hub-server.sh```
 - Spring Boot Observer: 
