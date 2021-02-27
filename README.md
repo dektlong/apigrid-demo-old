@@ -18,7 +18,7 @@ It is designed to run on any k8s substrate.
 ## Collaborative micro-APIs 
 - Deploy backend service and expose its internal APIs through a dev-friendly 'app' Gateway, including simple to use SSO
 - Frontend developers discover, test and reuse backend APIs via an auto-populated Hub
-- Backend team add 'background-checks' leveraging 'brownfield APIs' from off-platform services 
+- Backend team add functionality leveraging 'brownfield APIs' from off-platform services 
 - Publish app and configure live traffic via the gateway
 
 ## COMPLETE BEFORE STARTING !!
