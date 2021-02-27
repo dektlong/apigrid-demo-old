@@ -67,7 +67,7 @@ It is designed to run on any k8s substrate.
 - Access API Hub on ```localhost:8080/apis```
   - Show the dekt4Pets API group auto-populated with the API spec you defined
   - now the frontend team can easily discover and test the backend APIs and reuse
-  - Show the the 3 other API groups ('brownfield APIs')
+  - Show the other API groups ('brownfield APIs')
 - ```./run-pipeline.sh deploy-frontend```
 - Show the new frontend APIs that where auto-populated to the hub
 - ```./run-pipeline.sh open-store```
