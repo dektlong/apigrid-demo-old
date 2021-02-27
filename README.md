@@ -23,18 +23,18 @@ It is designed to run on any k8s substrate.
 
 ## COMPLETE BEFORE STARTING !!
 
-- Create a folder named ```myconfigs``` in the dekt4pets parent directory
+- Create a folder named ```secrets``` in the dekt4pets parent directory
 
-- Create ```dekt4pets-jwk.txt``` and ```dekt4pets-sso.txt``` credential files and place them in the ```myconfigs``` directory
+- Create ```dekt4pets-jwk.txt``` and ```dekt4pets-sso.txt``` credential files and place them in the ```secrets``` directory
   - see example in ```https://github.com/spring-cloud-services-samples/animal-rescue/blob/main/k8s/deploy_to_k8s.md```
 
-- Copy ```config-values-UPDATE_ME``` to ```myconfigs``` directory and renamed it to ```config-values.env```
+- Copy ```config-values-UPDATE_ME``` to ```secrets``` directory and renamed it to ```config-values.env```
 
 - Set all variables in ```config-values.env```
 
 - The ingress setup is based on GoDaddy DNS, if you are using a different one, please modify ```k8sbuilders/install-ingress-controller.sh``` 
 
-- Note: all yaml files that are updated in runtime will be copied to ```myconfigs``` directory during the init-demo phase
+- Note: all yaml files that are updated in runtime will be copied to ```.configs``` sub-directory in their respective directories during the init-demo phase
 
 ### Current workarounds: 
 - API HUB

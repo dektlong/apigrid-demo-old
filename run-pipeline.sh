@@ -48,7 +48,7 @@ open-store() {
 	echo
 	echo "=========> Open dekt4pets online store: Configure external traffic via dekt4pets-gateway ..."
 	echo
-	kubectl apply -f gateway/dekt4pets-ingress.yaml -n $APP_NAMESPACE
+	kubectl apply -f gateway/.config/dekt4pets-ingress.yaml -n $APP_NAMESPACE
 	
 	echo
     printf "Waiting for ingress rule to receive IP address ."
@@ -155,9 +155,8 @@ git-push() {
     #git diff --exit-code --quiet
     #local_changes=$? #1 if prior to commit any code changes were made, 0 if no changes made
 
-	git commit -o backend/routes
-	git commit -o backend/src
-    git push  
+	git commit -a -m "$1"
+	git push  
 	
     _latestCommitId="$(git rev-parse HEAD)"
 }

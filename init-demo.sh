@@ -55,7 +55,7 @@ create-namespaces () {
 update-yaml-files () {
 
     echo
-    echo "===> Update ingress and depolyment yaml files with domain and image info..."
+    echo "===> Copy and update ingress and depolyment yaml files with domain and image info..."
     echo
 
     BACKEND_IMAGE_NAME=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION
@@ -64,31 +64,43 @@ update-yaml-files () {
     
     change_token="{REPLACED_IN_RUNTIME}"
     
-    perl -pi -w -e "s|$change_token|$BACKEND_IMAGE_NAME|g;" backend/dekt4pets-backend-app.yaml 
+    mkdir {backend/.config,frontend/.config,gateway/.config,hub/.config,sbo/.config,tss/.config}
 
-    perl -pi -w -e "s|$change_token|$FRONTEND_IMAGE_NAME|g;" frontend/dekt4pets-frontend-app.yaml 
+    cp backend/dekt4pets-backend-app.yaml backend/.config/dekt4pets-backend-app.yaml
+    perl -pi -w -e "s|$change_token|$BACKEND_IMAGE_NAME|g;" backend/.config/dekt4pets-backend-app.yaml
 
-    perl -pi -w -e "s|$change_token|$HOST_URI|g;" gateway/dekt4pets-gateway.yaml
+    cp frontend/dekt4pets-frontend-app.yaml frontend/.config/dekt4pets-frontend-app.yaml
+    perl -pi -w -e "s|$change_token|$FRONTEND_IMAGE_NAME|g;" frontend/.config/dekt4pets-frontend-app.yaml
 
-    perl -pi -w -e "s|$change_token|$HOST_URI|g;" gateway/dekt4pets-ingress.yaml
+    cp gateway/dekt4pets-gateway.yaml gateway/.config/dekt4pets-gateway.yaml
+    perl -pi -w -e "s|$change_token|$HOST_URI|g;" gateway/.config/dekt4pets-gateway.yaml
 
-    perl -pi -w -e "s|$change_token|$HOST_URI|g;" hub/brownfield-apis/datacheck-gateway.yaml
+    cp gateway/dekt4pets-ingress.yaml gateway/.config/dekt4pets-ingress.yaml
+    perl -pi -w -e "s|$change_token|$HOST_URI|g;" gateway/.config/dekt4pets-ingress.yaml
 
-    perl -pi -w -e "s|$change_token|$HOST_URI|g;" hub/brownfield-apis/donations-gateway.yaml
+    cp hub/brownfield-apis/datacheck-gateway.yaml hub/.config/datacheck-gateway.yaml
+    perl -pi -w -e "s|$change_token|$HOST_URI|g;" hub/.config/datacheck-gateway.yaml
 
-    perl -pi -w -e "s|$change_token|$HOST_URI|g;" hub/brownfield-apis/suppliers-gateway.yaml
+    cp hub/brownfield-apis/donations-gateway.yaml hub/.config/donations-gateway.yaml
+    perl -pi -w -e "s|$change_token|$HOST_URI|g;" hub/.config/donations-gateway.yaml
 
-    perl -pi -w -e "s|$change_token|$HOST_URI|g;" hub/scg-openapi-ingress.yaml
+    cp hub/brownfield-apis/suppliers-gateway.yaml hub/.config/suppliers-gateway.yaml
+    perl -pi -w -e "s|$change_token|$HOST_URI|g;" hub/.config/suppliers-gateway.yaml
 
-    perl -pi -w -e "s|$change_token|$HOST_URI|g;" hub/run-local-api-hub-server.sh
+    cp hub/scg-openapi-ingress.yaml hub/.config/scg-openapi-ingress.yaml
+    perl -pi -w -e "s|$change_token|$HOST_URI|g;" hub/.config/scg-openapi-ingress.yaml
 
-    perl -pi -w -e "s|$change_token|$HOST_URI|g;" sbo/fortune-ingress.yaml
+    cp hub/run-local-api-hub-server.sh hub/.config/run-local-api-hub-server.sh
+    perl -pi -w -e "s|$change_token|$HOST_URI|g;" hub/.config/run-local-api-hub-server.sh
 
-    perl -pi -w -e "s|$change_token|$HOST_URI|g;" sbo/sbo-ingress.yaml
+    cp sbo/fortune-ingress.yaml sbo/.config/fortune-ingress.yaml
+    perl -pi -w -e "s|$change_token|$HOST_URI|g;" sbo/.config/fortune-ingress.yaml
 
-    perl -pi -w -e "s|$change_token|$HOST_URI|g;" tss/tss-ingress.yaml
+    cp sbo/sbo-ingress.yaml sbo/.config/sbo-ingress.yaml
+    perl -pi -w -e "s|$change_token|$HOST_URI|g;" sbo/.config/sbo-ingress.yaml
 
-    
+    cp tss/tss-ingress.yaml tss/.config/tss-ingress.yaml
+    perl -pi -w -e "s|$change_token|$HOST_URI|g;" tss/.config/tss-ingress.yaml
 
 }
 
@@ -124,10 +136,10 @@ create-secrets() {
         --namespace $SBO_NAMESPACE 
    
     #sso secret for dekt4pets-gatway 
-    kubectl create secret generic dekt4pets-sso --from-env-file=secrets/dekt4pets-sso.txt -n $APP_NAMESPACE
+    kubectl create secret generic dekt4pets-sso --from-env-file=myconfigs/dekt4pets-sso.txt -n $APP_NAMESPACE
 
     #jwt secret for dekt4pets backend app
-    kubectl create secret generic dekt4pets-jwk --from-env-file=secrets/dekt4pets-jwk.txt -n $APP_NAMESPACE
+    kubectl create secret generic dekt4pets-jwk --from-env-file=myconfigs/dekt4pets-jwk.txt -n $APP_NAMESPACE
     
 
     #for local images build and/or relocated to image registry
@@ -186,7 +198,7 @@ install-apihub() {
     echo
     echo "===> Installing API Hub..."
     echo
-    kubectl apply -f hub/scg-openapi-ingress.yaml -n $GW_NAMESPACE
+    kubectl apply -f hub/.config/scg-openapi-ingress.yaml -n $GW_NAMESPACE
 
     #until hub is available as a k8s deployment it will be started localy as part of start-local-utilities 
 }
@@ -199,7 +211,7 @@ install-sbo () {
 
     ## Create sbo deployment and ingress rule
     kubectl apply -f sbo/sbo-deployment.yaml -n $SBO_NAMESPACE
-    kubectl apply -f sbo/sbo-ingress.yaml -n $SBO_NAMESPACE 
+    kubectl apply -f sbo/.config/sbo-ingress.yaml -n $SBO_NAMESPACE 
 
 }
 

@@ -8,4 +8,4 @@ resources:
   - tss-server-deployment.yaml
   #- tss-server-pvc.yaml
   - tss-server-service.yaml
-  - tss-ingress.yaml
+  - .config/tss-ingress.yaml

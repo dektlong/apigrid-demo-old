@@ -3,7 +3,7 @@ kind: Kustomization
 namespace: dekt-apps
 
 resources:
-  - dekt4pets-frontend-app.yaml
+  - .config/dekt4pets-frontend-app.yaml
   - routes/dekt4pets-frontend-routes.yaml
   - routes/dekt4pets-frontend-mapping.yaml
  
