@@ -32,14 +32,14 @@ It is designed to run on any k8s substrate.
 
 - Set all variables in ```config-values.env```
 
-- (temp) modify ```hub/run-local-api-hub-server.sh``` with the location of your api-hub-server-###.jar
- 
 - The ingress setup is based on GoDaddy DNS, if you are using a different one, please modify ```k8sbuilders/install-ingress-controller.sh``` 
 
-- Update the image locations in all k8s Deployments yamls with your Image Registry info 
-  - Note that all ingress and gateway yamls are dynamically generated per the specified sub-domain and domain
-	
-- Spring Boot Observer (very early, use at your own risk!) 
+- API HUB current workarounds: 
+
+  - modify ```hub/run-local-api-hub-server.sh``` with the <SUB_DOMAIN>.<DOMAIN> 
+  - update the location of your api-hub-server-###.jar
+ 
+- Spring Boot Observer current workarounds: 
   - build and push images to your repo 
   - Update /sbo yamls 
   - The observer UI should be available at ```http://sbo.<SUB_DOMAIN>.<DOMAIN>/apps```

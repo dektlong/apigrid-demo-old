@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-BACKEND_IMAGE_NAME=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION
-FRONTEND_IMAGE_NAME=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION
-HOST_URI=$SUB_DOMAIN.$DOMAIN
-
 #################### functions #######################
 
 #install
@@ -62,19 +58,25 @@ update-yaml-files () {
     echo "===> Update ingress and depolyment yaml files with domain and image info..."
     echo
 
-    change_token="REPLACED_IN_RUNTIME"
+    BACKEND_IMAGE_NAME=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION
+    FRONTEND_IMAGE_NAME=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION
+    HOST_URI=$SUB_DOMAIN.$DOMAIN
+    
+    change_token="{REPLACED_IN_RUNTIME}"
     
     perl -pi -w -e "s|$change_token|$BACKEND_IMAGE_NAME|g;" backend/dekt4pets-backend-app.yaml 
 
     perl -pi -w -e "s|$change_token|$FRONTEND_IMAGE_NAME|g;" frontend/dekt4pets-frontend-app.yaml 
 
+    perl -pi -w -e "s|$change_token|$HOST_URI|g;" gateway/dekt4pets-gateway.yaml
+
     perl -pi -w -e "s|$change_token|$HOST_URI|g;" gateway/dekt4pets-ingress.yaml
 
-    perl -pi -w -e "s|$change_token|$HOST_URI|g;" hub/brownfield-api/data-check-gateway.yaml
+    perl -pi -w -e "s|$change_token|$HOST_URI|g;" hub/brownfield-apis/datacheck-gateway.yaml
 
-    perl -pi -w -e "s|$change_token|$HOST_URI|g;" hub/brownfield-api/donations-gateway.yaml
+    perl -pi -w -e "s|$change_token|$HOST_URI|g;" hub/brownfield-apis/donations-gateway.yaml
 
-    perl -pi -w -e "s|$change_token|$HOST_URI|g;" hub/brownfield-api/suppliers-gateway.yaml
+    perl -pi -w -e "s|$change_token|$HOST_URI|g;" hub/brownfield-apis/suppliers-gateway.yaml
 
     perl -pi -w -e "s|$change_token|$HOST_URI|g;" hub/scg-openapi-ingress.yaml
 
