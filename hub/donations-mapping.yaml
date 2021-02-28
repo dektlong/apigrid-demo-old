@@ -1,0 +1,9 @@
+apiVersion: "tanzu.vmware.com/v1"
+kind: SpringCloudGatewayMapping
+metadata:
+  name: donations-routes-mapping
+spec:
+  gatewayRef:
+    name: donations-gateway
+  routeConfigRef:
+    name: donations-routes-config

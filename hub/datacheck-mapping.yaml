@@ -1,0 +1,9 @@
+apiVersion: "tanzu.vmware.com/v1"
+kind: SpringCloudGatewayMapping
+metadata:
+  name: datacheck-routes-mapping
+spec:
+  gatewayRef:
+    name: datacheck-gateway
+  routeConfigRef:
+    name: datacheck-routes-config
