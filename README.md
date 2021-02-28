@@ -32,9 +32,9 @@ It is designed to run on any k8s substrate.
 
 - Set all variables in ```config-values.env```
 
-- The ingress setup is based on GoDaddy DNS, if you are using a different one, please modify ```k8sbuilders/install-ingress-controller.sh``` 
+- The ingress setup is based on GoDaddy DNS, if you are using a different one, please modify ```k8s-builders/install-ingress-controller.sh``` 
 
-- Note: all yaml files that are updated in runtime will be copied to ```.configs``` sub-directory in their respective directories during the init-demo phase
+- Note: all yaml files that are updated in runtime will be copied to ```.config``` sub-directory in their respective directories during the init-demo phase
 
 - Spring Boot Observer (current workaround): 
   - build and push images to your repo 
