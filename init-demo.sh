@@ -280,7 +280,7 @@ setup-demo-artifacts() {
 start-local-utilities() {
 
     #temp unitl Hub as a k8s deployment
-    open -a Terminal hub/run-local-api-hub-server.sh
+    open -a Terminal hub/.config/run-local-api-hub-server.sh
 
     open -a Terminal k8s-builders/start_octant.sh
 }
