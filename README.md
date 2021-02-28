@@ -84,11 +84,11 @@ It is designed to run on any k8s substrate.
 - explain that now our backend team can know exactly how to use a verified working version of both APIs (no tickets to off platform teams)
 - In ```backend/routes/dekt4pets-backend-routes.yaml``` add
 ```
-- predicates:
-    - Path=/api/check-adopter
-    - Method=GET
-  ssoEnabled: true
-  tokenRelay: true        
+    - predicates:
+        - Path=/api/check-adopter
+        - Method=GET
+      ssoEnabled: true
+      tokenRelay: true          
 ```
 - In ```backend/src/main/.../AnimalController.java``` add
 ```
