@@ -96,7 +96,7 @@ patch-backend() {
     echo "Waiting for next github polling interval ..."
     echo  
     
-    sleep 20 #enough time, instead of active polling which is not recommended by the TBS team
+    sleep 10 #enough time, instead of active polling which is not recommended by the TBS team
     
     kp build list $BACKEND_TBS_IMAGE -n $APP_NAMESPACE
 

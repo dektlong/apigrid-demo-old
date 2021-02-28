@@ -78,13 +78,13 @@ setup-dynamic-values () {
     cp gateway/dekt4pets-ingress.yaml gateway/.config/dekt4pets-ingress.yaml
     perl -pi -w -e "s|$change_token|$HOST_URI|g;" gateway/.config/dekt4pets-ingress.yaml
 
-    cp hub/brownfield-apis/datacheck-gateway.yaml hub/.config/datacheck-gateway.yaml
+    cp hub/datacheck-gateway.yaml hub/.config/datacheck-gateway.yaml
     perl -pi -w -e "s|$change_token|$HOST_URI|g;" hub/.config/datacheck-gateway.yaml
 
-    cp hub/brownfield-apis/donations-gateway.yaml hub/.config/donations-gateway.yaml
+    cp hub/donations-gateway.yaml hub/.config/donations-gateway.yaml
     perl -pi -w -e "s|$change_token|$HOST_URI|g;" hub/.config/donations-gateway.yaml
 
-    cp hub/brownfield-apis/suppliers-gateway.yaml hub/.config/suppliers-gateway.yaml
+    cp hub/suppliers-gateway.yaml hub/.config/suppliers-gateway.yaml
     perl -pi -w -e "s|$change_token|$HOST_URI|g;" hub/.config/suppliers-gateway.yaml
 
     cp hub/scg-openapi-ingress.yaml hub/.config/scg-openapi-ingress.yaml
@@ -222,7 +222,7 @@ setup-demo-artifacts() {
     echo
     echo "===> Setup demo artifact: brownfield APIs ..."
     echo
-    kustomize build hub/brownfield-apis | kubectl apply -f -
+    kustomize build hub | kubectl apply -f -
 
     echo
     echo "===> Setup demo artifact: spring-boot-observer fortune-service..."
