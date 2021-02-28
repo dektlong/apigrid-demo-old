@@ -137,10 +137,10 @@ create-secrets() {
         --namespace $SBO_NAMESPACE 
    
     #sso secret for dekt4pets-gatway 
-    kubectl create secret generic dekt4pets-sso --from-env-file=myconfigs/dekt4pets-sso.txt -n $APP_NAMESPACE
+    kubectl create secret generic dekt4pets-sso --from-env-file=secrets/dekt4pets-sso.txt -n $APP_NAMESPACE
 
     #jwt secret for dekt4pets backend app
-    kubectl create secret generic dekt4pets-jwk --from-env-file=myconfigs/dekt4pets-jwk.txt -n $APP_NAMESPACE
+    kubectl create secret generic dekt4pets-jwk --from-env-file=secrets/dekt4pets-jwk.txt -n $APP_NAMESPACE
     
 
     #for local images build and/or relocated to image registry
