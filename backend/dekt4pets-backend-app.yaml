@@ -15,7 +15,7 @@ spec:
       - name: imagereg-secret
       containers:
         - name: dekt4pets-backend
-          image: {IMAGE_NAME}
+          image: {BACKEND_IMAGE}
           imagePullPolicy: Always
           env:
             - name: spring.profiles.active
@@ -33,14 +33,14 @@ spec:
               memory: "512Mi"
               cpu: "500m"
       restartPolicy: Always
-       # - name: spring-observer-sidecar
-       #   image: harbor.apps.cf.tanzutime.com/dekt-apps/spring-boot-observer-sidecar:0.0.1-SNAPSHOT
-       #   env:
-       #   - name: spring.boot.observer.sidecar.application-name
-       #     value: dekt4pets-backend
-       #   - name: spring.boot.observer.client.host
-       #     value: spring-boot-observer-server.sbo-system.svc.cluster.local
-       #   resources: {} 
+       - name: spring-observer-sidecar
+         image: {OBSERVER_SIDECAR_IMAGE}
+         env:
+         - name: spring.boot.observer.sidecar.application-name
+           value: dekt4pets-backend
+         - name: spring.boot.observer.client.host
+           value: spring-boot-observer-server.sbo-system.svc.cluster.local
+         resources: {} 
 ---
 apiVersion: v1
 kind: Service
