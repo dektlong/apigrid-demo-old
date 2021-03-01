@@ -9,8 +9,6 @@ install() {
 
     create-secrets
 
-    setup-dynamic-values
-    
     install-core-services
     
     start-local-utilities
@@ -49,60 +47,9 @@ create-namespaces () {
     kubectl create ns $TSS_NAMESPACE
     kubectl create ns $SBO_NAMESPACE
     kubectl create ns $BROWNFIELD_NAMESPACE
-}
 
-#setup-dynamic-values
-setup-dynamic-values () {
-
-    echo
-    echo "===> Copy and update ingress and depolyment yaml files with domain and image info..."
-    echo
-
-    BACKEND_IMAGE_NAME=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION
-    FRONTEND_IMAGE_NAME=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION
-    HOST_URI=$SUB_DOMAIN.$DOMAIN
-    
-    change_token="{REPLACED_IN_RUNTIME}"
-    
+    #dynamic values folders
     mkdir {backend/.config,frontend/.config,gateway/.config,hub/.config,sbo/.config,tss/.config}
-
-    cp backend/dekt4pets-backend-app.yaml backend/.config/dekt4pets-backend-app.yaml
-    perl -pi -w -e "s|$change_token|$BACKEND_IMAGE_NAME|g;" backend/.config/dekt4pets-backend-app.yaml
-
-    cp frontend/dekt4pets-frontend-app.yaml frontend/.config/dekt4pets-frontend-app.yaml
-    perl -pi -w -e "s|$change_token|$FRONTEND_IMAGE_NAME|g;" frontend/.config/dekt4pets-frontend-app.yaml
-
-    cp gateway/dekt4pets-gateway.yaml gateway/.config/dekt4pets-gateway.yaml
-    perl -pi -w -e "s|$change_token|$HOST_URI|g;" gateway/.config/dekt4pets-gateway.yaml
-
-    cp gateway/dekt4pets-ingress.yaml gateway/.config/dekt4pets-ingress.yaml
-    perl -pi -w -e "s|$change_token|$HOST_URI|g;" gateway/.config/dekt4pets-ingress.yaml
-
-    cp hub/datacheck-gateway.yaml hub/.config/datacheck-gateway.yaml
-    perl -pi -w -e "s|$change_token|$HOST_URI|g;" hub/.config/datacheck-gateway.yaml
-
-    cp hub/donations-gateway.yaml hub/.config/donations-gateway.yaml
-    perl -pi -w -e "s|$change_token|$HOST_URI|g;" hub/.config/donations-gateway.yaml
-
-    cp hub/suppliers-gateway.yaml hub/.config/suppliers-gateway.yaml
-    perl -pi -w -e "s|$change_token|$HOST_URI|g;" hub/.config/suppliers-gateway.yaml
-
-    cp hub/scg-openapi-ingress.yaml hub/.config/scg-openapi-ingress.yaml
-    perl -pi -w -e "s|$change_token|$HOST_URI|g;" hub/.config/scg-openapi-ingress.yaml
-
-    cp hub/run-local-api-hub-server.sh hub/.config/run-local-api-hub-server.sh
-    perl -pi -w -e "s|$change_token|$HOST_URI|g;" hub/.config/run-local-api-hub-server.sh
-    perl -pi -w -e "s|{RUNTIME_PATH_TO_API_HUB_JAR}|$RUNTIME_PATH_TO_API_HUB_JAR|g;" hub/.config/run-local-api-hub-server.sh
-
-    cp sbo/fortune-ingress.yaml sbo/.config/fortune-ingress.yaml
-    perl -pi -w -e "s|$change_token|$HOST_URI|g;" sbo/.config/fortune-ingress.yaml
-
-    cp sbo/sbo-ingress.yaml sbo/.config/sbo-ingress.yaml
-    perl -pi -w -e "s|$change_token|$HOST_URI|g;" sbo/.config/sbo-ingress.yaml
-
-    cp tss/tss-ingress.yaml tss/.config/tss-ingress.yaml
-    perl -pi -w -e "s|$change_token|$HOST_URI|g;" tss/.config/tss-ingress.yaml
-
 }
 
 #create-secrets 
@@ -159,6 +106,10 @@ install-gateway() {
     $GW_INSTALL_DIR/scripts/relocate-images.sh $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO
     
     $GW_INSTALL_DIR/scripts/install-spring-cloud-gateway.sh $GW_NAMESPACE
+
+    update-dynamic-value gateway dekt4pets-gateway.yaml {HOST_NAME} $SUB_DOMAIN.$DOMAIN
+    update-dynamic-value gateway dekt4pets-ingress.yaml {HOST_NAME} $SUB_DOMAIN.$DOMAIN
+  
 }
 
 #install starter service
@@ -168,6 +119,7 @@ install-tss() {
     echo "===> Install Tanzu Starter Service..."
     echo
     
+    update-dynamic-value tss tss-ingress.yaml {HOST_NAME} $SUB_DOMAIN.$DOMAIN
     kustomize build tss | kubectl apply -f -
 
 }
@@ -199,6 +151,14 @@ install-apihub() {
     echo
     echo "===> Installing API Hub..."
     echo
+
+    pushd $API_HUB_INSTALL_DIR
+    ./gradlew clean build
+    pushd
+    
+    update-dynamic-value hub run-local-api-hub-server.sh {OPEN_API_URLS} http://scg-openapi.$SUB_DOMAIN.$DOMAIN/openapi {RUNTIME_PATH_TO_API_HUB_JAR} $API_HUB_INSTALL_DIR/api-hub-server/build/libs/api-hub-server-0.0.1-SNAPSHOT.jar
+    update-dynamic-value hub scg-openapi-ingress.yaml {HOST_NAME} $SUB_DOMAIN.$DOMAIN
+    
     kubectl apply -f hub/.config/scg-openapi-ingress.yaml -n $GW_NAMESPACE
 
     #until hub is available as a k8s deployment it will be started localy as part of start-local-utilities 
@@ -207,11 +167,13 @@ install-apihub() {
 #install-sbo (spring boot observer)
 install-sbo () {
 
-    #you need to build and relocate the SBO images to your repo
-    #sbo/build-and-relocate-images.sh   
+    sbo/build-sbo-images.sh   
+
+    update-dynamic-value sbo sbo-deployment.yaml {OBSERVER_SERVER_IMAGE} $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/spring-boot-observer-server:0.0.1-SNAPSHOT
+    update-dynamic-value sbo sbo-ingress.yaml {HOST_NAME} $SUB_DOMAIN.$DOMAIN
 
     ## Create sbo deployment and ingress rule
-    kubectl apply -f sbo/sbo-deployment.yaml -n $SBO_NAMESPACE
+    kubectl apply -f sbo/.config/sbo-deployment.yaml -n $SBO_NAMESPACE
     kubectl apply -f sbo/.config/sbo-ingress.yaml -n $SBO_NAMESPACE 
 
 }
@@ -222,6 +184,9 @@ setup-demo-artifacts() {
     echo
     echo "===> Setup demo artifact: brownfield APIs ..."
     echo
+    update-dynamic-value hub datacheck-gateway.yaml {HOST_NAME} $SUB_DOMAIN.$DOMAIN
+    update-dynamic-value hub suppliers-gateway.yaml {HOST_NAME} $SUB_DOMAIN.$DOMAIN
+    update-dynamic-value hub donations-gateway.yaml {HOST_NAME} $SUB_DOMAIN.$DOMAIN
     kustomize build hub | kubectl apply -f -
 
     echo
@@ -247,8 +212,9 @@ setup-demo-artifacts() {
     #--namespace $APP_NAMESPACE
     
     #backend (git commits to the main branch will be auto-built by TBS)
+    backend_image_tag=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION
     kp image create $BACKEND_TBS_IMAGE \
-	--tag $BACKEND_IMAGE_NAME \
+	--tag $backend_image_tag \
     --git $DEMO_APP_GIT_REPO  \
 	--git-revision main \
 	--sub-path ./backend \
@@ -256,16 +222,21 @@ setup-demo-artifacts() {
 	--wait
     #--builder $BUILDER_NAME \
 
+    update-dynamic-value backend dekt4pets-backend-app.yaml {IMAGE_NAME} $backend_image_tag
+
     echo
     echo "===> Setup demo artifact  5/5 : create dekt4pets TBS frontend image..."
     echo
     
+    frontend_image_tag=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION
+    
     #frontend
     #"!! since animals-frontend does *not* currently compile with TBS, 
     # as a workaround we relocate the image from springcloudservices/animal-rescue-frontend"
+    
     docker pull springcloudservices/animal-rescue-frontend
-    docker tag springcloudservices/animal-rescue-frontend:latest $FRONTEND_IMAGE_NAME
-    docker push $FRONTEND_IMAGE_NAME
+    docker tag springcloudservices/animal-rescue-frontend:latest $frontend_image_tag
+    docker push $frontend_image_tag
 
     #kp image create $FRONTEND_TBS_IMAGE \
 	#--tag $FRONTEND_IMAGE_NAME \
@@ -274,6 +245,8 @@ setup-demo-artifacts() {
    	#--sub-path ./frontend \
 	#--namespace $APP_NAMESPACE \
 	#--wait
+
+    update-dynamic-value frontend dekt4pets-frontend-app.yaml {IMAGE_NAME} $frontend_image_tag
 }
 
 #start local utilities
@@ -283,6 +256,18 @@ start-local-utilities() {
     open -a Terminal hub/.config/run-local-api-hub-server.sh
 
     open -a Terminal k8s-builders/start_octant.sh
+}
+
+#update-dynamic-value
+#params: sub-folder, org-file-to-update, find-key1, replace-value1, find-key2, replace-value2
+update-dynamic-value() {
+    cp $1/$2 $1/.config/$2
+    perl -pi -w -e "s|$3|$4|g;" $1/.config/$2
+
+    if  [ "$5" != "" ]; then 
+        perl -pi -w -e "s|$5|$6|g;" $1/.config/$2
+    fi
+
 }
 
 #cleanup

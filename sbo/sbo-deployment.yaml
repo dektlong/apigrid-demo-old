@@ -19,7 +19,7 @@ spec:
       imagePullSecrets: 
       - name: imagereg-secret
       containers:
-      - image: harbor.apps.cf.tanzutime.com/dekt-system/spring-boot-observer-server:0.0.1-SNAPSHOT
+      - image: {OBSERVER_SERVER_IMAGE}
         name: spring-boot-observer-server
         resources: {}
 ---
