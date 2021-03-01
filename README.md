@@ -62,7 +62,7 @@ It is designed to run on any k8s substrate.
   - now the frontend team can easily discover and test the backend APIs and reuse
   - Show the other API groups ('brownfield APIs')
 - ```./run-pipeline.sh deploy-frontend```
-- Access Spring Boot Observer at ```http://sbo.<SUB_DOMAIN>.<DOMAIN>/apps` to show the backend application 
+- Access Spring Boot Observer at ```http://sbo.<SUB_DOMAIN>.<DOMAIN>/app``` to show actuator information on the backend application 
 - Show the new frontend APIs that where auto-populated to the hub
 - ```./run-pipeline.sh open-store```
   - External traffic can only routed via the micro-gateway
