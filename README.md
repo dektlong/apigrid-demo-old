@@ -35,11 +35,6 @@ It is designed to run on any k8s substrate.
 
 - The ingress setup is based on GoDaddy DNS, if you are using a different one, please modify ```k8s-builders/install-ingress-controller.sh``` 
 
-- Spring Boot Observer (current workaround): 
-  - build and push images to your repo 
-  - Update /sbo yamls 
-  - The observer UI should be available at ```http://sbo.<SUB_DOMAIN>.<DOMAIN>/apps```
-
 ## Installing the demo
 
 - ```./init-demo.sh [aks | tkg]```
@@ -67,6 +62,7 @@ It is designed to run on any k8s substrate.
   - now the frontend team can easily discover and test the backend APIs and reuse
   - Show the other API groups ('brownfield APIs')
 - ```./run-pipeline.sh deploy-frontend```
+- Access Spring Boot Observer at ```http://sbo.<SUB_DOMAIN>.<DOMAIN>/apps` to show the backend application 
 - Show the new frontend APIs that where auto-populated to the hub
 - ```./run-pipeline.sh open-store```
   - External traffic can only routed via the micro-gateway
