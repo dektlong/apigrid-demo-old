@@ -87,19 +87,19 @@ It is designed to run on any k8s substrate.
 ```
 - In ```backend/src/main/.../AnimalController.java``` add
 ```
-@GetMapping("/check-adopter")
-public String checkAdopter(Principal adopter) {
+  @GetMapping("/check-adopter")
+	public String checkAdopter(Principal adopter) {
 
     	String adopterId = adopter.getName();
     
-	//verify adoption history - use the Hub verified adoption-history API call
+		  //verify adoption history - use the Hub verified adoption-history API call
 
     	//run background check - use the Hub verified background-check API call
 
-	String displayResults = "<B>Congratulations !!!</B><BR><BR>You are cleared to adopt your next best friend<BR><BR><I>token:"+adopterId+"</I>";
+		  String displayResults = "<B>Congratulations !!!</B><BR><BR>You are cleared to adopt your next best friend<BR><BR><I>token:"+adopterId+"</I>";
 		
-	return displayResults;
-}
+		  return displayResults;
+	}
 ```
 - ```./run-pipeline.sh patch-backend "add check-adopter api"```
 - show how build-service is invoking a new image build based on the git-commit-id
