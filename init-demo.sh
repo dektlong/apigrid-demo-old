@@ -196,7 +196,8 @@ setup-demo-artifacts() {
     observer_sidecar_image_tag=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/spring-boot-observer-sidecar:0.0.1-SNAPSHOT
     fortune_image_tag=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/fortune-service:0.0.1-SNAPSHOT
 
-    update-dynamic-value sbo dekt4pets-frontend-app.yaml {FORTUNE_IMAGE} $fortune_image_tag {OBSERVER_SIDECAR_IMAGE} $observer_sidecar_image_tag
+    update-dynamic-value sbo fortune-sidecar-example.yaml {FORTUNE_IMAGE} $fortune_image_tag {OBSERVER_SIDECAR_IMAGE} $observer_sidecar_image_tag
+    update-dynamic-value sbo fortune-ingress.yaml {HOST_NAME} $SUB_DOMAIN.$DOMAIN
 
     kubectl apply -f sbo/fortune-sidecar-example.yaml -n $APP_NAMESPACE 
 
