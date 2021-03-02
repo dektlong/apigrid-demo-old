@@ -152,9 +152,9 @@ install-apihub() {
     echo "===> Installing API Hub..."
     echo
 
-    pushd $API_HUB_INSTALL_DIR
-    ./gradlew clean build
-    pushd
+    #pushd $API_HUB_INSTALL_DIR
+    #./gradlew clean build
+    #pushd
     
     update-dynamic-value hub run-local-api-hub-server.sh {OPEN_API_URLS} http://scg-openapi.$SUB_DOMAIN.$DOMAIN/openapi {RUNTIME_PATH_TO_API_HUB_JAR} $API_HUB_INSTALL_DIR/api-hub-server/build/libs/api-hub-server-0.0.1-SNAPSHOT.jar
     update-dynamic-value hub scg-openapi-ingress.yaml {HOST_NAME} $SUB_DOMAIN.$DOMAIN
@@ -167,7 +167,7 @@ install-apihub() {
 #install-sbo (spring boot observer)
 install-sbo () {
 
-    sbo/build-sbo-images.sh   
+    #sbo/build-sbo-images.sh   
 
     update-dynamic-value sbo sbo-deployment.yaml {OBSERVER_SERVER_IMAGE} $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/spring-boot-observer-server:0.0.1-SNAPSHOT
     update-dynamic-value sbo sbo-ingress.yaml {HOST_NAME} $SUB_DOMAIN.$DOMAIN
@@ -192,6 +192,12 @@ setup-demo-artifacts() {
     echo
     echo "===> Setup demo artifact: spring-boot-observer fortune-service..."
     echo
+
+    observer_sidecar_image_tag=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/spring-boot-observer-sidecar:0.0.1-SNAPSHOT
+    fortune_image_tag=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/fortune-service:0.0.1-SNAPSHOT
+
+    update-dynamic-value sbo dekt4pets-frontend-app.yaml {FORTUNE_IMAGE} $fortune_image_tag {OBSERVER_SIDECAR_IMAGE} $observer_sidecar_image_tag
+
     kubectl apply -f sbo/fortune-sidecar-example.yaml -n $APP_NAMESPACE 
 
     echo
@@ -213,6 +219,8 @@ setup-demo-artifacts() {
     
     #backend (git commits to the main branch will be auto-built by TBS)
     backend_image_tag=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION
+    
+
     kp image create $BACKEND_TBS_IMAGE \
 	--tag $backend_image_tag \
     --git $DEMO_APP_GIT_REPO  \
@@ -222,14 +230,15 @@ setup-demo-artifacts() {
 	--wait
     #--builder $BUILDER_NAME \
 
-    update-dynamic-value backend dekt4pets-backend-app.yaml {IMAGE_NAME} $backend_image_tag
+    update-dynamic-value backend dekt4pets-backend-app.yaml {BACKEND_IMAGE} $backend_image_tag {OBSERVER_SIDECAR_IMAGE} $observer_sidecar_image_tag
+    
 
     echo
     echo "===> Setup demo artifact  5/5 : create dekt4pets TBS frontend image..."
     echo
     
     frontend_image_tag=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION
-    
+
     #frontend
     #"!! since animals-frontend does *not* currently compile with TBS, 
     # as a workaround we relocate the image from springcloudservices/animal-rescue-frontend"
@@ -246,7 +255,7 @@ setup-demo-artifacts() {
 	#--namespace $APP_NAMESPACE \
 	#--wait
 
-    update-dynamic-value frontend dekt4pets-frontend-app.yaml {IMAGE_NAME} $frontend_image_tag
+    update-dynamic-value frontend dekt4pets-frontend-app.yaml {FRONTEND_IMAGE} $frontend_image_tag
 }
 
 #start local utilities

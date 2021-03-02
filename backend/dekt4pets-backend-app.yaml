@@ -32,7 +32,6 @@ spec:
             limits:
               memory: "512Mi"
               cpu: "500m"
-      restartPolicy: Always
        - name: spring-observer-sidecar
          image: {OBSERVER_SIDECAR_IMAGE}
          env:
