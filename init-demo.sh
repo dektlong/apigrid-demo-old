@@ -167,7 +167,7 @@ install-apihub() {
 #install-sbo (spring boot observer)
 install-sbo () {
 
-    #sbo/build-sbo-images.sh   
+    sbo/build-sbo-images.sh   
 
     update-dynamic-value sbo sbo-deployment.yaml {OBSERVER_SERVER_IMAGE} $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/spring-boot-observer-server:0.0.1-SNAPSHOT
     update-dynamic-value sbo sbo-ingress.yaml {HOST_NAME} $SUB_DOMAIN.$DOMAIN
