@@ -31,7 +31,7 @@ install-core-services() {
     
     install-apihub
     
-    install-sbo
+    #install-sbo
 }
 
 #create-namespaces
@@ -78,7 +78,7 @@ create-secrets() {
     
     #enable SBO to access image registry
     kubectl create secret docker-registry imagereg-secret -n \
-        --docker-server=$IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO \
+        --docker-server=$IMG_REGISTRY_URL \
         --docker-username=$IMG_REGISTRY_USER \
         --docker-password=$IMG_REGISTRY_PASSWORD \
         --namespace $SBO_NAMESPACE 
@@ -172,9 +172,18 @@ install-sbo () {
     update-dynamic-value sbo sbo-deployment.yaml {OBSERVER_SERVER_IMAGE} $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/spring-boot-observer-server:0.0.1-SNAPSHOT
     update-dynamic-value sbo sbo-ingress.yaml {HOST_NAME} $SUB_DOMAIN.$DOMAIN
 
-    ## Create sbo deployment and ingress rule
+    # Create sbo deployment and ingress rule
     kubectl apply -f sbo/.config/sbo-deployment.yaml -n $SBO_NAMESPACE
     kubectl apply -f sbo/.config/sbo-ingress.yaml -n $SBO_NAMESPACE 
+
+    # add the fortune service sample app
+    observer_sidecar_image_tag=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/spring-boot-observer-sidecar:0.0.1-SNAPSHOT
+    fortune_image_tag=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/fortune-service:0.0.1-SNAPSHOT
+
+    update-dynamic-value sbo fortune-sidecar-example.yaml {FORTUNE_IMAGE} $fortune_image_tag {OBSERVER_SIDECAR_IMAGE} $observer_sidecar_image_tag
+    update-dynamic-value sbo fortune-ingress.yaml {HOST_NAME} $SUB_DOMAIN.$DOMAIN
+
+    kubectl apply -f sbo/fortune-sidecar-example.yaml -n $APP_NAMESPACE 
 
 }
 
@@ -188,18 +197,6 @@ setup-demo-artifacts() {
     update-dynamic-value hub suppliers-gateway.yaml {HOST_NAME} $SUB_DOMAIN.$DOMAIN
     update-dynamic-value hub donations-gateway.yaml {HOST_NAME} $SUB_DOMAIN.$DOMAIN
     kustomize build hub | kubectl apply -f -
-
-    echo
-    echo "===> Setup demo artifact: spring-boot-observer fortune-service..."
-    echo
-
-    observer_sidecar_image_tag=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/spring-boot-observer-sidecar:0.0.1-SNAPSHOT
-    fortune_image_tag=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/fortune-service:0.0.1-SNAPSHOT
-
-    update-dynamic-value sbo fortune-sidecar-example.yaml {FORTUNE_IMAGE} $fortune_image_tag {OBSERVER_SIDECAR_IMAGE} $observer_sidecar_image_tag
-    update-dynamic-value sbo fortune-ingress.yaml {HOST_NAME} $SUB_DOMAIN.$DOMAIN
-
-    kubectl apply -f sbo/fortune-sidecar-example.yaml -n $APP_NAMESPACE 
 
     echo
     echo "===> Setup demo artifact: tss generators and starters..."
@@ -235,7 +232,7 @@ setup-demo-artifacts() {
     
 
     echo
-    echo "===> Setup demo artifact  5/5 : create dekt4pets TBS frontend image..."
+    echo "===> Setup demo artifact: create dekt4pets TBS frontend image..."
     echo
     
     frontend_image_tag=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION
