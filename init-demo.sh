@@ -11,9 +11,13 @@ install() {
 
     install-core-services
     
-    start-local-utilities
+    setup-observer-examples
 
-    setup-demo-artifacts
+    setup-starters-examples
+
+    setup-brownfield-apis
+
+    setup-dekt4pets-examples
 
     echo
 	echo "Demo install completed. Enjoy your demo."
@@ -31,7 +35,9 @@ install-core-services() {
     
     install-apihub
     
-    #install-sbo
+    install-sbo
+
+    start-local-utilities
 }
 
 #create-namespaces
@@ -175,6 +181,14 @@ install-sbo () {
     # Create sbo deployment and ingress rule
     kubectl apply -f sbo/.config/sbo-deployment.yaml -n $SBO_NAMESPACE
     kubectl apply -f sbo/.config/sbo-ingress.yaml -n $SBO_NAMESPACE 
+}
+
+#setup-observer-examples
+setup-observer-examples() {
+
+    echo
+    echo "===> Setup SBO fortune service example..."
+    echo
 
     # add the fortune service sample app
     observer_sidecar_image_tag=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/spring-boot-observer-sidecar:0.0.1
@@ -187,25 +201,34 @@ install-sbo () {
 
 }
 
-#setup demo artifacts
-setup-demo-artifacts() {
+#setup-starters-examples
+setup-starters-examples() {
 
     echo
-    echo "===> Setup demo artifact: brownfield APIs ..."
+    echo "===> Setup App Accelerator generators and starters..."
+    echo
+    tss/dekt-starters/add-starters.sh
+    #tss/msft-starters/add-starters.sh
+
+}
+
+#setup-brownfield-apis
+setup-brownfield-apis() {
+
+    echo
+    echo "===> Setup brownfield APIs expamples..."
     echo
     update-dynamic-value hub datacheck-gateway.yaml {HOST_NAME} $SUB_DOMAIN.$DOMAIN
     update-dynamic-value hub suppliers-gateway.yaml {HOST_NAME} $SUB_DOMAIN.$DOMAIN
     update-dynamic-value hub donations-gateway.yaml {HOST_NAME} $SUB_DOMAIN.$DOMAIN
     kustomize build hub | kubectl apply -f -
+}
+
+#setup-dekt4pets-examples
+setup-dekt4pets-examples() {
 
     echo
-    echo "===> Setup demo artifact: tss generators and starters..."
-    echo
-    tss/dekt-starters/add-starters.sh
-    #tss/msft-starters/add-starters.sh
-
-    echo
-    echo "===> Setup demo artifact: create dekt4pets TBS backend images..."
+    echo "===> Setup dekt4pets TBS backend images..."
     echo
     #create a builder that can only run in dekt-apps ns and used to build java and nodejs apps
     #kp builder create $BUILDER_NAME \
@@ -232,7 +255,7 @@ setup-demo-artifacts() {
     
 
     echo
-    echo "===> Setup demo artifact: create dekt4pets TBS frontend image..."
+    echo "===> Setup dekt4pets TBS frontend image..."
     echo
     
     frontend_image_tag=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION
@@ -254,6 +277,7 @@ setup-demo-artifacts() {
 	#--wait
 
     update-dynamic-value frontend dekt4pets-frontend-app.yaml {FRONTEND_IMAGE} $frontend_image_tag
+    
 }
 
 #start local utilities
