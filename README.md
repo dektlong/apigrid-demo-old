@@ -93,12 +93,14 @@ It is designed to run on any k8s substrate.
     	String adopterId = adopter.getName();
     
 		  //verify adoption history - use the Hub verified adoption-history API call
+		  LOGGER.info("adopterId " + adopterId + " has succefully completed adoption history check");
 
-    	//run background check - use the Hub verified background-check API call
+    	//run criminal record background check - use the Hub verified background-check API call
+		  LOGGER.info("adopterId " + adopterId + " has succefully completed criminal record check");
 
 		  String displayResults = "<B>Congratulations !!!</B><BR><BR>You are cleared to adopt your next best friend<BR><BR><I>token:"+adopterId+"</I>";
 		
-		  return displayResults;
+			return displayResults;
 	}
 ```
 - ```./run-pipeline.sh patch-backend "add check-adopter api"```
