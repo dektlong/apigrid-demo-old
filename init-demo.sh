@@ -238,8 +238,8 @@ setup-dekt4pets-examples() {
     #--store default \
     #--namespace $APP_NAMESPACE
     
-    #backend (git commits to the main branch will be auto-built by TBS)
     backend_image_tag=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION
+    observer_sidecar_image_tag=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/spring-boot-observer-sidecar:0.0.1
     
 
     kp image create $BACKEND_TBS_IMAGE \
@@ -374,6 +374,11 @@ tkg)
     ;;
 cleanup)
 	cleanup $2
+    ;;
+test)
+    backend_image_tag=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION
+    observer_sidecar_image_tag=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/spring-boot-observer-sidecar:0.0.1
+    update-dynamic-value backend dekt4pets-backend-app.yaml {BACKEND_IMAGE} $backend_image_tag {OBSERVER_SIDECAR_IMAGE} $observer_sidecar_image_tag
     ;;
 *)
     incorrect-usage

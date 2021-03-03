@@ -32,13 +32,13 @@ spec:
             limits:
               memory: "512Mi"
               cpu: "500m"
-       - name: spring-observer-sidecar
-         image: {OBSERVER_SIDECAR_IMAGE}
-         env:
-         - name: spring.boot.observer.sidecar.application-name
-           value: dekt4pets-backend
-         - name: spring.boot.observer.client.host
-           value: spring-boot-observer-server.sbo-system.svc.cluster.local
+        - name: spring-observer-sidecar
+          image: {OBSERVER_SIDECAR_IMAGE}
+          env:
+            - name: spring.boot.observer.sidecar.application-name
+              value: dekt4pets-backend
+            - name: spring.boot.observer.client.host
+              value: spring-boot-observer-server.sbo-system.svc.cluster.local
          resources: {} 
 ---
 apiVersion: v1
