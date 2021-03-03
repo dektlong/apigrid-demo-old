@@ -39,7 +39,7 @@ spec:
               value: dekt4pets-backend
             - name: spring.boot.observer.client.host
               value: spring-boot-observer-server.sbo-system.svc.cluster.local
-         resources: {} 
+          resources: {} 
 ---
 apiVersion: v1
 kind: Service
