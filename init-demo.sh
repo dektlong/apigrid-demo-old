@@ -77,11 +77,11 @@ create-secrets() {
         --namespace $GW_NAMESPACE
     
     #enable SBO to access image registry
-    kubectl create secret docker-registry imagereg-secret -n \
+    kubectl create secret docker-registry imagereg-secret \
         --docker-server=$IMG_REGISTRY_URL \
         --docker-username=$IMG_REGISTRY_USER \
         --docker-password=$IMG_REGISTRY_PASSWORD \
-        --namespace $SBO_NAMESPACE 
+        --namespace=$SBO_NAMESPACE 
    
     #sso secret for dekt4pets-gatway 
     kubectl create secret generic dekt4pets-sso --from-env-file=secrets/dekt4pets-sso.txt -n $APP_NAMESPACE
@@ -167,9 +167,9 @@ install-apihub() {
 #install-sbo (spring boot observer)
 install-sbo () {
 
-    sbo/build-sbo-images.sh   
+    #sbo/build-sbo-images.sh   
 
-    update-dynamic-value sbo sbo-deployment.yaml {OBSERVER_SERVER_IMAGE} $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/spring-boot-observer-server:0.0.1-SNAPSHOT
+    update-dynamic-value sbo sbo-deployment.yaml {OBSERVER_SERVER_IMAGE} $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/spring-boot-observer-server:0.0.1
     update-dynamic-value sbo sbo-ingress.yaml {HOST_NAME} $SUB_DOMAIN.$DOMAIN
 
     # Create sbo deployment and ingress rule
@@ -177,13 +177,13 @@ install-sbo () {
     kubectl apply -f sbo/.config/sbo-ingress.yaml -n $SBO_NAMESPACE 
 
     # add the fortune service sample app
-    observer_sidecar_image_tag=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/spring-boot-observer-sidecar:0.0.1-SNAPSHOT
-    fortune_image_tag=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/fortune-service:0.0.1-SNAPSHOT
+    observer_sidecar_image_tag=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/spring-boot-observer-sidecar:0.0.1
+    fortune_image_tag=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/fortune-service:0.0.1
 
     update-dynamic-value sbo fortune-sidecar-example.yaml {FORTUNE_IMAGE} $fortune_image_tag {OBSERVER_SIDECAR_IMAGE} $observer_sidecar_image_tag
     update-dynamic-value sbo fortune-ingress.yaml {HOST_NAME} $SUB_DOMAIN.$DOMAIN
 
-    kubectl apply -f sbo/fortune-sidecar-example.yaml -n $APP_NAMESPACE 
+    kubectl apply -f sbo/.config/fortune-sidecar-example.yaml -n $APP_NAMESPACE 
 
 }
 

@@ -16,8 +16,8 @@ mvn -DskipTests clean install
 #sbo-server
 cd spring-boot-observer-server
 mvn -DskipTests spring-boot:build-image
-docker tag spring-boot-observer-server:0.0.1-SNAPSHOT $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/spring-boot-observer-server:0.0.1-SNAPSHOT
-docker push $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/spring-boot-observer-server:0.0.1-SNAPSHOT
+docker tag spring-boot-observer-server:0.0.1-SNAPSHOT $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/spring-boot-observer-server:0.0.1
+docker push $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/spring-boot-observer-server:0.0.1
 
            
     ## build image for spring-boot-observer-server
@@ -32,8 +32,8 @@ docker push $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/spring-boot-observer-ser
 ## sbo-sidecar
 cd ../spring-boot-observer-sidecar
 mvn -DskipTests spring-boot:build-image
-docker tag spring-boot-observer-sidecar:0.0.1-SNAPSHOT $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/spring-boot-observer-sidecar:0.0.1-SNAPSHOT
-docker push $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/spring-boot-observer-sidecar:0.0.1-SNAPSHOT
+docker tag spring-boot-observer-sidecar:0.0.1-SNAPSHOT $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/spring-boot-observer-sidecar:0.0.1
+docker push $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/spring-boot-observer-sidecar:0.0.1
 
     ## build image for spring-boot-observer-sidecar
     #kp image create spring-boot-observer-sidecar\
@@ -47,7 +47,7 @@ docker push $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/spring-boot-observer-sideca
 #fortune-service sample app
 cd ../samples/fortune-teller/fortune-service
 mvn -DskipTests spring-boot:build-image
-docker tag fortune-service:0.0.1-SNAPSHOT $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/fortune-service:0.0.1-SNAPSHOT
-docker push $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/fortune-service:0.0.1-SNAPSHOT
+docker tag fortune-service:0.0.1-SNAPSHOT $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/fortune-service:0.0.1
+docker push $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/fortune-service:0.0.1
 
 pushd
