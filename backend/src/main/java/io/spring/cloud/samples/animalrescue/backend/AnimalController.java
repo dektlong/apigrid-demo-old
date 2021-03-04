@@ -35,17 +35,25 @@ public class AnimalController {
 
     	String adopterId = adopter.getName();
     
-		  //verify adoption history - use the Hub verified adoption-history API call
-		  LOGGER.info("adopterId " + adopterId + " has succefully completed adoption history check");
+		//--------------
+		// check for valid adoption history
+		//---------------
+			//	use the Hub verified adoption-history API call
+		  	//	e.g. curl -X GET "https://datacheck.apps.dekt.io/adoption-history/*" -H "accept: */*"
+			LOGGER.info("adopterId " + adopterId + " has succefully completed adoption history check");
 
-    	//run criminal record background check - use the Hub verified background-check API call
+    	//--------------
+		// check for clear criminal-record
+		//---------------
+			//	use the Hub verified criminal-record call
+		  	//	e.g. curl -X GET "https://datacheck.apps.dekt.io/criminal-record/*" -H "accept: */*"
 		  LOGGER.info("adopterId " + adopterId + " has succefully completed criminal record check");
 
-		  String displayResults = "<B>Congratulations !!!</B><BR><BR>You are cleared to adopt your next best friend<BR><BR><I>token:"+adopterId+"</I>";
+		String displayResults = "<B>Congratulations !!!</B><BR><BR>You are cleared to adopt your next best friend<BR><BR><I>token:"+adopterId+"</I>";
 		
-			return displayResults;
-	}
-	
+		return displayResults;
+  	}
+	  
 	@GetMapping("/whoami")
 	public String whoami(Principal principal) {
 		if (principal == null) {
