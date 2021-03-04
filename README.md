@@ -106,10 +106,12 @@ It is designed to run on any k8s substrate.
 		  	//	e.g. curl -X GET "https://datacheck.apps.dekt.io/criminal-record/*" -H "accept: */*"
 		  LOGGER.info("adopterId " + adopterId + " has succefully completed criminal record check");
 
-		String displayResults = "<B>Congratulations !!!</B><BR><BR>You are cleared to adopt your next best friend<BR><BR><I>token:"+adopterId+"</I>";
+		String displayResults = "<h1>Congratulations,</h1>" + 
+								"<h2>You are cleared to adopt your next best friend.</h2>" +
+								"<p>token:"+adopterId+"</p>";
 		
 		return displayResults;
-  }
+  	}
 ```
 - ```./run-pipeline.sh patch-backend "add check-adopter api"```
 - show how build-service is invoking a new image build based on the git-commit-id
