@@ -49,11 +49,11 @@ public class AnimalController {
 		  	//	e.g. curl -X GET "https://datacheck.apps.dekt.io/criminal-record/*" -H "accept: */*"
 		  LOGGER.info("adopterId " + adopterId + " has succefully completed criminal record check");
 
-		String displayResults = "<B>Congratulations !!!</B><BR><BR>You are cleared to adopt your next best friend<BR><BR><I>token:"+adopterId+"</I>";
+		String displayResults = "<BIG><B>Congratulations !!!</B><BR><BR>You are cleared to adopt your next best friend<BR><BR></BIG><I>your token:"+adopterId+"</I>";
 		
 		return displayResults;
   	}
-	  
+
 	@GetMapping("/whoami")
 	public String whoami(Principal principal) {
 		if (principal == null) {
