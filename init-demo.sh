@@ -1,23 +1,26 @@
 #!/usr/bin/env bash
 
+#################### configs #######################
+    source secrets/config-values.env
+
+    HOST_NAME=$SUB_DOMAIN.$DOMAIN
+    HUB_SERVER_JAR_LOCATION=$API_HUB_INSTALL_DIR/api-hub-server/build/libs/api-hub-server-0.0.1-SNAPSHOT.jar
+    DET4PETS_FRONTEND_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION
+    DET4PETS_BACKEND_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION
+    FORTUNE_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/fortune-service:0.0.1
+    SBO_SERVER_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/spring-boot-observer-server:0.0.1
+    SBO_SIDECAR_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/spring-boot-observer-sidecar:0.0.1
+
 #################### functions #######################
 
 #install
 install() {
 
-    create-namespaces
-
-    create-secrets
+    create-namespaces-secrets
 
     install-core-services
     
-    setup-observer-examples
-
-    setup-starters-examples
-
-    setup-brownfield-apis
-
-    setup-dekt4pets-examples
+    setup-demo-examples
 
     echo
 	echo "Demo install completed. Enjoy your demo."
@@ -27,6 +30,8 @@ install() {
 #install core tanzu products
 install-core-services() {
     
+    update-configs
+
     install-gateway
 
     install-tss
@@ -40,8 +45,8 @@ install-core-services() {
     start-local-utilities
 }
 
-#create-namespaces
-create-namespaces () {
+#create-namespaces-secrets
+create-namespaces-secrets () {
 
     echo
     echo "===> Creating namespaces and secrets..."
@@ -53,17 +58,6 @@ create-namespaces () {
     kubectl create ns $TSS_NAMESPACE
     kubectl create ns $SBO_NAMESPACE
     kubectl create ns $BROWNFIELD_NAMESPACE
-
-    #dynamic values folders
-    mkdir {backend/.config,frontend/.config,gateway/.config,hub/.config,sbo/.config,tss/.config}
-}
-
-#create-secrets 
-create-secrets() {
-
-    echo
-    echo "===> Creating k8s secrets..."
-    echo
 
     #enable deployments in APP_NS to access private image registry 
     #need to be created with tbs cli and not kubectl to register the secret in TBS
@@ -98,8 +92,37 @@ create-secrets() {
 
     #for local images build and/or relocated to image registry
     docker login -u $IMG_REGISTRY_USER -p $IMG_REGISTRY_PASSWORD $IMG_REGISTRY_URL
+}
+
+#update-configs 
+update-configs() {
+
+    echo
+    echo "===> Updating runtime configurations..."
+    echo
+
+    #dynamic values folders
+    mkdir -p {backend/.config,frontend/.config,gateway/.config,hub/.config,sbo/.config,tss/.config}    
+    
+    update-dynamic-value "gateway" "dekt4pets-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
+    update-dynamic-value "gateway" "dekt4pets-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
+    update-dynamic-value "tss" "tss-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
+    update-dynamic-value "hub" "run-local-api-hub-server.sh" "{OPEN_API_URLS}" "http://scg-openapi.$HOST_NAME/openapi" "{RUNTIME_PATH_TO_API_HUB_JAR}" "$HUB_SERVER_JAR_LOCATION"
+    update-dynamic-value "hub" "scg-openapi-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
+    update-dynamic-value "sbo" "sbo-deployment.yaml" "{OBSERVER_SERVER_IMAGE}" "$SBO_SERVER_IMAGE_LOCATION"
+    update-dynamic-value "sbo" "sbo-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
+    update-dynamic-value "sbo" "fortune-sidecar-example.yaml" "{FORTUNE_IMAGE}" "$FORTUNE_IMAGE_LOCATION" "{OBSERVER_SIDECAR_IMAGE}" "$SBO_SIDECAR_IMAGE_LOCATION"
+    update-dynamic-value "sbo" "fortune-ingress.yaml" "{HOST_NAME}" "$SUB_DOMAIN.$DOMAIN"
+    update-dynamic-value "hub" "datacheck-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
+    update-dynamic-value "hub" "suppliers-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
+    update-dynamic-value "hub" "donations-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
+    update-dynamic-value "backend" "dekt4pets-backend-app.yaml" "{BACKEND_IMAGE}" "$DET4PETS_BACKEND_IMAGE_LOCATION" "{OBSERVER_SIDECAR_IMAGE}" "$SBO_SIDECAR_IMAGE_LOCATION"
+    update-dynamic-value "frontend" "dekt4pets-frontend-app.yaml" "{FRONTEND_IMAGE}" "$DET4PETS_FRONTEND_IMAGE_LOCATION" 
 
 
+    
+
+   
 }
 
 #install-gateway
@@ -112,10 +135,6 @@ install-gateway() {
     $GW_INSTALL_DIR/scripts/relocate-images.sh $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO
     
     $GW_INSTALL_DIR/scripts/install-spring-cloud-gateway.sh $GW_NAMESPACE
-
-    update-dynamic-value gateway dekt4pets-gateway.yaml {HOST_NAME} $SUB_DOMAIN.$DOMAIN
-    update-dynamic-value gateway dekt4pets-ingress.yaml {HOST_NAME} $SUB_DOMAIN.$DOMAIN
-  
 }
 
 #install starter service
@@ -124,8 +143,6 @@ install-tss() {
     echo
     echo "===> Install Tanzu Starter Service..."
     echo
-    
-    update-dynamic-value tss tss-ingress.yaml {HOST_NAME} $SUB_DOMAIN.$DOMAIN
     kustomize build tss | kubectl apply -f -
 
 }
@@ -162,9 +179,6 @@ install-apihub() {
     #./gradlew clean build
     #pushd
     
-    update-dynamic-value hub run-local-api-hub-server.sh {OPEN_API_URLS} http://scg-openapi.$SUB_DOMAIN.$DOMAIN/openapi {RUNTIME_PATH_TO_API_HUB_JAR} $API_HUB_INSTALL_DIR/api-hub-server/build/libs/api-hub-server-0.0.1-SNAPSHOT.jar
-    update-dynamic-value hub scg-openapi-ingress.yaml {HOST_NAME} $SUB_DOMAIN.$DOMAIN
-    
     kubectl apply -f hub/.config/scg-openapi-ingress.yaml -n $GW_NAMESPACE
 
     #until hub is available as a k8s deployment it will be started localy as part of start-local-utilities 
@@ -175,34 +189,18 @@ install-sbo () {
 
     #sbo/build-sbo-images.sh   
 
-    update-dynamic-value sbo sbo-deployment.yaml {OBSERVER_SERVER_IMAGE} $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/spring-boot-observer-server:0.0.1
-    update-dynamic-value sbo sbo-ingress.yaml {HOST_NAME} $SUB_DOMAIN.$DOMAIN
-
     # Create sbo deployment and ingress rule
     kubectl apply -f sbo/.config/sbo-deployment.yaml -n $SBO_NAMESPACE
     kubectl apply -f sbo/.config/sbo-ingress.yaml -n $SBO_NAMESPACE 
 }
 
-#setup-observer-examples
-setup-observer-examples() {
+#setup-demo-examples
+setup-demo-examples() {
 
     echo
     echo "===> Setup SBO fortune service example..."
     echo
-
-    # add the fortune service sample app
-    observer_sidecar_image_tag=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/spring-boot-observer-sidecar:0.0.1
-    fortune_image_tag=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/fortune-service:0.0.1
-
-    update-dynamic-value sbo fortune-sidecar-example.yaml {FORTUNE_IMAGE} $fortune_image_tag {OBSERVER_SIDECAR_IMAGE} $observer_sidecar_image_tag
-    update-dynamic-value sbo fortune-ingress.yaml {HOST_NAME} $SUB_DOMAIN.$DOMAIN
-
     kubectl apply -f sbo/.config/fortune-sidecar-example.yaml -n $APP_NAMESPACE 
-
-}
-
-#setup-starters-examples
-setup-starters-examples() {
 
     echo
     echo "===> Setup App Accelerator generators and starters..."
@@ -210,18 +208,13 @@ setup-starters-examples() {
     tss/dekt-starters/add-starters.sh
     #tss/msft-starters/add-starters.sh
 
-}
-
-#setup-brownfield-apis
-setup-brownfield-apis() {
-
     echo
     echo "===> Setup brownfield APIs expamples..."
     echo
-    update-dynamic-value hub datacheck-gateway.yaml {HOST_NAME} $SUB_DOMAIN.$DOMAIN
-    update-dynamic-value hub suppliers-gateway.yaml {HOST_NAME} $SUB_DOMAIN.$DOMAIN
-    update-dynamic-value hub donations-gateway.yaml {HOST_NAME} $SUB_DOMAIN.$DOMAIN
     kustomize build hub | kubectl apply -f -
+
+    setup-dekt4pets-examples
+
 }
 
 #setup-dekt4pets-examples
@@ -238,12 +231,9 @@ setup-dekt4pets-examples() {
     #--store default \
     #--namespace $APP_NAMESPACE
     
-    backend_image_tag=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION
-    observer_sidecar_image_tag=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/spring-boot-observer-sidecar:0.0.1
-    
-
+  
     kp image create $BACKEND_TBS_IMAGE \
-	--tag $backend_image_tag \
+	--tag $DET4PETS_BACKEND_IMAGE_LOCATION \
     --git $DEMO_APP_GIT_REPO  \
 	--git-revision main \
 	--sub-path ./backend \
@@ -251,33 +241,26 @@ setup-dekt4pets-examples() {
 	--wait
     #--builder $BUILDER_NAME \
 
-    update-dynamic-value backend dekt4pets-backend-app.yaml {BACKEND_IMAGE} $backend_image_tag {OBSERVER_SIDECAR_IMAGE} $observer_sidecar_image_tag
-    
-
     echo
     echo "===> Setup dekt4pets TBS frontend image..."
     echo
     
-    frontend_image_tag=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION
-
     #frontend
     #"!! since animals-frontend does *not* currently compile with TBS, 
     # as a workaround we relocate the image from springcloudservices/animal-rescue-frontend"
     
     docker pull springcloudservices/animal-rescue-frontend
-    docker tag springcloudservices/animal-rescue-frontend:latest $frontend_image_tag
-    docker push $frontend_image_tag
+    docker tag springcloudservices/animal-rescue-frontend:latest $DET4PETS_FRONTEND_IMAGE_LOCATION
+    docker push $DET4PETS_FRONTEND_IMAGE_LOCATION
 
     #kp image create $FRONTEND_TBS_IMAGE \
-	#--tag $FRONTEND_IMAGE_NAME \
+	#--tag $DET4PETS_FRONTEND_IMAGE_LOCATION \
 	#--git $DEMO_APP_GIT_REPO\
     #--git-revision main \
    	#--sub-path ./frontend \
 	#--namespace $APP_NAMESPACE \
 	#--wait
-
-    update-dynamic-value frontend dekt4pets-frontend-app.yaml {FRONTEND_IMAGE} $frontend_image_tag
-    
+ 
 }
 
 #start local utilities
@@ -290,15 +273,19 @@ start-local-utilities() {
 }
 
 #update-dynamic-value
-#params: sub-folder, org-file-to-update, find-key1, replace-value1, find-key2, replace-value2
 update-dynamic-value() {
-    cp $1/$2 $1/.config/$2
-    perl -pi -w -e "s|$3|$4|g;" $1/.config/$2
 
-    if  [ "$5" != "" ]; then 
-        perl -pi -w -e "s|$5|$6|g;" $1/.config/$2
-    fi
+    subFolder=$1
+    fileName=$2
+    find=($3 $5 $7)
+    replace=($4 $6 $8)
+    
+    cp $subFolder/$fileName $subFolder/.config/$fileName
 
+    for i in ${!find[@]}; do
+        perl -pi -w -e "s|${find[$i]}|${replace[$i]}|g;" $subFolder/.config/$fileName
+    done
+    
 }
 
 #cleanup
@@ -330,14 +317,14 @@ remove-examples() {
     
     kustomize build dekt4pets/backend | kubectl delete -f -
     kustomize build dekt4pets/frontend | kubectl delete -f -
-    kubectl delete -f dekt4pets/gateway/dekt4pets-ingress.yaml -n $APP_NAMESPACE
+    kubectl delete -f dekt4pets/gateway/.config/dekt4pets-ingress.yaml -n $APP_NAMESPACE
     kustomize build dekt4pets/gateway | kubectl delete -f -
     kustomize build tss | kubectl delete -f -
     kustomize build legacy-apis | kubectl delete -f -
     helm uninstall spring-cloud-gateway -n $GW_NAMESPACE
     kapp deploy -a tanzu-build-service -y
-    kubectl delete -f sbo/sbo-deployment.yaml -n $SBO_NAMESPACE
-    kubectl delete -f sbo/sbo-ingress.yaml -n $SBO_NAMESPACE 
+    kubectl delete -f sbo/.config/sbo-deployment.yaml -n $SBO_NAMESPACE
+    kubectl delete -f sbo/.config/sbo-ingress.yaml -n $SBO_NAMESPACE 
     kubectl delete ns dekt-apps
     kubectl delete ns tss-system
     kubectl delete ns scgw-system 
@@ -361,8 +348,6 @@ incorrect-usage() {
 
 #################### main #######################
 
-source secrets/config-values.env
-
 case $1 in
 aks)
     k8s-builders/build-aks-cluster.sh create $CLUSTER_NAME 5 #nodes
@@ -376,9 +361,7 @@ cleanup)
 	cleanup $2
     ;;
 unit-test)
-    #backend_image_tag=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION
-    #observer_sidecar_image_tag=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/spring-boot-observer-sidecar:0.0.1
-    #update-dynamic-value backend dekt4pets-backend-app.yaml {BACKEND_IMAGE} $backend_image_tag {OBSERVER_SIDECAR_IMAGE} $observer_sidecar_image_tag
+    update-configs 
     ;;
 *)
     incorrect-usage
