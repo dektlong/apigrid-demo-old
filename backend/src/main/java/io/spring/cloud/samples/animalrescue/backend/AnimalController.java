@@ -49,7 +49,9 @@ public class AnimalController {
 		  	//	e.g. curl -X GET "https://datacheck.apps.dekt.io/criminal-record/*" -H "accept: */*"
 		  LOGGER.info("adopterId " + adopterId + " has succefully completed criminal record check");
 
-		String displayResults = "<BIG><B>Congratulations !!!</B><BR><BR>You are cleared to adopt your next best friend<BR><BR></BIG><I>your token:"+adopterId+"</I>";
+		String displayResults = "<h1>Congratulations !!!</h1>" + 
+								"<h2>You are cleared to adopt your next best friend.</h2>" +
+								"<p>your token:"+adopterId+"</p>";
 		
 		return displayResults;
   	}
