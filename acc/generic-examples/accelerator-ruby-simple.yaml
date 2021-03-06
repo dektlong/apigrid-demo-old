@@ -3,8 +3,6 @@ actionNames:
 description: A basic hello world Ruby and Sinatra app
 displayName: Sample Ruby App
 framework: Sinatra
-generatorNames:
-- none
 homeUrl: https://github.com/simple-starters/hello-ruby
 iconUrl: https://raw.githubusercontent.com/simple-starters/icons/master/icon-ruby.png
 language: Ruby

@@ -216,7 +216,8 @@ setup-demo-examples() {
     echo
     echo "===> Setup App Accelerator examples..."
     echo
-    acc/add-examples.sh generic #or msft
+    acc/add-examples.sh generic http://acc.$HOST_NAME
+    #or msft
     
     echo
     echo "===> Setup brownfield APIs expamples..."
