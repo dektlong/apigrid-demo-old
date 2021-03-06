@@ -10,7 +10,6 @@
     FORTUNE_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/fortune-service:0.0.1
     SBO_SERVER_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/spring-boot-observer-server:0.0.1
     SBO_SIDECAR_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/spring-boot-observer-sidecar:0.0.1
-    APP_NAMESPACE="dekt-apps"
     GW_NAMESPACE="scgw-system"
     TSS_NAMESPACE="tss-system"
     SBO_NAMESPACE="sbo-system"
