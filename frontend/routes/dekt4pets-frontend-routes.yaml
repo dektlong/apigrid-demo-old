@@ -17,3 +17,8 @@ spec:
         - Path=/rescue/**
         - Method=GET
       order: 1000
+    - predicates:
+        - Path=/api/check-adopter
+        - Method=GET
+      ssoEnabled: true
+      tokenRelay: true 

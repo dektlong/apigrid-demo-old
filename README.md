@@ -92,26 +92,20 @@ It is designed to run on any k8s substrate.
 
     	String adopterId = adopter.getName();
     
-		//--------------
-		// check for valid adoption history
-		//---------------
-			//	use the Hub verified adoption-history API call
-		  	//	e.g. curl -X GET "https://datacheck.apps.dekt.io/adoption-history/*" -H "accept: */*"
+		  //check for valid adoption history
+		 	//	e.g. curl -X GET "https://datacheck.apps.dekt.io/adoption-history/*" -H "accept: */*"
 			LOGGER.info("adopterId " + adopterId + " has succefully completed adoption history check");
 
-    	//--------------
-		// check for clear criminal-record
-		//---------------
-			//	use the Hub verified criminal-record call
-		  	//	e.g. curl -X GET "https://datacheck.apps.dekt.io/criminal-record/*" -H "accept: */*"
+    	// check for clear criminal-record
+	  	//	e.g. curl -X GET "https://datacheck.apps.dekt.io/criminal-record/*" -H "accept: */*"
 		  LOGGER.info("adopterId " + adopterId + " has succefully completed criminal record check");
 
-		String displayResults = "<h1>Congratulations,</h1>" + 
+  		String displayResults = "<h1>Congratulations,</h1>" + 
 								"<h2>You are cleared to adopt your next best friend.</h2>" +
 								"<p>token:"+adopterId+"</p>";
 		
-		return displayResults;
-  	}
+	  	return displayResults;
+  }
 ```
 - ```./run-pipeline.sh patch-backend "add check-adopter api"```
 - show how build-service is invoking a new image build based on the git-commit-id
