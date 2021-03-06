@@ -38,7 +38,7 @@ install-core-services() {
 
     install-gateway
 
-    install-ACC
+    install-acc
     
     install-tbs
     
