@@ -5,6 +5,6 @@ namespace: acc-system
 resources:
   - acc-server-configmap.yaml
   - acc-server-deployment.yaml
-  #- tss-server-pvc.yaml
+  - acc-server-pvc.yaml
   - acc-server-service.yaml
   - .config/acc-ingress.yaml

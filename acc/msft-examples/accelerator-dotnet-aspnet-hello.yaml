@@ -1,6 +1,3 @@
-actionNames:
-- github-repo-create-two-X
-- github-repo-create
 description: The Hello World ASP.NET application with SSO integration deployed as
   web app to Azure
 displayName: Base ASP.NET MVC Application -X

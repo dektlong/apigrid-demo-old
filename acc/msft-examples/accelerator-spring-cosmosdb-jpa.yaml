@@ -1,6 +1,3 @@
-actionNames:
-- github-repo-create
-- github-repo-create-two-X
 description: 'A Spring Boot application that connects to an Azure Cosmos DB using
   Spring Data JPA '
 displayName: Spring Data JPA with Azure Cosmos DB

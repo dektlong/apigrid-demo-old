@@ -1,6 +1,3 @@
-actionNames:
-- github-repo-create
-- github-repo-create-two-X
 description: A sample Boot function, that runs on Azure Functions, and is configured
   with Spring Cloud Function.
 displayName: Simple Boot Function deployed to Azure Functions

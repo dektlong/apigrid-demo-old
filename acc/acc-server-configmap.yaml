@@ -7,11 +7,13 @@ data:
   application-database.yaml: |
     spring:
       datasource:
-        url: jdbc:h2:mem:tssdb
+        url: jdbc:h2:file:/app/data/accdb
       jpa:
         generate-ddl: true
         hibernate:
-          ddl-auto: create
+          ddl-auto: validate
+      flyway:
+        locations: 'classpath:db/migration/{vendor}'
   application.yaml: |
     server:
       port: 8080

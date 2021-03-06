@@ -88,7 +88,7 @@ create-namespaces-secrets () {
         --namespace=$SBO_NAMESPACE
 
     #enable ACC to access dev.registry.pivotal.io
-    kubectl create secret docker-registry imagereg-secret \
+    kubectl create secret docker-registry acc-image-regcred \
         --docker-server=dev.registry.pivotal.ioL \
         --docker-username=$TANZU_NETWORK_USER \
         --docker-password=$TANZU_NETWORK_PASSWORD \
@@ -148,11 +148,11 @@ install-gateway() {
     $GW_INSTALL_DIR/scripts/install-spring-cloud-gateway.sh $GW_NAMESPACE
 }
 
-#install starter service
+#install tanzu app accelerator 
 install-acc() {
 
     echo
-    echo "===> Install Tanzu Starter Service..."
+    echo "===> Install Tanzu Application Accelerator..."
     echo
     kustomize build acc | kubectl apply -f -
 
@@ -214,11 +214,10 @@ setup-demo-examples() {
     kubectl apply -f sbo/.config/fortune-sidecar-example.yaml -n $APP_NAMESPACE 
 
     echo
-    echo "===> Setup App Accelerator generators and starters..."
+    echo "===> Setup App Accelerator examples..."
     echo
-    acc/dekt-starters/add-starters.sh
-    #acc/msft-starters/add-starters.sh
-
+    acc/add-examples.sh generic #or msft
+    
     echo
     echo "===> Setup brownfield APIs expamples..."
     echo
@@ -372,7 +371,7 @@ cleanup)
 	cleanup $2
     ;;
 unit-test)
-    update-configs 
+    acc/add-examples.sh msft
     ;;
 *)
     incorrect-usage

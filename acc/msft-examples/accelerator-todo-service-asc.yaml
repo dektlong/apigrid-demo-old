@@ -1,6 +1,3 @@
-actionNames:
-- github-repo-create
-- github-repo-create-two-X
 description: A Spring Boot microservice that uses Azure Spring Cloud services to manage
   API for TODO(s)
 displayName: TODO(s) sample Boot app using Spring Cloud Services

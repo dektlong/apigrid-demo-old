@@ -3,36 +3,34 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: acc-server
     app.kubernetes.io/name: acc-server
+    app.kubernetes.io/part-of: acc-server
   name: acc-server
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: acc-server
       app.kubernetes.io/name: acc-server
   template:
     metadata:
       labels:
-        app: acc-server
         app.kubernetes.io/name: acc-server
     spec:
-      imagePullSecrets: 
-      - name: imagereg-secret
       containers:
       - name: acc-server
         env:
+        - name: SERVER_PORT
+          value: '8080'
         - name: SPRING_PROFILES_ACTIVE
           value: database
         - name: SPRING_CONFIG_ADDITIONAL_LOCATION
           value: /app/runtime/config/
-        image: dev.registry.pivotal.io/app-accelerator/acc-server:1.0.0-SNAPSHOT-2021-03-05T14-19-53Z
+        image: dev.registry.pivotal.io/app-accelerator/acc-server:1.0.0-SNAPSHOT-2021-03-02T21-41-25Z
         livenessProbe:
           httpGet:
             path: /actuator/health/liveness
             port: 8080
-          initialDelaySeconds: 30
+          initialDelaySeconds: 90
           periodSeconds: 30
         ports:
         - containerPort: 80
@@ -53,7 +51,17 @@ spec:
         - mountPath: /app/runtime/config
           name: config
           readOnly: true
+        - mountPath: /app/data
+          name: data
+      imagePullSecrets:
+      - name: acc-image-regcred
+      securityContext:
+        fsGroup: 1001
+        runAsUser: 1001
       volumes:
       - name: config
         configMap:
           name: acc-server
+      - name: data
+        persistentVolumeClaim:
+          claimName: accdb

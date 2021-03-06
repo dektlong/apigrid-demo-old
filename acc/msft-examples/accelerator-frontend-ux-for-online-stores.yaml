@@ -1,6 +1,3 @@
-actionNames:
-- github-repo-create
-- github-repo-create-two-X
 description: Starter to create fronted UX for online Stores
 displayName: Frontend UX for Online Stores
 framework: Spring Boot
