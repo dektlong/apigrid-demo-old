@@ -10,7 +10,7 @@ frontend/.config
 gateway/.config
 hub/.config
 sbo/.config
-tss/.config
+acc/.config
 
 # Ignore files related to config values and credentials
 .env
