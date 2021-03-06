@@ -1,0 +1,15 @@
+commands: |-
+  k8s new
+  k8s update
+description: Deploy a Spring Boot application on k8s and add kustomize and skaffold configuration files
+displayName: Spring Boot on Kubernetes using kustomize and skaffold 
+homeUrl: https://github.com/simple-starters/generator-boot-k8s-kustomize-skaffold
+iconUrl: https://icon-library.com/images/rick-sanchez-icon/rick-sanchez-icon-24.jpg
+maintainer: mpollack@vmware.com
+name: boot-k8s-kustomize
+sourceUrl: github.com/simple-starters/generator-boot-k8s-kustomize-skaffold?ref=1.0.1
+tags:
+- kustomize
+- skaffold
+- kubernetes
+version: 1.0.1

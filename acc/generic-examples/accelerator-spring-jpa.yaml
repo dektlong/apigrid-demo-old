@@ -1,0 +1,15 @@
+description: A Spring Boot application that connects to a PostgreSQL database and
+  uses Spring Data JPA to access the database.  Contains code for accessing Quote
+  data.
+displayName: Spring Data JPA with Postgres
+framework: Spring Boot
+generatorNames:
+- docker-compose
+homeUrl: https://github.com/markpollack/docker-compose-postgres
+iconUrl: https://raw.githubusercontent.com/simple-starters/icons/master/icon-data.png
+language: Java
+services: PostgreSQL
+maintainer: https://github.com/markpollack
+name: spring-postgres-jpa
+sourceUrl: github.com/markpollack/docker-compose-postgres?ref=1.0.0
+version: 1.0.0
