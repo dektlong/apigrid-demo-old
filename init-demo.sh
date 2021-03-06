@@ -89,7 +89,7 @@ create-namespaces-secrets () {
 
     #enable ACC to access dev.registry.pivotal.io
     kubectl create secret docker-registry acc-image-regcred \
-        --docker-server=dev.registry.pivotal.ioL \
+        --docker-server=dev.registry.pivotal.io \
         --docker-username=$TANZU_NETWORK_USER \
         --docker-password=$TANZU_NETWORK_PASSWORD \
         --namespace=$ACC_NAMESPACE 
@@ -371,7 +371,7 @@ cleanup)
 	cleanup $2
     ;;
 unit-test)
-    acc/add-examples.sh msft
+    acc/add-examples.sh generic
     ;;
 *)
     incorrect-usage
