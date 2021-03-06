@@ -81,7 +81,14 @@ create-namespaces-secrets () {
         --docker-server=$IMG_REGISTRY_URL \
         --docker-username=$IMG_REGISTRY_USER \
         --docker-password=$IMG_REGISTRY_PASSWORD \
-        --namespace=$SBO_NAMESPACE 
+        --namespace=$SBO_NAMESPACE
+
+    #enable TSS to access dev.registry.pivotal.io
+    kubectl create secret docker-registry imagereg-secret \
+        --docker-server=dev.registry.pivotal.ioL \
+        --docker-username=$TANZU_NETWORK_USER \
+        --docker-password=$TANZU_NETWORK_PASSWORD \
+        --namespace=$TSS_NAMESPACE 
    
     #sso secret for dekt4pets-gatway 
     kubectl create secret generic dekt4pets-sso --from-env-file=secrets/dekt4pets-sso.txt -n $APP_NAMESPACE

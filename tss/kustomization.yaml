@@ -3,7 +3,6 @@ kind: Kustomization
 namespace: tss-system
 
 resources:
-  - tss-image-regcred-secret.yaml
   - tss-server-configmap.yaml
   - tss-server-deployment.yaml
   #- tss-server-pvc.yaml

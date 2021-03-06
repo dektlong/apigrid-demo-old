@@ -18,6 +18,8 @@ spec:
         app: tss-server
         app.kubernetes.io/name: tss-server
     spec:
+      imagePullSecrets: 
+      - name: imagereg-secret
       containers:
       - name: tss-server
         env:
@@ -51,8 +53,6 @@ spec:
         - mountPath: /app/runtime/config
           name: config
           readOnly: true
-      imagePullSecrets:
-      - name: tss-image-regcred
       volumes:
       - name: config
         configMap:
