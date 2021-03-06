@@ -11,7 +11,7 @@
     SBO_SERVER_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/spring-boot-observer-server:0.0.1
     SBO_SIDECAR_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/spring-boot-observer-sidecar:0.0.1
     GW_NAMESPACE="scgw-system"
-    TSS_NAMESPACE="tss-system"
+    ACC_NAMESPACE="ACC-system"
     SBO_NAMESPACE="sbo-system"
     BROWNFIELD_NAMESPACE="brownfield-apis"
 
@@ -38,7 +38,7 @@ install-core-services() {
 
     install-gateway
 
-    install-tss
+    install-ACC
     
     install-tbs
     
@@ -59,7 +59,7 @@ create-namespaces-secrets () {
     #namespaces
     kubectl create ns $APP_NAMESPACE
     kubectl create ns $GW_NAMESPACE
-    kubectl create ns $TSS_NAMESPACE
+    kubectl create ns $ACC_NAMESPACE
     kubectl create ns $SBO_NAMESPACE
     kubectl create ns $BROWNFIELD_NAMESPACE
 
@@ -87,12 +87,12 @@ create-namespaces-secrets () {
         --docker-password=$IMG_REGISTRY_PASSWORD \
         --namespace=$SBO_NAMESPACE
 
-    #enable TSS to access dev.registry.pivotal.io
+    #enable ACC to access dev.registry.pivotal.io
     kubectl create secret docker-registry imagereg-secret \
         --docker-server=dev.registry.pivotal.ioL \
         --docker-username=$TANZU_NETWORK_USER \
         --docker-password=$TANZU_NETWORK_PASSWORD \
-        --namespace=$TSS_NAMESPACE 
+        --namespace=$ACC_NAMESPACE 
    
     #sso secret for dekt4pets-gatway 
     kubectl create secret generic dekt4pets-sso --from-env-file=secrets/dekt4pets-sso.txt -n $APP_NAMESPACE
@@ -113,11 +113,11 @@ update-configs() {
     echo
 
     #dynamic values folders
-    mkdir -p {backend/.config,frontend/.config,gateway/.config,hub/.config,sbo/.config,tss/.config}    
+    mkdir -p {backend/.config,frontend/.config,gateway/.config,hub/.config,sbo/.config,ACC/.config}    
     
     update-dynamic-value "gateway" "dekt4pets-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
     update-dynamic-value "gateway" "dekt4pets-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
-    update-dynamic-value "tss" "tss-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
+    update-dynamic-value "acc" "acc-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
     update-dynamic-value "hub" "run-local-api-hub-server.sh" "{OPEN_API_URLS}" "http://scg-openapi.$HOST_NAME/openapi" "{RUNTIME_PATH_TO_API_HUB_JAR}" "$HUB_SERVER_JAR_LOCATION"
     update-dynamic-value "hub" "scg-openapi-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
     update-dynamic-value "sbo" "sbo-deployment.yaml" "{OBSERVER_SERVER_IMAGE}" "$SBO_SERVER_IMAGE_LOCATION"
@@ -149,12 +149,12 @@ install-gateway() {
 }
 
 #install starter service
-install-tss() {
+install-acc() {
 
     echo
     echo "===> Install Tanzu Starter Service..."
     echo
-    kustomize build tss | kubectl apply -f -
+    kustomize build acc | kubectl apply -f -
 
 }
 
@@ -216,8 +216,8 @@ setup-demo-examples() {
     echo
     echo "===> Setup App Accelerator generators and starters..."
     echo
-    tss/dekt-starters/add-starters.sh
-    #tss/msft-starters/add-starters.sh
+    acc/dekt-starters/add-starters.sh
+    #acc/msft-starters/add-starters.sh
 
     echo
     echo "===> Setup brownfield APIs expamples..."
@@ -330,14 +330,14 @@ remove-examples() {
     kustomize build dekt4pets/frontend | kubectl delete -f -
     kubectl delete -f dekt4pets/gateway/.config/dekt4pets-ingress.yaml -n $APP_NAMESPACE
     kustomize build dekt4pets/gateway | kubectl delete -f -
-    kustomize build tss | kubectl delete -f -
+    kustomize build acc | kubectl delete -f -
     kustomize build legacy-apis | kubectl delete -f -
     helm uninstall spring-cloud-gateway -n $GW_NAMESPACE
     kapp deploy -a tanzu-build-service -y
     kubectl delete -f sbo/.config/sbo-deployment.yaml -n $SBO_NAMESPACE
     kubectl delete -f sbo/.config/sbo-ingress.yaml -n $SBO_NAMESPACE 
     kubectl delete ns dekt-apps
-    kubectl delete ns tss-system
+    kubectl delete ns acc-system
     kubectl delete ns scgw-system 
     kubectl delete ns sbo-system 
 
