@@ -1,0 +1,59 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: acc-server
+    app.kubernetes.io/name: acc-server
+  name: acc-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: acc-server
+      app.kubernetes.io/name: acc-server
+  template:
+    metadata:
+      labels:
+        app: acc-server
+        app.kubernetes.io/name: acc-server
+    spec:
+      imagePullSecrets: 
+      - name: imagereg-secret
+      containers:
+      - name: acc-server
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: database
+        - name: SPRING_CONFIG_ADDITIONAL_LOCATION
+          value: /app/runtime/config/
+        image: dev.registry.pivotal.io/app-accelerator/acc-server:1.0.0-SNAPSHOT-2021-03-05T14-19-53Z
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        ports:
+        - containerPort: 80
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 15
+        resources:
+          limits:
+            cpu: 1
+            memory: 768Mi
+          requests:
+            cpu: 500m
+            memory: 768Mi
+        volumeMounts:
+        - mountPath: /app/runtime/config
+          name: config
+          readOnly: true
+      volumes:
+      - name: config
+        configMap:
+          name: acc-server

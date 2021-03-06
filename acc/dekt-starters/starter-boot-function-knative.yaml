@@ -1,0 +1,15 @@
+actionNames:
+- github-repo-create
+description: A basic hello world Spring Cloud Function serverless app with GraalVM
+  Native Image Compilation
+displayName: Spring Cloud Function Serverless Native Image App
+framework: Spring Cloud
+generatorNames:
+- boot-knative-graalvm
+homeUrl: https://github.com/simple-starters/native-fun
+iconUrl: https://raw.githubusercontent.com/simple-starters/icons/master/icon-cloud.png
+language: Java
+maintainer: https://github.com/trisberg
+name: native-fun
+sourceUrl: github.com/simple-starters/native-fun?ref=v0.0.4
+version: 0.0.4

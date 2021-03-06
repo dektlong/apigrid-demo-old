@@ -1,0 +1,9 @@
+commands: none new
+description: Deploy ASP.NET Core Steeltoe application on Azure Spring Cloud and add  Spring Cloud Services configurations
+displayName: Deploy Steetoe apps on Azure Spring Cloud
+homeUrl: https://github.com/simple-starters/generator-none
+iconUrl: https://icon-library.com/images/rick-sanchez-icon/rick-sanchez-icon-24.jpg
+maintainer: risbergt@vmware.com
+name: steeltoe-azure-spring-cloud
+sourceUrl: github.com/simple-starters/generator-none
+version: 1.0.0

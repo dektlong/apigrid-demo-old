@@ -1,0 +1,12 @@
+commands: k8s-simple new
+description: 'Deploy a Spring Boot application on AKS and configure database access '
+displayName: Spring Boot on AKS using data access
+homeUrl: https://github.com/simple-starters/generator-k8s-skaffold
+iconUrl: https://icon-library.com/images/rick-sanchez-icon/rick-sanchez-icon-24.jpg
+maintainer: risbergt@vmware.com
+name: boot-aks-data
+sourceUrl: github.com/simple-starters/generator-k8s-skaffold
+tags:
+- kubernetes
+- spring
+version: 1.0.0

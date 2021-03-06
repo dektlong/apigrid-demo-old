@@ -1,0 +1,15 @@
+commands: |-
+  k8s new
+  k8s update
+description: Deploy a Spring Boot application on Azure Spring Cloud adding Spring Cloud Services configurations.
+displayName: Spring Boot on Azure Spring Cloud using Spring Cloud Services
+homeUrl: https://github.com/simple-starters/generator-boot-k8s-kustomize-skaffold
+iconUrl: https://icon-library.com/images/rick-sanchez-icon/rick-sanchez-icon-24.jpg
+maintainer: mpollack@vmware.com
+name: boot-azure-spring-cloud
+sourceUrl: github.com/simple-starters/generator-boot-k8s-kustomize-skaffold?ref=1.0.1
+tags:
+- skaffold
+- kubernetes
+- spring
+version: 1.0.1

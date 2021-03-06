@@ -1,0 +1,11 @@
+commands: none new
+description: Does not add additional deployment configuration to the new project.
+displayName: No deployment configuation
+homeUrl: https://github.com/simple-starters/generator-none
+iconUrl: https://icon-library.com/images/rick-sanchez-icon/rick-sanchez-icon-24.jpg
+maintainer: risbergt@vmware.com
+name: none
+sourceUrl: github.com/simple-starters/generator-none
+tags:
+- none
+version: 1.0.0

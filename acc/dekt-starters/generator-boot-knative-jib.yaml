@@ -1,0 +1,17 @@
+commands: |-
+  knative new
+  knative update
+description: Deploy a Spring Boot application using Jib for build, kustomize off-the-shell
+  kustomizations for Knative Service, and deploy using skaffold.
+displayName: Spring Boot with Knative Service using Kustomize and Skaffold
+homeUrl: https://github.com/simple-starters/generator-knative-kustomize-skaffold
+iconUrl: https://avatars3.githubusercontent.com/u/35583233?s=280&v=4
+maintainer: trisberg@pivotal.io
+name: knative-kustomize-skaffold
+sourceUrl: github.com/simple-starters/generator-knative-kustomize-skaffold
+tags:
+- skaffold
+- kubernetes
+- knative
+- jib
+version: 1.0.0
