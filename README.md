@@ -45,7 +45,8 @@ It is designed to run on any k8s substrate.
 - Access TSS on ```tss.<SUB_DOMAIN>.<DOMAIN>```
 - Admin view: Show available Starters and Generators
 - Admin view: Create a new backend-api-for-online-stores with online-store as the tag
-  - see example of Starter source repo here: ```https://github.com/dektlong/store-backend-api```
+  - see example of a generator source repo here: ```https://github.com/dektlong/generator-boot-api-k8s```
+  - see example of an accelerator source repo here: ```https://github.com/dektlong/store-backend-api```
 - Developer view: Click on online-store tag and show both frontend and backend Starters
 - Developer view: Select the new ```backend-api-for-online-stores``` Starter and provide your own name (e.g. dekt4pets-backend)
 - Generate and open the zip in your local IDE
