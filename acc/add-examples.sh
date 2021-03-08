@@ -45,7 +45,7 @@ add-msft-examples() {
 #incorrect usage
 incorrect-usage() {
     echo
-    echo "Incorrect usage. Please specify generic | msft and an acc cli target url"
+    
     echo
     exit
 }
@@ -60,6 +60,6 @@ msft)
     add-msft-examples
     ;;
 *)
-    
+    echo "Incorrect usage. Please specify generic or msft"
     ;;
 esac
