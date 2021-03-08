@@ -12,7 +12,7 @@ init () {
 #add generic examples
 add-generic-examples() {
 
-    generators_files=("generator-boot-k8s-kubectl.yaml" "generator-boot-k8s-jpa.yaml" "generator-boot-k8s-kustomize.yaml" "generator-boot-knative-graalvm.yaml" "generator-boot-knative-jib.yaml" "generator-boot-cloudfoundry.yaml" "generator-docker-compose.yaml" "generator-web-k8s.yaml" "generator-steeltoe-k8s-skaffold.yaml" "generator-steeltoe-azure-spring-cloud.yaml")
+    generators_files=("generator-boot-api-k8s.yaml" "generator-boot-k8s-kubectl.yaml" "generator-boot-k8s-jpa.yaml" "generator-boot-k8s-kustomize.yaml" "generator-boot-knative-graalvm.yaml" "generator-boot-knative-jib.yaml" "generator-boot-cloudfoundry.yaml" "generator-docker-compose.yaml" "generator-web-k8s.yaml" "generator-steeltoe-k8s-skaffold.yaml" "generator-steeltoe-azure-spring-cloud.yaml")
     accelerators_files=("accelerator-music-store-steeltoe.yaml" "accelerator-ebanking.yaml" "accelerator-todo-service.yaml" "accelerator-function-kafka.yaml" "accelerator-spring-jpa.yaml" "accelerator-ruby-simple.yaml" "accelerator-dotnet-aspnet-hello.yaml" "accelerator-boot-function-knative.yaml" "accelerator-frontend-ux-for-online-stores.yaml")
     
     for i in ${!generators_files[@]}; do
