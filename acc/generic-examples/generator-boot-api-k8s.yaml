@@ -1,5 +1,5 @@
 commands: |-
-  api-boot-k8s core
+  api-boot-k8s app
   api-boot-k8s api
 description: Deploy a Micro-API based Boot application to Kuberentes and add kubectl configuration files
 displayName: Micro-api and Boot on Kuberentes using kubectl
