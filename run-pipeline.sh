@@ -119,6 +119,15 @@ patch-backend() {
 
 }
 
+#deploy-to-TAS
+deploy-to-TAS() {
+    
+    cf api $TAS_API_URI --skip-ssl-validation
+    
+    cf login -u $TAS_USER -p $TAS_PASSWORD -o $TAS_ORG -s $TAS_SPACE
+
+    cf create-service p.gateway standard dekt4pets-gw -c gateway/dekt4pets-gateway.json
+}
 #info
 info() {
 	echo
