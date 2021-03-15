@@ -2,7 +2,7 @@
 
 open -a Terminal ~/Dropbox/Work/code/tss/run-server.sh
 
-sleep 10
+sleep 15
 
 acc/add-examples.sh generic
 

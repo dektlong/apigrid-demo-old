@@ -1,6 +1,6 @@
 commands: |-
-  api-boot-k8s app
-  api-boot-k8s api
+  api-boot-k8s application
+  api-boot-k8s gateway
 description: Deploy a Micro-API based Boot application to Kuberentes and add kubectl configuration files
 displayName: Micro-api and Boot on Kuberentes using kubectl
 homeUrl: github.com/dektlong/generator-boot-api-k8s

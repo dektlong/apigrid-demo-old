@@ -30,8 +30,6 @@ add-msft-examples() {
     generators_files=("generator-aks-resource-simple.yaml" "generator-boot-aks-data.yaml" "generator-boot-asc.yaml" "generator-boot-function-azure.yaml" "generator-cloudfoundry.yaml" "generator-docker-compose.yaml" "generator-dotnet-web-azure.yaml" "generator-kubernetes-steeltoe-skaffold.yaml" "generator-none.yaml" "generator-steeltoe-asc.yaml")
     accelerators_files=("accelerator-music-store-steeltoe.yaml" "accelerator-todo-service-asc.yaml" "accelerator-spring-cosmosdb-jpa.yaml" "accelerator-dotnet-aspnet-hello.yaml" "accelerator-boot-function-azure.yaml" "accelerator-frontend-ux-for-online-stores.yaml")
 
-    acc login -u admin -p admin
-
     for i in ${!generators_files[@]}; do
         acc generator create-from-file --file=acc/msft-examples/${generators_files[$i]}
     done
