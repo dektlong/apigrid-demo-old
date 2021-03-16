@@ -4,7 +4,7 @@ open -a Terminal ~/Dropbox/Work/code/tss/run-server.sh
 
 sleep 15
 
-acc/add-examples.sh spring
+acc/add-examples.sh dotnet
 
 open http://apps.dekt-dev.io:8877/dashboard/
 

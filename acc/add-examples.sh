@@ -22,8 +22,8 @@ add-spring-examples() {
 #add dotnet examples
 add-dotnet-examples() {
 
-    GENERATORS_FILES=("boot-api-k8s" "dotnet-k8s" "aks-resource-simple" "boot-aks-data" "boot-asc" "boot-function-azure" "cloudfoundry" "docker-compose" "dotnet-web-azure" "kubernetes-steeltoe-skaffold" "steeltoe-asc" "boot-knative-graalvm")
-    ACCELERATORS_FILES=("dotnet5-webapp" "music-store-steeltoe" "todo-service-asc" "jpa-sqlserver" "spring-cosmosdb-jpa" "dotnet-aspnet-hello" "boot-function-azure" "frontend-ux-for-online-stores")
+    GENERATORS_FILES=("boot-api-k8s" "web-k8s" "aks-resource-simple" "boot-aks-data" "boot-asc" "boot-function-azure" "boot-cloudfoundry" "docker-compose" "dotnet-web-azure" "kubernetes-steeltoe-skaffold" "steeltoe-asc" "boot-knative-graalvm")
+    ACCELERATORS_FILES=("dotnet-SQLServer-EFCore" "music-store-steeltoe" "todo-service-asc" "jpa-sqlserver" "spring-cosmosdb-jpa" "dotnet-aspnet-hello" "boot-function-azure" "frontend-ux-for-online-stores")
 
     import-files
 }

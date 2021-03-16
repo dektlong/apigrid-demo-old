@@ -1,9 +1,0 @@
-commands: dotnet-docker new
-description: ASP .NET application on Kubernetes 
-displayName: Configure ASP .NET application on Kubernetes using kubectl  
-homeUrl: https://github.com/dektlong/generator-dotnet-k8s
-iconUrl: https://icon-library.com/images/rick-sanchez-icon/rick-sanchez-icon-24.jpg
-maintainer: dekt
-name: generator-dotnet-k8s
-sourceUrl: https://github.com/dektlong/generator-dotnet-k8s
-version: 0.0.1
