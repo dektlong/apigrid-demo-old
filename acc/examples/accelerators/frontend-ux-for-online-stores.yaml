@@ -2,7 +2,7 @@ description: Starter to create fronted UX for online Stores
 displayName: Frontend UX for Online Stores
 framework: Angular, Spring Boot
 generatorNames:
-- boot-k8s-kubectl
+- boot-api-k8s
 - boot-knative-graalvm
 homeUrl: https://github.com/spring-cloud-services-samples/animal-rescue
 iconUrl: https://raw.githubusercontent.com/simple-starters/icons/master/icon-boot-angular.png

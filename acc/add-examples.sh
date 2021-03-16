@@ -13,17 +13,17 @@ init () {
 #add spring examples
 add-spring-examples() {
 
-    GENERATORS_FILES=("generator-boot-api-k8s.yaml" "generator-boot-k8s-kubectl.yaml" "generator-boot-k8s-jpa.yaml" "generator-boot-k8s-kustomize.yaml" "generator-boot-knative-graalvm.yaml" "generator-boot-knative-jib.yaml" "generator-boot-cloudfoundry.yaml" "generator-docker-compose.yaml" "generator-web-k8s.yaml" "generator-steeltoe-k8s-skaffold.yaml" "generator-steeltoe-azure-spring-cloud.yaml")
-    ACCELERATORS_FILES=("accelerator-music-store-steeltoe.yaml" "accelerator-ebanking.yaml" "accelerator-todo-service.yaml" "accelerator-function-kafka.yaml" "accelerator-spring-jpa.yaml" "accelerator-ruby-simple.yaml" "accelerator-dotnet-aspnet-hello.yaml" "accelerator-boot-function-knative.yaml" "accelerator-frontend-ux-for-online-stores.yaml")
+    GENERATORS_FILES=("boot-api-k8s" "boot-k8s-kubectl" "boot-k8s-jpa" "boot-k8s-kustomize" "dotnet-k8s" "boot-knative-graalvm" "boot-knative-jib" "boot-cloudfoundry" "docker-compose" "web-k8s" "steeltoe-k8s-skaffold" "steeltoe-azure-spring-cloud")
+    ACCELERATORS_FILES=("music-store-steeltoe" "ebanking" "todo-service" "function-kafka" "spring-jpa" "ruby-simple" "dotnet-aspnet-hello" "boot-function-knative" "frontend-ux-for-online-stores")
 
     import-files
 }
 
-#add azure examples
-add-azure-examples() {
+#add dotnet examples
+add-dotnet-examples() {
 
-    GENERATORS_FILES=("generator-aks-resource-simple.yaml" "generator-boot-aks-data.yaml" "generator-boot-asc.yaml" "generator-boot-function-azure.yaml" "generator-cloudfoundry.yaml" "generator-docker-compose.yaml" "generator-dotnet-web-azure.yaml" "generator-kubernetes-steeltoe-skaffold.yaml" "generator-none.yaml" "generator-steeltoe-asc.yaml")
-    ACCELERATORS_FILES==("accelerator-music-store-steeltoe.yaml" "accelerator-todo-service-asc.yaml" "accelerator-spring-cosmosdb-jpa.yaml" "accelerator-dotnet-aspnet-hello.yaml" "accelerator-boot-function-azure.yaml" "accelerator-frontend-ux-for-online-stores.yaml")
+    GENERATORS_FILES=("boot-api-k8s" "dotnet-k8s" "aks-resource-simple" "boot-aks-data" "boot-asc" "boot-function-azure" "cloudfoundry" "docker-compose" "dotnet-web-azure" "kubernetes-steeltoe-skaffold" "steeltoe-asc" "boot-knative-graalvm")
+    ACCELERATORS_FILES=("dotnet5-webapp" "music-store-steeltoe" "todo-service-asc" "jpa-sqlserver" "spring-cosmosdb-jpa" "dotnet-aspnet-hello" "boot-function-azure" "frontend-ux-for-online-stores")
 
     import-files
 }
@@ -32,11 +32,11 @@ add-azure-examples() {
 import-files() {
 
     for i in ${!GENERATORS_FILES[@]}; do
-        acc generator create-from-file --file=acc/examples/generators/${GENERATORS_FILES[$i]}
+        acc generator create-from-file --file=acc/examples/generators/${GENERATORS_FILES[$i]}.yaml
     done
 
     for i in ${!ACCELERATORS_FILES[@]}; do
-        acc accelerator create-from-file --file=acc/examples/accelerators/${ACCELERATORS_FILES[$i]}
+        acc accelerator create-from-file --file=acc/examples/accelerators/${ACCELERATORS_FILES[$i]}.yaml
     done
 }
 
@@ -46,15 +46,11 @@ spring)
     init $2
     add-spring-examples
     ;;
-azure)
-    init $2
-    add-azure-examples
-    ;;
 dotnet)
     init $2
     add-dotnet-examples
     ;;
 *)
-    echo "Incorrect usage. Please specify spring | azure | dotnet"
+    echo "Incorrect usage. Please specify spring | dotnet"
     ;;
 esac

@@ -216,7 +216,7 @@ setup-demo-examples() {
     echo
     echo "===> Setup App Accelerator examples..."
     echo
-    acc/add-examples.sh spring http://acc.$HOST_NAME #spring | azure | dotnet 
+    acc/add-examples.sh spring http://acc.$HOST_NAME #spring | dotnet 
     
     
     echo

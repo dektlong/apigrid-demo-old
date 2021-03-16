@@ -1,0 +1,12 @@
+description: The default .NET Web App for the .NET 5.0 framework
+displayName: .NET 5.0 Web App  
+framework: ASP.NET
+generatorNames:
+- generator-dotnet-k8s
+homeUrl: https://github.com/dektlong/dotnet-webapp-5.0
+iconUrl: https://raw.githubusercontent.com/simple-starters/icons/master/icon-dotnet.png
+language: C#
+maintainer: ccheetham@vmware.com
+name: dotnet-webapp-5.0
+sourceUrl: https://github.com/dektlong/dotnet-webapp-5.0
+version: 0.0.5
