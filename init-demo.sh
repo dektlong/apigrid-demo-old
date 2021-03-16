@@ -216,8 +216,8 @@ setup-demo-examples() {
     echo
     echo "===> Setup App Accelerator examples..."
     echo
-    acc/add-examples.sh generic http://acc.$HOST_NAME
-    #or msft
+    acc/add-examples.sh spring http://acc.$HOST_NAME #spring | azure | dotnet 
+    
     
     echo
     echo "===> Setup brownfield APIs expamples..."
