@@ -74,8 +74,8 @@ It is designed to run on any k8s substrate.
   https://dekt4pets.<SUB_DOMAIN>.<DOMAIN>
   ```
   - login and show SSO functionality 
-  - Demo Tanzu Serverless
-    - ```./run-pipeline.sh deploy-knative-app```
+- Demo Tanzu Serverless
+  - ```./run-pipeline.sh deploy-knative-app```
 
 ### Changes in production
 - now the backend team will leverage the 'brownfield' APIs to add background check functionality on potential adopters
