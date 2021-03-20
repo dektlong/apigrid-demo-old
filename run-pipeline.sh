@@ -122,7 +122,7 @@ patch-backend() {
 #deploy-knative-app
 deploy-knative-app () {
 
-    enovy_ip=$(kubectl get service envoy -n contour-external --output 'jsonpath={.status.loadBalancer.ingress[0].ip}')
+    envoy_ip="$(kubectl get service envoy -n contour-external --output 'jsonpath={.status.loadBalancer.ingress[0].ip}')"
 
     echo
     echo "create the following A record $envoy_ip -> *.native.dekt.io"
@@ -135,10 +135,15 @@ deploy-knative-app () {
         --patch '{"data":{"native.dekt.io":""}}'
 
     #kn service create dekt4pets-frontend \
-    kn service create dekt-todo-ui\
+    kn service create dekt-todo-ui --image dektlong/dekt-todo-ui -n $APP_NAMESPACE
         #--image springcloudservices/animal-rescue-frontend \
-        --image dektlong/dekt-todo-ui
-        -n $APP_NAMESPACE
+    
+    kn service create dekt-function \
+    -n dekt-apps \
+    --image triathlonguy/hello-function:jvm \
+    --env TARGET="from Serverless Test - Spring Function on JVM" \
+    --revision-name dekt-function-v1
+        
 
 }
 #info
