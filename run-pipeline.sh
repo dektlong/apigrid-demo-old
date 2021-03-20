@@ -119,6 +119,28 @@ patch-backend() {
 
 }
 
+#deploy-knative-app
+deploy-knative-app () {
+
+    enovy_ip=$(kubectl get service envoy -n contour-external --output 'jsonpath={.status.loadBalancer.ingress[0].ip}')
+
+    echo
+    echo "create the following A record $envoy_ip -> *.native.dekt.io"
+    read
+    echo
+
+    kubectl patch configmap/config-domain \
+        --namespace knative-serving \
+        --type merge \
+        --patch '{"data":{"native.dekt.io":""}}'
+
+    #kn service create dekt4pets-frontend \
+    kn service create dekt-todo-ui\
+        #--image springcloudservices/animal-rescue-frontend \
+        --image dektlong/dekt-todo-ui
+        -n $APP_NAMESPACE
+
+}
 #info
 info() {
 	echo
@@ -171,6 +193,7 @@ incorrect-usage() {
 	echo "* open-store"
     echo "* patch-backend { required: git-commit-message } "
     echo "* info"
+    echo "* deploy-knative-app"
    	echo
   	exit   
  
@@ -195,6 +218,9 @@ patch-backend)
     ;;
 info)
     info
+    ;;
+deploy-knative-app)
+    deploy-knative-app
     ;;
 *)
   	incorrect-usage
