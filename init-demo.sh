@@ -46,6 +46,8 @@ install-core-services() {
     
     install-sbo
 
+    install-serverless
+
     start-local-utilities
 }
 
@@ -198,11 +200,28 @@ install-apihub() {
 #install-sbo (spring boot observer)
 install-sbo () {
 
+    echo
+    echo "===> Installing Spring Boot Observer..."
+    echo
     #sbo/build-sbo-images.sh   
 
     # Create sbo deployment and ingress rule
     kubectl apply -f sbo/.config/sbo-deployment.yaml -n $SBO_NAMESPACE
     kubectl apply -f sbo/.config/sbo-ingress.yaml -n $SBO_NAMESPACE 
+}
+
+#install-serverless
+install-serverless() {
+
+    echo
+    echo "===> Installing Tanzu Serverless..."
+    echo
+
+    export serverless_docker_server=registry.pivotal.io
+    export serverless_docker_username=$TANZU_NETWORK_USER
+    export serverless_docker_password=$TANZU_NETWORK_PASSWORD
+    
+    $SERVERLESS_INSTALL_DIR/bin/install-serverless.sh
 }
 
 #setup-demo-examples
@@ -372,7 +391,7 @@ cleanup)
 	cleanup $2
     ;;
 unit-test)
-    acc/add-examples.sh generic
+    install-serverless
     ;;
 *)
     incorrect-usage
