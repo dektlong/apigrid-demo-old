@@ -13,7 +13,8 @@ It is designed to run on any k8s substrate.
 ## Consistent Builds                                                    
 - Local dev to pipeline-initiated builds                          
 - Follows standard Boot tools (no docker files required)               
-- Prod-optimized images, air-gapped artifacts, lifecycle support        
+- Prod-optimized images, air-gapped artifacts, lifecycle support  
+- GitOps for APIs - e.g. pipeline driven configuration of routes per lifecycle stage       
 
 ## Collaborative micro-APIs 
 - Deploy backend service and expose its internal APIs through a dev-friendly 'app' Gateway, including simple to use SSO
@@ -73,6 +74,8 @@ It is designed to run on any k8s substrate.
   https://dekt4pets.<SUB_DOMAIN>.<DOMAIN>
   ```
   - login and show SSO functionality 
+  - Demo Tanzu Serverless
+    - ```./run-pipeline.sh deploy-knative-app```
 
 ### Changes in production
 - now the backend team will leverage the 'brownfield' APIs to add background check functionality on potential adopters
