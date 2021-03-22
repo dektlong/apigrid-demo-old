@@ -39,6 +39,19 @@ It is designed to run on any k8s substrate.
 ## Installing the demo
 
 - ```./init-demo.sh [aks | tkg]```
+- This script installs the following products
+  - Spring Cloud Gateway
+  - App Accelerator
+  - Api portal
+  - Spring Boot Observer
+  - Build Service
+  - Cloud Native Runtim
+- This script setup the following examples
+  - Fortune sidecar for Spring Boot Observer
+  - App Accelerators generators and accelerators
+  - Brownfield APIs examples for API portal
+  - Det4Pets backend TBS image
+  - Det4Pets frontend TBS image
 
 ## Suggested demo flow
 
