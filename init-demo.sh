@@ -32,7 +32,7 @@ install() {
 
     install-acc
     
-    install-apihub
+    install-api-portal
     
     install-sbo
 
@@ -190,11 +190,11 @@ install-tbs() {
 
 }
 
-#install apihub
-install-apihub() {
+#install api-portal
+install-api-portal() {
 
     echo
-    echo "===> Installing API Hub..."
+    echo "===> Installing API portal..."
     echo
 
     #pushd $API_HUB_INSTALL_DIR
