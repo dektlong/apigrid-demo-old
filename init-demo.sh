@@ -43,11 +43,11 @@ install-core-services() {
 
     install-acc
     
-    install-tbs
-    
     install-apihub
     
     install-sbo
+
+    install-tbs
 
     start-local-utilities
 }
