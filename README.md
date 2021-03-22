@@ -34,7 +34,7 @@ It is designed to run on any k8s substrate.
 - Set all variables in ```config-values.env```
   - Note: all yaml files that are updated in runtime will be copied to ```.config``` sub-directory in their respective directories during the init-demo phase
 
-- The ingress setup is based on GoDaddy DNS, if you are using a different one, please modify the ```update-dns``` function in the ```init-demo.sh``` 
+- The ingress setup is based on GoDaddy DNS, if you are using a different one, please modify the ```update-dns``` function in ```init-demo.sh``` 
 
 ## Installing the demo
 
