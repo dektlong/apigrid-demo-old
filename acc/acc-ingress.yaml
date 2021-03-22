@@ -1,15 +1,14 @@
-apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
-metadata:
+apiVersion: networking.k8s.io/v1beta1 
+kind: Ingress 
+metadata: 
   name: acc-ingress
-  annotations:
-    kubernetes.io/ingress.class: nginx
-spec:
-  rules:
+  annotations: 
+    kubernetes.io/ingress.class: contour 
+spec: 
+  rules: 
     - host: acc.{HOST_NAME}
-      http:
-        paths:
-          - path: "/"
-            backend:
+      http: 
+        paths: 
+          - backend: 
               serviceName: acc-server
-              servicePort: 8080
+              servicePort: 80

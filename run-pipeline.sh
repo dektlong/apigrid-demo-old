@@ -119,33 +119,39 @@ patch-backend() {
 
 }
 
-#deploy-knative-app
-deploy-knative-app () {
+#rockme-native
+rockme-native () {
 
-    envoy_ip="$(kubectl get service envoy -n contour-external --output 'jsonpath={.status.loadBalancer.ingress[0].ip}')"
+    case $1 in
+    create)
+    	kn service create rockme-native \
+            --image $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/rockme:1.0.0 \
+            --env TARGET="revision 1 of rockme-native" \
+            --revision-name rockme-native-v1 \
+            -n $APP_NAMESPACE 
 
-    echo
-    echo "create the following A record $envoy_ip -> *.native.dekt.io"
-    read
-    echo
-
-    kubectl patch configmap/config-domain \
-        --namespace knative-serving \
-        --type merge \
-        --patch '{"data":{"native.dekt.io":""}}'
-
-    #kn service create dekt4pets-frontend \
-    kn service create dekt-todo-ui --image dektlong/dekt-todo-ui -n $APP_NAMESPACE
-        #--image springcloudservices/animal-rescue-frontend \
-    
-    kn service create dekt-function \
-    -n dekt-apps \
-    --image triathlonguy/hello-function:jvm \
-    --env TARGET="from Serverless Test - Spring Function on JVM" \
-    --revision-name dekt-function-v1
-        
-
+        kn service create dekt4pets-frontend \
+            --image springcloudservices/animal-rescue-frontend \
+            -n $APP_NAMESPACE 
+        ;;
+    update)
+	    kn service update rockme-native \
+            --image $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/rockme:1.0.0 \
+            --env TARGET="revision 2 of rockme-native" \
+            --revision-name rockme-native-v2 \
+            --traffic @latest=20,rockme-native-v1=80 \
+            -n $APP_NAMESPACE 
+	    ;;
+    load)
+        siege -d1  -c200 -t60S  --content-type="text/plain" 'http://rockme-native.dekt-apps.native.dekt.io POST rock-on'
+        ;;
+    *)
+  	    incorrect-usage
+  	    ;;
+    esac
 }
+
+
 #info
 info() {
 	echo
@@ -198,7 +204,7 @@ incorrect-usage() {
 	echo "* open-store"
     echo "* patch-backend { required: git-commit-message } "
     echo "* info"
-    echo "* deploy-knative-app"
+    echo "* rockme-native { required: create | update | load }"
    	echo
   	exit   
  
@@ -224,8 +230,8 @@ patch-backend)
 info)
     info
     ;;
-deploy-knative-app)
-    deploy-knative-app
+rockme-native)
+    rockme-native $2
     ;;
 *)
   	incorrect-usage

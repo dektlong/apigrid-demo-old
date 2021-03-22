@@ -14,13 +14,12 @@
     ACC_NAMESPACE="acc-system"
     SBO_NAMESPACE="sbo-system"
     BROWNFIELD_NAMESPACE="brownfield-apis"
+    ACC_INSTALL_BUNDLE="dev.registry.pivotal.io/app-accelerator/acc-install-bundle:1.0.0-preview-20210312"
 
 #################### functions #######################
 
 #install
 install() {
-
-    create-namespaces-secrets
 
     install-core-services
     
@@ -34,7 +33,11 @@ install() {
 #install core tanzu products
 install-core-services() {
     
+    create-namespaces-secrets
+
     update-configs
+
+    setup-ingress
 
     install-gateway
 
@@ -45,8 +48,6 @@ install-core-services() {
     install-apihub
     
     install-sbo
-
-    install-serverless
 
     start-local-utilities
 }
@@ -156,7 +157,18 @@ install-acc() {
     echo
     echo "===> Install Tanzu Application Accelerator..."
     echo
-    kustomize build acc | kubectl apply -f -
+
+    imgpkg pull -b $ACC_INSTALL_BUNDLE \
+       -o /tmp/acc-bundle
+
+    export acc_service_type=ClusterIP
+    export acc_import_on_startup=false
+    
+    ytt -f /tmp/acc-bundle/config -f /tmp/acc-bundle/values.yaml --data-values-env acc \
+        | kbld -f /tmp/acc-bundle/.imgpkg/images.yml -f- \
+        | kapp deploy -y -n $ACC_NAMESPACE -a accelerator -f-
+
+    kubectl apply -f acc/.config/acc-ingress.yaml -n $ACC_NAMESPACE
 
 }
 
@@ -222,6 +234,54 @@ install-serverless() {
     export serverless_docker_password=$TANZU_NETWORK_PASSWORD
     
     $SERVERLESS_INSTALL_DIR/bin/install-serverless.sh
+
+    envoy_ip="$(kubectl get service envoy -n contour-external --output 'jsonpath={.status.loadBalancer.ingress[0].ip}')"
+
+    #updating the dns record 
+    record_name="*.native"
+    api_sso_key="$GODADDY_API_KEY:$GODADDY_API_SECRET"
+    update_domain_api_call="https://api.godaddy.com/v1/domains/$DOMAIN/records/A/$record_name"
+
+    echo "updating this A record in GoDaddy:  $record_name.$DOMAIN --> $envoy_ip..."
+
+    curl -X PUT -H 'Content-Type: application/json' -H 'Accept: application/json' -H "Authorization: sso-key $api_sso_key" "$update_domain_api_call" -d "[{\"data\": \"$envoy_ip\"}]"
+
+     kubectl patch configmap/config-domain \
+        --namespace knative-serving \
+        --type merge \
+        --patch '{"data":{"*.native.$DOMAIN":""}}'
+}
+
+#setup-ingress
+setup-ingress() {
+
+    echo
+    echo "===> Setup Contour Ingress controller..."
+    echo
+
+    kubectl apply -f https://projectcontour.io/quickstart/contour.yaml
+
+    echo
+    printf "Waiting for ingress controller to receive public IP address from loadbalancer ."
+
+    ingress_public_ip=""
+
+    while [ "$ingress_public_ip" == "" ]
+    do
+	    printf "."
+	    ingress_public_ip="$(kubectl get service envoy -n projectcontour --output 'jsonpath={.status.loadBalancer.ingress[0].ip}')"
+	    sleep 1
+    done
+    
+    #updating the dns record 
+    record_name="*.$SUB_DOMAIN"
+    api_sso_key="$GODADDY_API_KEY:$GODADDY_API_SECRET"
+    update_domain_api_call="https://api.godaddy.com/v1/domains/$DOMAIN/records/A/$record_name"
+
+    echo "updating this A record in GoDaddy:  $record_name.$DOMAIN --> $ingress_public_ip..."
+
+    curl -X PUT -H 'Content-Type: application/json' -H 'Accept: application/json' -H "Authorization: sso-key $api_sso_key" "$update_domain_api_call" -d "[{\"data\": \"$ingress_public_ip\"}]"
+
 }
 
 #setup-demo-examples
@@ -349,7 +409,8 @@ remove-examples() {
     kustomize build dekt4pets/frontend | kubectl delete -f -
     kubectl delete -f dekt4pets/gateway/.config/dekt4pets-ingress.yaml -n $APP_NAMESPACE
     kustomize build dekt4pets/gateway | kubectl delete -f -
-    kustomize build acc | kubectl delete -f -
+    #kustomize build acc | kubectl delete -f -
+    kapp delete -n $ACC_NAMESPACE -a accelerator -y
     kustomize build legacy-apis | kubectl delete -f -
     helm uninstall spring-cloud-gateway -n $GW_NAMESPACE
     kapp deploy -a tanzu-build-service -y
@@ -370,6 +431,8 @@ incorrect-usage() {
 	echo
   	echo "* aks"
     echo "* tkg"
+    echo "* add-serverless"
+    echo "* unit-test"
     echo "* cleanup [ aks | tkg  (default: aks) ]"
 	echo
   	exit   
@@ -387,11 +450,14 @@ tkg)
     k8s-builders/build-tkg-cluster.sh tkg-i $CLUSTER_NAME $TKGI_CLUSTER_PLAN 1 4
     install
     ;;
+add-serverless)
+    install-serverless
+    ;;
 cleanup)
 	cleanup $2
     ;;
 unit-test)
-    install-serverless
+    setup-ingress
     ;;
 *)
     incorrect-usage
