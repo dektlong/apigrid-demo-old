@@ -19,9 +19,6 @@ create-cluster() {
 	az aks create --resource-group $RESOURCE_GROUP --name $1 --node-count $2 --generate-ssh-keys
 
 	az aks get-credentials --resource-group $RESOURCE_GROUP --name $1
-	
-	k8s-builders/install-ingress-controller.sh with-lb
-	
 }
 
 #delete cluster

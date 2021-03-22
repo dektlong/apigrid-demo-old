@@ -21,17 +21,8 @@
 #install
 install() {
 
-    install-core-services
-    
-    setup-demo-examples
-
-    echo
-	echo "Demo install completed. Enjoy your demo."
-	echo
-}
-
-#install core tanzu products
-install-core-services() {
+    install-nginx
+    #install-contour
     
     create-namespaces-secrets
 
@@ -47,7 +38,15 @@ install-core-services() {
 
     install-tbs
 
+    install-cnr
+
     start-local-utilities
+    
+    setup-demo-examples
+
+    echo
+	echo "Demo install completed. Enjoy your demo."
+	echo
 }
 
 #create-namespaces-secrets
@@ -220,11 +219,11 @@ install-sbo () {
     kubectl apply -f sbo/.config/sbo-ingress.yaml -n $SBO_NAMESPACE 
 }
 
-#install-serverless
-install-serverless() {
+#install-cnr (cloud native runtime)
+install-cnr() {
 
     echo
-    echo "===> Installing Tanzu Serverless..."
+    echo "===> Installing Tanzu Cloud Native Runtime..."
     echo
 
     export serverless_docker_server=registry.pivotal.io
@@ -233,18 +232,9 @@ install-serverless() {
     
     $SERVERLESS_INSTALL_DIR/bin/install-serverless.sh
 
-    envoy_ip="$(kubectl get service envoy -n contour-external --output 'jsonpath={.status.loadBalancer.ingress[0].ip}')"
-
-    #updating the dns record 
-    record_name="*.native"
-    api_sso_key="$GODADDY_API_KEY:$GODADDY_API_SECRET"
-    update_domain_api_call="https://api.godaddy.com/v1/domains/$DOMAIN/records/A/$record_name"
-
-    echo "updating this A record in GoDaddy:  $record_name.$DOMAIN --> $envoy_ip..."
-
-    curl -X PUT -H 'Content-Type: application/json' -H 'Accept: application/json' -H "Authorization: sso-key $api_sso_key" "$update_domain_api_call" -d "[{\"data\": \"$envoy_ip\"}]"
-
-     kubectl patch configmap/config-domain \
+    update-dns "envoy" "contour-external" "*.native"
+        
+    kubectl patch configmap/config-domain \
         --namespace knative-serving \
         --type merge \
         --patch '{"data":{"*.native.$DOMAIN":""}}'
@@ -344,6 +334,80 @@ update-dynamic-value() {
     
 }
 
+#install-nginx
+install-nginx() {
+
+    echo
+    echo "=========> Install nginx ingress controller ..."
+    echo
+
+    # Add the ingress-nginx repository
+    helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+
+    kubectl create ns nginx-system
+
+    # Use Helm to deploy an NGINX ingress controller
+    helm install dekt4pets ingress-nginx/ingress-nginx \
+        --namespace nginx-system \
+        --set controller.replicaCount=2 \
+        --set controller.nodeSelector."beta\.kubernetes\.io/os"=linux \
+        --set defaultBackend.nodeSelector."beta\.kubernetes\.io/os"=linux \
+        --set controller.admissionWebhooks.patch.nodeSelector."beta\.kubernetes\.io/os"=linux
+    
+    update-dns "dekt4pets-ingress-nginx-controller" "nginx-system" "*.$SUB_DOMAIN"
+
+}
+
+#install-contour
+install-contour() {
+
+    echo
+    echo "=========> Install contour ingress controller ..."
+    echo
+    
+    kubectl create namespace contour-system
+
+    helm repo update
+    
+    helm install ingress bitnami/contour -n projectcontour --version 3.3.1
+
+    update-dns "ingress-contour-envoy" "contour-system" "*.$SUB_DOMAIN"
+
+}
+
+#update-dns
+update-dns ()
+{
+    ingress_service_name=$1
+    ingress_namespace=$2
+    record_name=$3
+
+    echo
+    echo "====> Updating your DNS ..."
+    echo
+    
+    echo
+    printf "Waiting for ingress controller to receive public IP address from loadbalancer ."
+
+    ingress_public_ip=""
+
+    while [ "$ingress_public_ip" == "" ]
+    do
+	    printf "."
+	    ingress_public_ip="$(kubectl get svc $ingress_service_name --namespace $ingress_namespace -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')"
+	    sleep 1
+    done
+    
+    echo
+
+    api_sso_key="$GODADDY_API_KEY:$GODADDY_API_SECRET"
+    update_domain_api_call="https://api.godaddy.com/v1/domains/$DOMAIN/records/A/$record_name"
+
+    echo "updating this A record in GoDaddy:  $record_name.$DOMAIN --> $ingress_public_ip..."
+
+    # Create DNS A Record
+    curl -X PUT -H 'Content-Type: application/json' -H 'Accept: application/json' -H "Authorization: sso-key $api_sso_key" "$update_domain_api_call" -d "[{\"data\": \"$ingress_public_ip\"}]"
+}
 #cleanup
 cleanup() {
 
@@ -397,7 +461,6 @@ incorrect-usage() {
 	echo
   	echo "* aks"
     echo "* tkg"
-    echo "* add-serverless"
     echo "* unit-test"
     echo "* cleanup [ aks | tkg  (default: aks) ]"
 	echo
@@ -416,14 +479,11 @@ tkg)
     k8s-builders/build-tkg-cluster.sh tkg-i $CLUSTER_NAME $TKGI_CLUSTER_PLAN 1 4
     install
     ;;
-add-serverless)
-    install-serverless
-    ;;
 cleanup)
 	cleanup $2
     ;;
 unit-test)
-    setup-ingress
+    install-contour
     ;;
 *)
     incorrect-usage
