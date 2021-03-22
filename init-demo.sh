@@ -37,8 +37,6 @@ install-core-services() {
 
     update-configs
 
-    setup-ingress
-
     install-gateway
 
     install-acc
@@ -250,38 +248,6 @@ install-serverless() {
         --namespace knative-serving \
         --type merge \
         --patch '{"data":{"*.native.$DOMAIN":""}}'
-}
-
-#setup-ingress
-setup-ingress() {
-
-    echo
-    echo "===> Setup Contour Ingress controller..."
-    echo
-
-    kubectl apply -f https://projectcontour.io/quickstart/contour.yaml
-
-    echo
-    printf "Waiting for ingress controller to receive public IP address from loadbalancer ."
-
-    ingress_public_ip=""
-
-    while [ "$ingress_public_ip" == "" ]
-    do
-	    printf "."
-	    ingress_public_ip="$(kubectl get service envoy -n projectcontour --output 'jsonpath={.status.loadBalancer.ingress[0].ip}')"
-	    sleep 1
-    done
-    
-    #updating the dns record 
-    record_name="*.$SUB_DOMAIN"
-    api_sso_key="$GODADDY_API_KEY:$GODADDY_API_SECRET"
-    update_domain_api_call="https://api.godaddy.com/v1/domains/$DOMAIN/records/A/$record_name"
-
-    echo "updating this A record in GoDaddy:  $record_name.$DOMAIN --> $ingress_public_ip..."
-
-    curl -X PUT -H 'Content-Type: application/json' -H 'Accept: application/json' -H "Authorization: sso-key $api_sso_key" "$update_domain_api_call" -d "[{\"data\": \"$ingress_public_ip\"}]"
-
 }
 
 #setup-demo-examples
