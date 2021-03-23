@@ -4,8 +4,7 @@ metadata:
   name: dekt4pets-frontend-routes-config
 spec:
   service: 
-    #name: dekt4pets-frontend-service
-    name: dekt4pets-frontend-00001
+    name: dekt4pets-frontend-service
   routes:
     - predicates:
         - Path=/rescue/login
