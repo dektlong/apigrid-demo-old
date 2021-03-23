@@ -38,7 +38,7 @@ install() {
 
     install-tbs
 
-    install-cnr
+    #install-cnr
 
     start-local-utilities
     
