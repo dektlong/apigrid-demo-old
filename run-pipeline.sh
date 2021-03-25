@@ -129,10 +129,6 @@ rockme-native () {
             --env TARGET="revision 1 of rockme-native" \
             --revision-name rockme-native-v1 \
             -n $APP_NAMESPACE 
-
-        kn service create dekt4pets-frontend \
-            --image springcloudservices/animal-rescue-frontend \
-            -n $APP_NAMESPACE 
         ;;
     update)
 	    kn service update rockme-native \
