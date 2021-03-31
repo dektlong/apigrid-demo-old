@@ -4,7 +4,6 @@
     source secrets/config-values.env
 
     HOST_NAME=$SUB_DOMAIN.$DOMAIN
-    HUB_SERVER_JAR_LOCATION=$API_HUB_INSTALL_DIR/api-hub-server/build/libs/api-hub-server-0.0.1-SNAPSHOT.jar
     DET4PETS_FRONTEND_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION
     DET4PETS_BACKEND_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION
     FORTUNE_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/fortune-service:0.0.1
@@ -40,8 +39,6 @@ install() {
     install-tbs
 
     #install-cnr
-
-    start-local-utilities
     
     setup-demo-examples
 
@@ -122,20 +119,20 @@ update-configs() {
     echo
 
     #dynamic values folders
-    mkdir -p {backend/.config,frontend/.config,gateway/.config,hub/.config,sbo/.config,ACC/.config}    
+    mkdir -p {backend/.config,frontend/.config,gateway/.config,api-portal/.config,sbo/.config,ACC/.config}    
     
     update-dynamic-value "gateway" "dekt4pets-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
     update-dynamic-value "gateway" "dekt4pets-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
     update-dynamic-value "acc" "acc-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
-    update-dynamic-value "hub" "scg-openapi-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
-    update-dynamic-value "hub" "api-portal-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
+    update-dynamic-value "api-portal" "scg-openapi-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
+    update-dynamic-value "api-portal" "api-portal-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
     update-dynamic-value "sbo" "sbo-deployment.yaml" "{OBSERVER_SERVER_IMAGE}" "$SBO_SERVER_IMAGE_LOCATION"
     update-dynamic-value "sbo" "sbo-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
     update-dynamic-value "sbo" "fortune-sidecar-example.yaml" "{FORTUNE_IMAGE}" "$FORTUNE_IMAGE_LOCATION" "{OBSERVER_SIDECAR_IMAGE}" "$SBO_SIDECAR_IMAGE_LOCATION"
     update-dynamic-value "sbo" "fortune-ingress.yaml" "{HOST_NAME}" "$SUB_DOMAIN.$DOMAIN"
-    update-dynamic-value "hub" "datacheck-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
-    update-dynamic-value "hub" "suppliers-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
-    update-dynamic-value "hub" "donations-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
+    update-dynamic-value "api-portal" "datacheck-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
+    update-dynamic-value "api-portal" "suppliers-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
+    update-dynamic-value "api-portal" "donations-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
     update-dynamic-value "backend" "dekt4pets-backend-app.yaml" "{BACKEND_IMAGE}" "$DET4PETS_BACKEND_IMAGE_LOCATION" "{OBSERVER_SIDECAR_IMAGE}" "$SBO_SIDECAR_IMAGE_LOCATION"
     update-dynamic-value "frontend" "dekt4pets-frontend-app.yaml" "{FRONTEND_IMAGE}" "$DET4PETS_FRONTEND_IMAGE_LOCATION" 
 
@@ -213,9 +210,9 @@ install-api-portal() {
     
     kubectl set env deployment.apps/api-portal-server API_PORTAL_SOURCE_URLS=http://scg-openapi.$SUB_DOMAIN.$DOMAIN/openapi -n $PORTAL_NAMESPACE
 
-    kubectl apply -f hub/.config/api-portal-ingress.yaml -n $PORTAL_NAMESPACE
+    kubectl apply -f api-portal/.config/api-portal-ingress.yaml -n $PORTAL_NAMESPACE
 
-    kubectl apply -f hub/.config/scg-openapi-ingress.yaml -n $GW_NAMESPACE
+    kubectl apply -f api-portal/.config/scg-openapi-ingress.yaml -n $GW_NAMESPACE
 
    
 }
@@ -271,7 +268,7 @@ setup-demo-examples() {
     echo
     echo "===> Setup brownfield APIs expamples..."
     echo
-    kustomize build hub | kubectl apply -f -
+    kustomize build api-portal | kubectl apply -f -
 
     setup-dekt4pets-examples
 
@@ -321,15 +318,6 @@ setup-dekt4pets-examples() {
 	#--namespace $APP_NAMESPACE \
 	#--wait
  
-}
-
-#start local utilities
-start-local-utilities() {
-
-    #temp unitl Hub as a k8s deployment
-    open -a Terminal hub/.config/run-local-api-hub-server.sh
-
-    open -a Terminal k8s-builders/start_octant.sh
 }
 
 #update-dynamic-value

@@ -52,6 +52,7 @@ source secrets/config-values.env
 case $1 in 
 create)
 	create-cluster $2 $3
+	open -a Terminal start_octant.sh
 	;;
 delete)
 	delete-cluster $2
