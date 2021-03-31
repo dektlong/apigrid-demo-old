@@ -11,6 +11,7 @@
     SBO_SERVER_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/spring-boot-observer-server:0.0.1
     SBO_SIDECAR_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/spring-boot-observer-sidecar:0.0.1
     GW_NAMESPACE="scgw-system"
+    PORTAL_NAMESPACE="api-portal-system"
     ACC_NAMESPACE="acc-system"
     SBO_NAMESPACE="sbo-system"
     BROWNFIELD_NAMESPACE="brownfield-apis"
@@ -59,6 +60,7 @@ create-namespaces-secrets () {
     #namespaces
     kubectl create ns $APP_NAMESPACE
     kubectl create ns $GW_NAMESPACE
+    kubectl create ns $PORTAL_NAMESPACE
     kubectl create ns $ACC_NAMESPACE
     kubectl create ns $SBO_NAMESPACE
     kubectl create ns $BROWNFIELD_NAMESPACE
@@ -79,6 +81,13 @@ create-namespaces-secrets () {
         --docker-username=$IMG_REGISTRY_USER \
         --docker-password=$IMG_REGISTRY_PASSWORD \
         --namespace $GW_NAMESPACE
+    
+    #enable API-PORTAL to access image registry (has to be that specific name)
+    kubectl create secret docker-registry api-portal-image-pull-secret \
+        --docker-server=$IMG_REGISTRY_URL \
+        --docker-username=$IMG_REGISTRY_USER \
+        --docker-password=$IMG_REGISTRY_PASSWORD \
+        --namespace $PORTAL_NAMESPACE
     
     #enable SBO to access image registry
     kubectl create secret docker-registry imagereg-secret \
@@ -118,8 +127,8 @@ update-configs() {
     update-dynamic-value "gateway" "dekt4pets-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
     update-dynamic-value "gateway" "dekt4pets-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
     update-dynamic-value "acc" "acc-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
-    update-dynamic-value "hub" "run-local-api-hub-server.sh" "{OPEN_API_URLS}" "http://scg-openapi.$HOST_NAME/openapi" "{RUNTIME_PATH_TO_API_HUB_JAR}" "$HUB_SERVER_JAR_LOCATION"
     update-dynamic-value "hub" "scg-openapi-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
+    update-dynamic-value "hub" "api-portal-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
     update-dynamic-value "sbo" "sbo-deployment.yaml" "{OBSERVER_SERVER_IMAGE}" "$SBO_SERVER_IMAGE_LOCATION"
     update-dynamic-value "sbo" "sbo-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
     update-dynamic-value "sbo" "fortune-sidecar-example.yaml" "{FORTUNE_IMAGE}" "$FORTUNE_IMAGE_LOCATION" "{OBSERVER_SIDECAR_IMAGE}" "$SBO_SIDECAR_IMAGE_LOCATION"
@@ -197,13 +206,18 @@ install-api-portal() {
     echo "===> Installing API portal..."
     echo
 
-    #pushd $API_HUB_INSTALL_DIR
-    #./gradlew clean build
-    #pushd
     
+    $API_PORTAL_INSTALL_DIR/scripts/relocate-images.sh $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO
+    
+    $API_PORTAL_INSTALL_DIR/scripts/install-api-portal.sh $PORTAL_NAMESPACE
+    
+    kubectl set env deployment.apps/api-portal-server API_PORTAL_SOURCE_URLS=http://scg-openapi.$SUB_DOMAIN.$DOMAIN/openapi -n $PORTAL_NAMESPACE
+
+    kubectl apply -f hub/.config/api-portal-ingress.yaml -n $PORTAL_NAMESPACE
+
     kubectl apply -f hub/.config/scg-openapi-ingress.yaml -n $GW_NAMESPACE
 
-    #until hub is available as a k8s deployment it will be started localy as part of start-local-utilities 
+   
 }
 
 #install-sbo (spring boot observer)
@@ -483,7 +497,7 @@ cleanup)
 	cleanup $2
     ;;
 unit-test)
-    install-contour
+    install-api-portal
     ;;
 *)
     incorrect-usage
