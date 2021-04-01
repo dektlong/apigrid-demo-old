@@ -8,7 +8,7 @@ secrets
 backend/.config
 frontend/.config
 gateway/.config
-hub/.config
+api-portal/.config
 sbo/.config
 acc/.config
 
