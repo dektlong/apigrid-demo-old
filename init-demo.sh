@@ -402,13 +402,14 @@ update-dns ()
     
     echo
 
-    api_sso_key="$GODADDY_API_KEY:$GODADDY_API_SECRET"
-    update_domain_api_call="https://api.godaddy.com/v1/domains/$DOMAIN/records/A/$record_name"
-
     echo "updating this A record in GoDaddy:  $record_name.$DOMAIN --> $ingress_public_ip..."
 
-    # Create DNS A Record
-    curl -X PUT -H 'Content-Type: application/json' -H 'Accept: application/json' -H "Authorization: sso-key $api_sso_key" "$update_domain_api_call" -d "[{\"data\": \"$ingress_public_ip\"}]"
+    # Update/Create DNS A Record
+    curl -X PUT https://api.godaddy.com/v1/domains/$DOMAIN/records/ \
+        -H "Authorization: sso-key $GODADDY_API_KEY:$GODADDY_API_SECRET" \
+        -H "Content-Type: application/json" \
+        --data "[{\"type\": \"A\",\"name\": \"$record_name\",\"data\": \"$ingress_public_ip\",\"ttl\": 600}]"
+
 }
 #cleanup
 cleanup() {
