@@ -21,8 +21,8 @@
 #install
 install() {
 
-    install-nginx
-    #install-contour
+    #install-nginx
+    install-contour
     
     create-namespaces-secrets
 
@@ -371,7 +371,7 @@ install-contour() {
 
     helm repo update
     
-    helm install ingress bitnami/contour -n projectcontour --version 3.3.1
+    helm install ingress bitnami/contour -n contour-system --version 3.3.1
 
     update-dns "ingress-contour-envoy" "contour-system" "*.$SUB_DOMAIN"
 
@@ -405,11 +405,11 @@ update-dns ()
     echo "updating this A record in GoDaddy:  $record_name.$DOMAIN --> $ingress_public_ip..."
 
     # Update/Create DNS A Record
-    curl -X PUT https://api.godaddy.com/v1/domains/$DOMAIN/records/ \
-        -H "Authorization: sso-key $GODADDY_API_KEY:$GODADDY_API_SECRET" \
-        -H "Content-Type: application/json" \
-        --data "[{\"type\": \"A\",\"name\": \"$record_name\",\"data\": \"$ingress_public_ip\",\"ttl\": 600}]"
 
+    curl -s -X PUT \
+        -H "Authorization: sso-key $GODADDY_API_KEY:$GODADDY_API_SECRET" "https://api.godaddy.com/v1/domains/$DOMAIN/records/A/$record_name" \
+        -H "Content-Type: application/json" \
+        -d "[{\"data\": \"${ingress_public_ip}\"}]"
 }
 #cleanup
 cleanup() {
@@ -486,7 +486,7 @@ cleanup)
 	cleanup $2
     ;;
 unit-test)
-    install-api-portal
+    update-dns "ingress-contour-envoy" "contour-system" "*.$SUB_DOMAIN"
     ;;
 *)
     incorrect-usage
