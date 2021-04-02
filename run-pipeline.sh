@@ -89,7 +89,7 @@ patch-backend() {
     echo
     echo "=========> Commit code changes to $DEMO_APP_GIT_REPO  ..."
     echo
-    #git-push "$git_commit_msg"
+    git-push "$git_commit_msg"
     
     echo
     echo "=========> Auto-build $BACKEND_TBS_IMAGE image on latest git commit (commit: $_latestCommitId) ..."

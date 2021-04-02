@@ -21,8 +21,8 @@
 #install
 install() {
 
-    #install-nginx
-    install-contour
+    install-nginx
+    #install-contour
     
     create-namespaces-secrets
 
