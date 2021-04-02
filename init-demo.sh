@@ -367,18 +367,10 @@ install-contour() {
     echo "=========> Install contour ingress controller ..."
     echo
     
-    kubectl apply -f https://projectcontour.io/quickstart/contour.yaml
+    #we use a modified install yaml to set externalTrafficPolicy: Cluster (from the local default) due to issues on AKS
+    kubectl apply -f k8s-builders/contour-install.yaml
 
     update-dns "envoy" "projectcontour" "*.$SUB_DOMAIN" 
-    
-    #kubectl create namespace contour-system
-
-    #helm repo update
-    
-    #helm install ingress bitnami/contour -n contour-system --version 3.3.1
-
-    #update-dns "ingress-contour-envoy" "contour-system" "*.$SUB_DOMAIN"
-
 }
 
 #update-dns

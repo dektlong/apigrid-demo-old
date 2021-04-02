@@ -68,13 +68,18 @@ open-store() {
 	echo
 	echo "The dekt4pets application should now be accessible on https://dekt4pets.$SUB_DOMAIN.$DOMAIN/rescue "
 	echo
+
+    #debug gateway
+    #kubectl -n dekt-apps  port-forward service/dekt4pets-gateway 8080:80
+    #see if app works on http://localhost:8080/rescue
 }
 
 #patch-backend
-# input change commit message
 patch-backend() {
     
-    if  [ "$1" == "" ]; then 
+    git_commit_msg=$1
+
+    if  [ "$git_commit_msg" == "" ]; then 
         echo
 	    echo "Incorrect usage. A message for this git commit is required."
 	    echo
@@ -84,7 +89,7 @@ patch-backend() {
     echo
     echo "=========> Commit code changes to $DEMO_APP_GIT_REPO  ..."
     echo
-    git-push "$1"
+    #git-push "$git_commit_msg"
     
     echo
     echo "=========> Auto-build $BACKEND_TBS_IMAGE image on latest git commit (commit: $_latestCommitId) ..."

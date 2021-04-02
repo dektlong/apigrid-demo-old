@@ -3,7 +3,7 @@ kind: Ingress
 metadata: 
   name: acc-ingress
   annotations: 
-    kubernetes.io/ingress.class: nginx 
+    kubernetes.io/ingress.class: contour 
 spec: 
   rules: 
     - host: acc.{HOST_NAME}
