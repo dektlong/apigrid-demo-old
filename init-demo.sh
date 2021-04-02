@@ -57,7 +57,7 @@ create-namespaces-secrets () {
     #namespaces
     kubectl create ns $APP_NAMESPACE
     kubectl create ns $GW_NAMESPACE
-    kubectl create ns $PORTAL_NAMESPACE
+    kubectl create ns $HUB_NAMESPACE
     kubectl create ns $ACC_NAMESPACE
     kubectl create ns $SBO_NAMESPACE
     kubectl create ns $BROWNFIELD_NAMESPACE
@@ -84,7 +84,7 @@ create-namespaces-secrets () {
         --docker-server=$IMG_REGISTRY_URL \
         --docker-username=$IMG_REGISTRY_USER \
         --docker-password=$IMG_REGISTRY_PASSWORD \
-        --namespace $PORTAL_NAMESPACE
+        --namespace $HUB_NAMESPACE
     
     #enable SBO to access image registry
     kubectl create secret docker-registry imagereg-secret \
@@ -196,8 +196,8 @@ install-tbs() {
 
 }
 
-#install hub
-install-hub() {
+#install-api-hub
+install-api-hub() {
 
     echo
     echo "===> Installing API hub..."
@@ -367,13 +367,17 @@ install-contour() {
     echo "=========> Install contour ingress controller ..."
     echo
     
-    kubectl create namespace contour-system
+    kubectl apply -f https://projectcontour.io/quickstart/contour.yaml
 
-    helm repo update
+    update-dns "envoy" "projectcontour" "*.$SUB_DOMAIN" 
     
-    helm install ingress bitnami/contour -n contour-system --version 3.3.1
+    #kubectl create namespace contour-system
 
-    update-dns "ingress-contour-envoy" "contour-system" "*.$SUB_DOMAIN"
+    #helm repo update
+    
+    #helm install ingress bitnami/contour -n contour-system --version 3.3.1
+
+    #update-dns "ingress-contour-envoy" "contour-system" "*.$SUB_DOMAIN"
 
 }
 
@@ -486,7 +490,7 @@ cleanup)
 	cleanup $2
     ;;
 unit-test)
-    update-dns "ingress-contour-envoy" "contour-system" "*.$SUB_DOMAIN"
+    install-api-hub
     ;;
 *)
     incorrect-usage

@@ -1,12 +1,12 @@
 apiVersion: networking.k8s.io/v1beta1 
 kind: Ingress 
 metadata: 
-  name: api-portal-ingress
+  name: api-hub-ingress
   annotations: 
-    kubernetes.io/ingress.class: nginx 
+    kubernetes.io/ingress.class: contour 
 spec: 
   rules: 
-    - host: api-portal.apps.dekt.io
+    - host: api-hub.apps.dekt.io
       http: 
         paths: 
           - backend: 
