@@ -3,7 +3,7 @@ kind: Ingress
 metadata: 
   name: api-hub-ingress
   annotations: 
-    kubernetes.io/ingress.class: nginx 
+    kubernetes.io/ingress.class: contour 
 spec: 
   rules: 
     - host: api-hub.{HOST_NAME}
