@@ -66,7 +66,7 @@ open-store() {
 	kubectl get ingress dekt4pets-ingress -n $APP_NAMESPACE
 
 	echo
-	echo "The dekt4pets application should now be accessible on https://dekt4pets-store.$SUB_DOMAIN.$DOMAIN/rescue "
+	echo "The dekt4pets application should now be accessible on https://dekt4pets.$SUB_DOMAIN.$DOMAIN/rescue "
 	echo
 
     #debug gateway

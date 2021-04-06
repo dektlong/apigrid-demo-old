@@ -21,8 +21,8 @@
 #install
 install() {
 
-    #install-nginx
-    install-contour
+    install-nginx
+    #install-contour
     
     create-namespaces-secrets
 
@@ -38,7 +38,7 @@ install() {
 
     install-tbs
 
-    install-cnr
+    #install-cnr
     
     setup-demo-examples
 
