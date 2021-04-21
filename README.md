@@ -38,6 +38,7 @@ It is designed to run on any k8s substrate.
 
 ## Installing the demo
 
+- If you update / first install the core Tanzu services ```./init-demo.sh relocate-core-images```
 - ```./init-demo.sh [aks | tkg]```
 - This script installs the following products
   - Spring Cloud Gateway
