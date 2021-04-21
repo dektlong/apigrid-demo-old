@@ -6,7 +6,7 @@ generatorNames:
 - boot-k8s-kubectl
 - boot-cloudfoundry
 homeUrl: https://github.com/spring-cloud-services-samples/animal-rescue
-iconUrl: https://raw.githubusercontent.com/simple-starters/icons/master/icon-boot-angular.png
+iconUrl: https://raw.githubusercontent.com/simple-starters/icons/master/icon-boot.png
 language: Java
 maintainer: dekt
 name: backend-api-for-online-stores
