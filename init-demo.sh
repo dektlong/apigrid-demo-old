@@ -105,10 +105,6 @@ create-namespaces-secrets () {
 
     #jwt secret for dekt4pets backend app
     kubectl create secret generic dekt4pets-jwk --from-env-file=secrets/dekt4pets-jwk.txt -n $APP_NAMESPACE
-    
-
-    #for local images build and/or relocated to image registry
-    docker login -u $IMG_REGISTRY_USER -p $IMG_REGISTRY_PASSWORD $IMG_REGISTRY_URL
 }
 
 #update-configs 
@@ -148,9 +144,7 @@ install-gateway() {
     echo
     echo "===> Installing Spring Cloud Gateway operator..."
     echo
-
-    $GW_INSTALL_DIR/scripts/relocate-images.sh $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO
-    
+   
     $GW_INSTALL_DIR/scripts/install-spring-cloud-gateway.sh $GW_NAMESPACE
 }
 
@@ -182,8 +176,6 @@ install-tbs() {
     echo "===> Installing Tanzu Build Service..."
     echo
     
-    kbld relocate -f $TBS_INSTALL_DIR/images.lock --lock-output $TBS_INSTALL_DIR/images-relocated.lock --repository $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/build-service
-
     ytt -f $TBS_INSTALL_DIR/values.yaml \
         -f $TBS_INSTALL_DIR/manifests/ \
         -v docker_repository="$IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/build-service" \
@@ -203,9 +195,6 @@ install-api-hub() {
     echo "===> Installing API hub..."
     echo
 
-    
-    $API_HUB_INSTALL_DIR/scripts/relocate-images.sh $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO
-    
     $API_HUB_INSTALL_DIR/scripts/install-api-portal.sh $HUB_NAMESPACE
     
     kubectl set env deployment.apps/api-portal-server API_PORTAL_SOURCE_URLS=http://scg-openapi.$SUB_DOMAIN.$DOMAIN/openapi -n $HUB_NAMESPACE
@@ -223,8 +212,7 @@ install-sbo () {
     echo
     echo "===> Installing Spring Boot Observer..."
     echo
-    #sbo/build-sbo-images.sh   
-
+ 
     # Create sbo deployment and ingress rule
     kubectl apply -f sbo/.config/sbo-deployment.yaml -n $SBO_NAMESPACE
     kubectl apply -f sbo/.config/sbo-ingress.yaml -n $SBO_NAMESPACE 
@@ -334,6 +322,21 @@ update-dynamic-value() {
         perl -pi -w -e "s|${find[$i]}|${replace[$i]}|g;" $subFolder/.config/$fileName
     done
     
+}
+
+#relocate-core-images
+relocate-core-images() {
+
+    docker login -u $IMG_REGISTRY_USER -p $IMG_REGISTRY_PASSWORD $IMG_REGISTRY_URL
+
+    sbo/build-sbo-images.sh 
+
+    $API_HUB_INSTALL_DIR/scripts/relocate-images.sh $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO
+
+    kbld relocate -f $TBS_INSTALL_DIR/images.lock --lock-output $TBS_INSTALL_DIR/images-relocated.lock --repository $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/build-service
+
+    $GW_INSTALL_DIR/scripts/relocate-images.sh $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO
+
 }
 
 #install-nginx
@@ -460,6 +463,7 @@ incorrect-usage() {
 	echo
   	echo "* aks"
     echo "* tkg"
+    echo "* relocate-core-images"
     echo "* unit-test"
     echo "* cleanup [ aks | tkg  (default: aks) ]"
 	echo
@@ -480,6 +484,9 @@ tkg)
     ;;
 cleanup)
 	cleanup $2
+    ;;
+relocate-core-images)
+    relocate-core-images
     ;;
 unit-test)
     install-api-hub

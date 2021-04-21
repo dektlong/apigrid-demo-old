@@ -8,7 +8,11 @@ spec:
   rules: 
     - host: api-hub.{HOST_NAME}
       http: 
-        paths: 
-          - backend: 
-              serviceName: api-portal-server
-              servicePort: 8080
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: api-portal-server
+              port:
+                number: 8080

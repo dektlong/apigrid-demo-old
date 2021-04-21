@@ -8,7 +8,11 @@ spec:
   rules: 
     - host: dekt4pets.{HOST_NAME}
       http: 
-        paths: 
-          - backend: 
-              serviceName: dekt4pets-gateway
-              servicePort: 80
+       paths:
+       - path: /
+         pathType: Prefix
+         backend:
+           service:
+             name: dekt4pets-gateway
+             port:
+               number: 80
