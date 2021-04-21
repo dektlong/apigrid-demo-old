@@ -1,0 +1,16 @@
+description: Accelerator to create backend-api-for-online-stores
+displayName: Backend API for online-stores
+framework: Spring Boot
+generatorNames:
+- boot-api-k8s
+- knative-kpack
+homeUrl: https://github.com/spring-cloud-services-samples/animal-rescue
+iconUrl: https://raw.githubusercontent.com/simple-starters/icons/master/icon-boot-angular.png
+language: Java
+maintainer: dekt
+name: backend-api-for-online-stores
+services: Spring Cloud Gateway
+sourceUrl: https://github.com/simple-starters/hello-fun
+tags:
+- online-store
+version: 1.0.0
