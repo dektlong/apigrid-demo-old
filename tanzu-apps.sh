@@ -199,7 +199,8 @@ workload () {
         ;;
     create-frontend)
 	    deploy-frontend
-        open-store
+        #open-store
+        kubectl apply -f gateway/.config/dekt4pets-ingress.yaml -n $APP_NAMESPACE
 	    ;;
     patch-backend)
         patch-backend
