@@ -111,13 +111,9 @@ It is designed to run on any k8s substrate.
 
     	String adopterId = adopter.getName();
     
-		  //check for valid adoption history
+		  //check for valid adoption history and criminal-record
 		 	//	e.g. curl -X GET "https://datacheck.apps.dekt.io/adoption-history/*" -H "accept: */*"
-			LOGGER.info("adopterId " + adopterId + " has succefully completed adoption history check");
-
-    	// check for clear criminal-record
 	  	//	e.g. curl -X GET "https://datacheck.apps.dekt.io/criminal-record/*" -H "accept: */*"
-		  LOGGER.info("adopterId " + adopterId + " has succefully completed criminal record check");
 
   		String displayResults = "<h1>Congratulations,</h1>" + 
 								"<h2>You are cleared to adopt your next best friend.</h2>" +
