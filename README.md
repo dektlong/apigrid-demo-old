@@ -69,18 +69,18 @@ It is designed to run on any k8s substrate.
   - Show the pre-generated API configs
 
 ### The path-to-prod
-- ```./run-pipeline.sh info``` 
-- ```./run-pipeline.sh deploy-backend```
+- ```./tanzu-apps.sh supplychain``` 
+- ```./tanzu-apps.sh workload create-backend```
 - Show how build service detects git-repo changes and auto re-build backend-image (if required)
 - Show how the ```dekt4pets-gateway``` micro-gateway starts quickly as just a component of your app
-- Access API Hub on ```localhost:8080/apis```
+- Access API Hub on ```api-hub.<SUB_DOMAIN>.<DOMAIN>```
   - Show the dekt4Pets API group auto-populated with the API spec you defined
   - now the frontend team can easily discover and test the backend APIs and reuse
   - Show the other API groups ('brownfield APIs')
-- ```./run-pipeline.sh deploy-frontend```
+- ```./tanzu-apps.sh workload create-frontend```
 - Access Spring Boot Observer at ```http://sbo.<SUB_DOMAIN>.<DOMAIN>/apps``` to show actuator information on the backend application 
 - Show the new frontend APIs that where auto-populated to the hub
-- ```./run-pipeline.sh open-store```
+- This phase will also add an ingress rule to the gateway, now you can show:
   - External traffic can only routed via the micro-gateway
   - Frontend and backend microservices still cannot be accessed directly) 
   - Access the application on 
@@ -125,7 +125,7 @@ It is designed to run on any k8s substrate.
 	  	return displayResults;
   }
 ```
-- ```./run-pipeline.sh patch-backend "add check-adopter api"```
+- ```./tanzu-apps.sh workload patch-backend "```
 - show how build-service is invoking a new image build based on the git-commit-id
 - run the new check-adopter api 
 ```
