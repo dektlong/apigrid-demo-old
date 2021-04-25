@@ -177,13 +177,16 @@ usage() {
 #describe-supplychain
 describe-supplychain() {
     echo
-	echo "The following 'dekt4pets' supplychain mockup configurations have been applied to this cluster:"
+	echo "The following supplychain mockup configurations have been applied to this cluster:"
 	echo
     echo "* SourceTemplate with git repo https://github.com/dektlong/_dekt4pets-demo"
   	echo "* BuildTemplate with 2 cluster builders:"
     echo "  1. dekt4pets-backend Build-Service image (java-builder)"
     echo "  2. dekt4pets-frontend Build-Service image (native-builder)"
-    echo "* ConfigTemplate for dekt4pets Spring Cloud Gateway instance"  
+    echo "* ConfigTemplate with internal apis definitions:"
+    echo "  1. dekt4pets Spring Cloud Gateway"  
+    echo "  2. dekt4pets-backend routes"
+    echo "  3. dekt4pets-frontend routes"
    	echo
 }
 
