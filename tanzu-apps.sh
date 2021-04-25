@@ -184,7 +184,6 @@ describe-supplychain() {
     echo "  1. dekt4pets-backend Build-Service image (java-builder)"
     echo "  2. dekt4pets-frontend Build-Service image (native-builder)"
     echo "* ConfigTemplate for dekt4pets Spring Cloud Gateway instance"  
-    echo "* DeliveryTemplate with ingress controller for external traffic"
    	echo
 }
 
