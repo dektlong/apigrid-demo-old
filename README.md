@@ -70,7 +70,7 @@ It is designed to run on any k8s substrate.
   - Show the pre-generated API configs
 
 ### The path-to-prod
-- ```./tanzu-apps.sh supplychain``` 
+- ```./tanzu-apps.sh supplychain describe``` 
 - ```./tanzu-apps.sh workload create-backend```
 - Show how build service detects git-repo changes and auto re-build backend-image (if required)
 - Show how the ```dekt4pets-gateway``` micro-gateway starts quickly as just a component of your app
