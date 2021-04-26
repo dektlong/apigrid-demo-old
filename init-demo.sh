@@ -199,7 +199,7 @@ install-api-portal() {
     
     kubectl set env deployment.apps/api-portal-server API_PORTAL_SOURCE_URLS=http://scg-openapi.$SUB_DOMAIN.$DOMAIN/openapi -n $HUB_NAMESPACE
 
-    kubectl set env deployment.apps/api-portal-server API_PORTAL_SOURCE_URLS_CACHE_TTL_SEC=10 #so frontend apis will appear faster, just for this demo
+    kubectl set env deployment.apps/api-portal-server API_PORTAL_SOURCE_URLS_CACHE_TTL_SEC=10 -n $HUB_NAMESPACE #so frontend apis will appear faster, just for this demo
 
     kubectl apply -f api-portal/.config/api-portal-ingress.yaml -n $HUB_NAMESPACE
 
