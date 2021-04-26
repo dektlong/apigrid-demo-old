@@ -207,7 +207,7 @@ supplychain() {
         ;;
     create)
 	    echo
-        echo "creating a new supply chain based on accelerator workload.yaml configuration ..."
+        echo "Creating a new supply chain based on accelerator workload.yaml configuration ..."
         echo
         ;;
     *)
