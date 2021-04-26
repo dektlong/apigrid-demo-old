@@ -140,7 +140,9 @@ rockme-native () {
         siege -d1  -c200 -t60S  --content-type="text/plain" 'http://rockme-native.dekt-apps.native.dekt.io POST rock-on'
         ;;
     *)
-  	    usage
+  	    echo
+        echo "usage: please specify { create | update | load }"
+      	exit 
   	    ;;
     esac
 }
@@ -166,9 +168,13 @@ usage() {
 	echo
 	echo "A mockup script to illustrate upcoming AppStack concepts. Please specify one of the following:"
 	echo
-    echo "* supplychain"
-    echo "* workload { create-backend | create-frontend | patch-backend }"
-    echo "* knative { create | update | load }"
+    echo "=> supplychain"
+    echo "  * create"
+    echo "  * describe"
+    echo "=> workload" 
+    echo "  * create-backend" 
+    echo "  * create-frontend"
+    echo "  * patch-backend"
     echo
   	exit   
  
@@ -182,7 +188,7 @@ describe-supplychain() {
     echo "* SourceTemplate with git repo https://github.com/dektlong/_dekt4pets-demo"
   	echo "* BuildTemplate with 2 cluster builders:"
     echo "  1. dekt4pets-backend Build-Service image (java-builder)"
-    echo "  2. dekt4pets-frontend Build-Service image (native-builder)"
+    echo "  2. dekt4pets-frontend Build-Service image (knative-builder)"
     echo "* ConfigTemplate with internal apis definitions:"
     echo "  1. dekt4pets Spring Cloud Gateway"  
     echo "  2. dekt4pets-backend routes"
@@ -222,7 +228,7 @@ workload)
 supplychain)
     describe-supplychain
     ;;
-knative)
+rockme-native)
     rockme-native $2
     ;;
 *)
