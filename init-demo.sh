@@ -14,7 +14,7 @@
     ACC_NAMESPACE="acc-system"
     SBO_NAMESPACE="sbo-system"
     BROWNFIELD_NAMESPACE="brownfield-apis"
-    ACC_INSTALL_BUNDLE="dev.registry.pivotal.io/app-accelerator/acc-install-bundle:1.0.0-preview-20210312"
+    ACC_INSTALL_BUNDLE="registry.pivotal.io/app-accelerator/acc-install-bundle:1.0.0-preview-20210322"
 
 #################### functions #######################
 
@@ -93,9 +93,9 @@ create-namespaces-secrets () {
         --docker-password=$IMG_REGISTRY_PASSWORD \
         --namespace=$SBO_NAMESPACE
 
-    #enable ACC to access dev.registry.pivotal.io
+    #enable ACC to access registry.pivotal.io
     kubectl create secret docker-registry acc-image-regcred \
-        --docker-server=dev.registry.pivotal.io \
+        --docker-server=registry.pivotal.io \
         --docker-username=$TANZU_NETWORK_USER \
         --docker-password=$TANZU_NETWORK_PASSWORD \
         --namespace=$ACC_NAMESPACE 
@@ -198,6 +198,8 @@ install-api-portal() {
     $API_HUB_INSTALL_DIR/scripts/install-api-portal.sh $HUB_NAMESPACE
     
     kubectl set env deployment.apps/api-portal-server API_PORTAL_SOURCE_URLS=http://scg-openapi.$SUB_DOMAIN.$DOMAIN/openapi -n $HUB_NAMESPACE
+
+    kubectl set env deployment.apps/api-portal-server API_PORTAL_SOURCE_URLS_CACHE_TTL_SEC=10 #so frontend apis will appear faster, just for this demo
 
     kubectl apply -f api-portal/.config/api-portal-ingress.yaml -n $HUB_NAMESPACE
 
@@ -492,7 +494,7 @@ relocate-core-images)
     relocate-core-images
     ;;
 unit-test)
-    install-api-portal
+    install-acc
     ;;
 *)
     incorrect-usage
