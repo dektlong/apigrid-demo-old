@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+bold=$(tput bold)
+normal=$(tput sgr0)
+
 #################### functions #######################
 
 #deploy-backend 
@@ -165,35 +168,52 @@ git-push() {
 
 #usage
 usage() {
-	echo
+
+    echo
 	echo "A mockup script to illustrate upcoming AppStack concepts. Please specify one of the following:"
 	echo
-    echo "=> supplychain"
-    echo "  * create"
-    echo "  * describe"
-    echo "=> workload" 
-    echo "  * create-backend" 
-    echo "  * create-frontend"
-    echo "  * patch-backend"
+    echo "${bold}supplychain${normal}"
+    echo "  create"
+    echo "  describe"
+    echo
+    echo "${bold}workload${normal}"
+    echo "  create-backend" 
+    echo "  create-frontend"
+    echo "  patch-backend"
     echo
   	exit   
  
 }
 
-#describe-supplychain
-describe-supplychain() {
-    echo
-	echo "The following supplychain mockup configurations have been applied to this cluster:"
-	echo
-    echo "* SourceTemplate with git repo https://github.com/dektlong/_dekt4pets-demo"
-  	echo "* BuildTemplate with 2 cluster builders:"
-    echo "  1. dekt4pets-backend Build-Service image (java-builder)"
-    echo "  2. dekt4pets-frontend Build-Service image (knative-builder)"
-    echo "* ConfigTemplate with internal apis definitions:"
-    echo "  1. dekt4pets Spring Cloud Gateway"  
-    echo "  2. dekt4pets-backend routes"
-    echo "  3. dekt4pets-frontend routes"
-   	echo
+#supplychain
+supplychain() {
+
+    case $1 in
+    describe)
+    	echo
+	    echo "The following supplychain mockup configurations have been applied to this cluster:"
+	    echo
+        echo "${bold}SourceTemplate${normal} with git repo https://github.com/dektlong/_dekt4pets-demo"
+        echo
+  	    echo "${bold}BuildTemplate${normal} with 2 cluster builders"
+        echo "  dekt4pets-backend Build-Service image (java-builder)"
+        echo "  dekt4pets-frontend Build-Service image (knative-builder)"
+        echo
+        echo "${bold}ConfigTemplate${normal} with internal apis definitions"
+        echo "  dekt4pets Spring Cloud Gateway instance"  
+        echo "  dekt4pets-backend routes"
+        echo "  dekt4pets-frontend routes"
+   	    echo
+        ;;
+    create)
+	    echo
+        echo "creating a new supply chain based on accelerator workload.yaml configuration ..."
+        echo
+        ;;
+    *)
+  	    usage
+  	    ;;
+    esac
 }
 
 #workload
@@ -226,7 +246,7 @@ workload)
 	workload $2
     ;;
 supplychain)
-    describe-supplychain
+    supplychain $2
     ;;
 rockme-native)
     rockme-native $2
