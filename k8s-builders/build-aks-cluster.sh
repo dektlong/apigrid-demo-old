@@ -52,7 +52,7 @@ source secrets/config-values.env
 case $1 in 
 create)
 	create-cluster $2 $3
-	#open -a Terminal k8s-builders/start_octant.sh
+	open -a Terminal k8s-builders/start_octant.sh
 	;;
 delete)
 	delete-cluster $2
