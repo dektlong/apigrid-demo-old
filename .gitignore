@@ -15,6 +15,4 @@ acc/.config
 # Ignore files related to config values and credentials
 .env
 
-#ingnore local api hub configurations
-hub/run-local-api-hub-server.sh
 
