@@ -10,7 +10,7 @@
     SBO_SERVER_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/spring-boot-observer-server:0.0.1
     SBO_SIDECAR_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/spring-boot-observer-sidecar:0.0.1
     GW_NAMESPACE="scgw-system"
-    HUB_NAMESPACE="api-hub-system"
+    HUB_NAMESPACE="api-portal-system"
     ACC_NAMESPACE="acc-system"
     SBO_NAMESPACE="sbo-system"
     BROWNFIELD_NAMESPACE="brownfield-apis"
@@ -32,13 +32,13 @@ install() {
 
     install-acc
     
-    install-api-hub
+    install-api-portal
     
     install-sbo
 
     install-tbs
 
-    #install-cnr
+    install-cnr
     
     setup-demo-examples
 
@@ -79,7 +79,7 @@ create-namespaces-secrets () {
         --docker-password=$IMG_REGISTRY_PASSWORD \
         --namespace $GW_NAMESPACE
     
-    #enable API-hub to access image registry (has to be that specific name)
+    #enable API-portal to access image registry (has to be that specific name)
     kubectl create secret docker-registry api-portal-image-pull-secret \
         --docker-server=$IMG_REGISTRY_URL \
         --docker-username=$IMG_REGISTRY_USER \
@@ -115,20 +115,20 @@ update-configs() {
     echo
 
     #dynamic values folders
-    mkdir -p {backend/.config,frontend/.config,gateway/.config,hub/.config,sbo/.config,ACC/.config}    
+    mkdir -p {backend/.config,frontend/.config,gateway/.config,api-portal/.config,sbo/.config,ACC/.config}    
     
     update-dynamic-value "gateway" "dekt4pets-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
     update-dynamic-value "gateway" "dekt4pets-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
     update-dynamic-value "acc" "acc-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
-    update-dynamic-value "hub" "scg-openapi-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
-    update-dynamic-value "hub" "hub-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
+    update-dynamic-value "api-portal" "scg-openapi-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
+    update-dynamic-value "api-portal" "api-portal-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
     update-dynamic-value "sbo" "sbo-deployment.yaml" "{OBSERVER_SERVER_IMAGE}" "$SBO_SERVER_IMAGE_LOCATION"
     update-dynamic-value "sbo" "sbo-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
     update-dynamic-value "sbo" "fortune-sidecar-example.yaml" "{FORTUNE_IMAGE}" "$FORTUNE_IMAGE_LOCATION" "{OBSERVER_SIDECAR_IMAGE}" "$SBO_SIDECAR_IMAGE_LOCATION"
     update-dynamic-value "sbo" "fortune-ingress.yaml" "{HOST_NAME}" "$SUB_DOMAIN.$DOMAIN"
-    update-dynamic-value "hub" "datacheck-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
-    update-dynamic-value "hub" "suppliers-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
-    update-dynamic-value "hub" "donations-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
+    update-dynamic-value "api-portal" "datacheck-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
+    update-dynamic-value "api-portal" "suppliers-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
+    update-dynamic-value "api-portal" "donations-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
     update-dynamic-value "backend" "dekt4pets-backend-app.yaml" "{BACKEND_IMAGE}" "$DET4PETS_BACKEND_IMAGE_LOCATION" "{OBSERVER_SIDECAR_IMAGE}" "$SBO_SIDECAR_IMAGE_LOCATION"
     update-dynamic-value "frontend" "dekt4pets-frontend-app.yaml" "{FRONTEND_IMAGE}" "$DET4PETS_FRONTEND_IMAGE_LOCATION" 
 
@@ -188,20 +188,20 @@ install-tbs() {
 
 }
 
-#install-api-hub
-install-api-hub() {
+#install-api-portal
+install-api-portal() {
 
     echo
-    echo "===> Installing API hub..."
+    echo "===> Installing API portal..."
     echo
 
     $API_HUB_INSTALL_DIR/scripts/install-api-portal.sh $HUB_NAMESPACE
     
     kubectl set env deployment.apps/api-portal-server API_PORTAL_SOURCE_URLS=http://scg-openapi.$SUB_DOMAIN.$DOMAIN/openapi -n $HUB_NAMESPACE
 
-    kubectl apply -f hub/.config/hub-ingress.yaml -n $HUB_NAMESPACE
+    kubectl apply -f api-portal/.config/api-portal-ingress.yaml -n $HUB_NAMESPACE
 
-    kubectl apply -f hub/.config/scg-openapi-ingress.yaml -n $GW_NAMESPACE
+    kubectl apply -f api-portal/.config/scg-openapi-ingress.yaml -n $GW_NAMESPACE
 
    
 }
@@ -256,7 +256,7 @@ setup-demo-examples() {
     echo
     echo "===> Setup brownfield APIs expamples..."
     echo
-    kustomize build hub | kubectl apply -f -
+    kustomize build api-portal | kubectl apply -f -
 
     setup-dekt4pets-examples
 
@@ -327,9 +327,12 @@ update-dynamic-value() {
 #relocate-core-images
 relocate-core-images() {
 
+    echo "Make sure the docker desktop deamon is running. Press any key to continue..."
+    read
+
     docker login -u $IMG_REGISTRY_USER -p $IMG_REGISTRY_PASSWORD $IMG_REGISTRY_URL
 
-    sbo/build-sbo-images.sh 
+    #sbo/build-sbo-images.sh 
 
     $API_HUB_INSTALL_DIR/scripts/relocate-images.sh $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO
 
@@ -489,7 +492,7 @@ relocate-core-images)
     relocate-core-images
     ;;
 unit-test)
-    install-api-hub
+    install-api-portal
     ;;
 *)
     incorrect-usage
