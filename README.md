@@ -24,7 +24,7 @@ It is designed to run on any k8s substrate.
 
 ## COMPLETE BEFORE STARTING !!
 
-- Create a folder named ```secrets``` in the dekt4pets parent directory
+- Create a folder named ```secrets``` in the ```supply-chain``` directory
 
 - Create ```dekt4pets-jwk.txt``` and ```dekt4pets-sso.txt``` credential files and place them in the ```secrets``` directory
   - see example in ```https://github.com/spring-cloud-services-samples/animal-rescue/blob/main/k8s/deploy_to_k8s.md```
@@ -32,7 +32,7 @@ It is designed to run on any k8s substrate.
 - Copy ```config-values-UPDATE_ME``` to ```secrets``` directory and renamed it to ```config-values.env```
 
 - Set all variables in ```config-values.env```
-  - Note: all yaml files that are updated in runtime will be copied to ```.config``` sub-directory in their respective directories during the init-demo phase
+  - Note: all yaml files that are updated in runtime will be copied to ```config``` sub-directory in their respective directories during the init-demo phase
 
 - The ingress setup is based on GoDaddy DNS, if you are using a different one, please modify the ```update-dns``` function in ```init-demo.sh``` 
 
@@ -90,13 +90,13 @@ It is designed to run on any k8s substrate.
   ```
   - login and show SSO functionality 
 - Demo Tanzu Serverless
-  - ```./run-pipeline.sh deploy-knative-app```
+  - ```./tanzu-apps.sh rockme-knative```
 
 ### Changes in production
 - now the backend team will leverage the 'brownfield' APIs to add background check functionality on potential adopters
 - access the 'datacheck' API group and test adoption-history and background-check APIs
 - explain that now our backend team can know exactly how to use a verified working version of both APIs (no tickets to off platform teams)
-- In ```backend/routes/dekt4pets-backend-routes.yaml``` add
+- In ```workload-backend/routes/dekt4pets-backend-routes.yaml``` add
 ```
     - predicates:
         - Path=/api/check-adopter
@@ -104,7 +104,7 @@ It is designed to run on any k8s substrate.
       ssoEnabled: true
       tokenRelay: true          
 ```
-- In ```backend/src/main/.../AnimalController.java``` add
+- In ```workload-backend/src/main/.../AnimalController.java``` add
 ```
   @GetMapping("/check-adopter")
 	public String checkAdopter(Principal adopter) {
