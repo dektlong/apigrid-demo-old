@@ -2,15 +2,15 @@
 .DS_store
 
 # Ignore the secrets folder
-secrets
+supplychain/secrets
 
 # Ignore .config folders
-backend/.config
-frontend/.config
-gateway/.config
-api-portal/.config
-sbo/.config
-acc/.config
+workloads/backend/.config
+workloads/frontend/.config
+supplychain/gateway/.config
+supplychain/api-portal/.config
+supplychain/sbo/.config
+supplychain/acc/.config
 
 # Ignore files related to config values and credentials
 .env

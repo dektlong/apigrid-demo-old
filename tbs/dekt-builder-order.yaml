@@ -1,3 +1,0 @@
-- group:
-  - id: tanzu-buildpacks/java
-  - id: tanzu-buildpacks/nodejs

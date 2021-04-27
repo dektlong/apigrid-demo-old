@@ -22,15 +22,10 @@ deploy-backend() {
     kp build list $BACKEND_TBS_IMAGE -n $APP_NAMESPACE
     
     echo
-    echo "=========> Start micro-gateway for dekt4pets app..."
-    echo
-    kustomize build gateway | kubectl apply -f -
-
-    echo
     echo "=========> Apply backend app, service and routes ..."
     echo    
     #kubectl set image deployment/dekt4pets-backend dekt4pets-backend=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION -n $APP_NAMESPACE
-    kustomize build backend | kubectl apply -f -
+    kustomize build workloads/backend | kubectl apply -f -
     
 }
 
@@ -41,40 +36,8 @@ deploy-frontend() {
     echo "=========> Apply frontend app, service and routes ..."
     echo
 	
-    kustomize build frontend | kubectl apply -f -
+    kustomize build workloads/frontend | kubectl apply -f -
 
-}
-
-#open-store (enable external traffic on gateway)
-open-store() {
-
-	echo
-	echo "=========> Open dekt4pets online store: Configure external traffic via dekt4pets-gateway ..."
-	echo
-	kubectl apply -f gateway/.config/dekt4pets-ingress.yaml -n $APP_NAMESPACE
-	
-	echo
-    printf "Waiting for ingress rule to receive IP address ."
-
-	ingress_ip=""
-
-	while [ "$ingress_ip" == "" ]
-	do
-		printf "."
-		ingress_ip="$(kubectl get ingress dekt4pets-ingress -n $APP_NAMESPACE -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')"
-		sleep 1
-	done
-
-	echo
-	kubectl get ingress dekt4pets-ingress -n $APP_NAMESPACE
-
-	echo
-	echo "The dekt4pets application should now be accessible on https://dekt4pets.$SUB_DOMAIN.$DOMAIN/rescue "
-	echo
-
-    #debug gateway
-    #kubectl -n dekt-apps  port-forward service/dekt4pets-gateway 8080:80
-    #see if app works on http://localhost:8080/rescue
 }
 
 #patch-backend
@@ -191,19 +154,16 @@ supplychain() {
     case $1 in
     describe)
     	echo
-	    echo "The following supplychain mockup configurations have been applied to this cluster:"
+	    echo "The following supplychains mockup configurations have been applied to this cluster:"
 	    echo
-        echo "${bold}SourceTemplate${normal} with git repo https://github.com/dektlong/_dekt4pets-demo"
+        echo "${bold}micro-gateways${normal}"
+        echo "  {SourceTemplate} defining Dekt4Pets, BackgroundCheck, Donations and Suppliers gateways"
         echo
-  	    echo "${bold}BuildTemplate${normal} with 2 cluster builders"
-        echo "  dekt4pets-backend Build-Service image (java-builder)"
-        echo "  dekt4pets-frontend Build-Service image (knative-builder)"
+        echo "${bold}dekt4Pets${normal}"
+        echo "  {SourceTemplate} defining Backend and Frontend microservices"
+        echo "  {BuildTemplate} defining Java and kNative builders"
+        echo "  {ConfigTemplate} defining Backend and Frontend api-routes"
         echo
-        echo "${bold}ConfigTemplate${normal} with internal apis definitions"
-        echo "  dekt4pets Spring Cloud Gateway instance"  
-        echo "  dekt4pets-backend routes"
-        echo "  dekt4pets-frontend routes"
-   	    echo
         ;;
     create)
 	    echo
@@ -225,8 +185,6 @@ workload () {
         ;;
     create-frontend)
 	    deploy-frontend
-        #open-store
-        kubectl apply -f gateway/.config/dekt4pets-ingress.yaml -n $APP_NAMESPACE
 	    ;;
     patch-backend)
         patch-backend
@@ -239,7 +197,7 @@ workload () {
 
 #################### main #######################
 
-source secrets/config-values.env
+source supplychain/secrets/config-values.env
 
 case $1 in
 workload)
