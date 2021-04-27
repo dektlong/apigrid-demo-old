@@ -30,22 +30,6 @@ public class AnimalController {
 		this.animalRepository = animalRepository;
 	}
 
-	@GetMapping("/check-adopter")
-	public String checkAdopter(Principal adopter) {
-
-    	String adopterId = adopter.getName();
-    
-		  //check for valid adoption history and criminal-record
-		 	//	e.g. curl -X GET "https://datacheck.apps.dekt.io/adoption-history/*" -H "accept: */*"
-	  	//	e.g. curl -X GET "https://datacheck.apps.dekt.io/criminal-record/*" -H "accept: */*"
-
-  		String displayResults = "<h1>Congratulations,</h1>" + 
-								"<h2>You are cleared to adopt your next best friend.</h2>" +
-								"<p>token:"+adopterId+"</p>";
-		
-	  	return displayResults;
-    }
-
 	@GetMapping("/whoami")
 	public String whoami(Principal principal) {
 		if (principal == null) {
