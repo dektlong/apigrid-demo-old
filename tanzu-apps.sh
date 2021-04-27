@@ -25,7 +25,7 @@ deploy-backend() {
     echo "=========> Apply backend app, service and routes ..."
     echo    
     #kubectl set image deployment/dekt4pets-backend dekt4pets-backend=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION -n $APP_NAMESPACE
-    kustomize build workloads/backend | kubectl apply -f -
+    kustomize build workload-backend | kubectl apply -f -
     
 }
 
@@ -36,7 +36,7 @@ deploy-frontend() {
     echo "=========> Apply frontend app, service and routes ..."
     echo
 	
-    kustomize build workloads/frontend | kubectl apply -f -
+    kustomize build workload-frontend | kubectl apply -f -
 
 }
 
@@ -77,9 +77,9 @@ patch-backend() {
     echo
     
     #workaround for image refresh issue
-    kubectl delete -f workloads/backend/dekt4pets-backend-app.yaml -n $APP_NAMESPACE > /dev/null 
+    kubectl delete -f workload-backend/dekt4pets-backend-app.yaml -n $APP_NAMESPACE > /dev/null 
         
-    kustomize build workloads/backend | kubectl apply -f -
+    kustomize build workload-backend | kubectl apply -f -
 
 }
 
@@ -135,7 +135,7 @@ usage() {
     echo
 	echo "A mockup script to illustrate upcoming AppStack concepts. Please specify one of the following:"
 	echo
-    echo "${bold}supplychain${normal}"
+    echo "${bold}supply-chain${normal}"
     echo "  create"
     echo "  describe"
     echo
@@ -148,20 +148,20 @@ usage() {
  
 }
 
-#supplychain
-supplychain() {
+#supply-chain
+supply-chain() {
 
     case $1 in
     describe)
     	echo
-	    echo "The following supplychains mockup configurations have been applied to this cluster:"
+	    echo "The following supply-chains mockup configurations have been applied to this cluster:"
 	    echo
         echo "${bold}micro-gateways${normal}"
         echo "  {ConfigTemplate}  config Dekt4Pets, BackgroundCheck, Donations and Suppliers gateway instances"
         echo
         echo "${bold}dekt4Pets${normal}"
         echo "  {SourceTemplate} - git-repo source for the  Backend and Frontend microservices"
-        echo "  {BuildTemplate} - namespace builder supporting Java, Node and kNative buildpacks"
+        echo "  {BuildTemplate} - cluster builder supporting Java, Node and kNative buildpacks"
         echo "  {ConfigTemplate} - config Backend and Frontend api-routes"
         echo
         ;;
@@ -197,14 +197,14 @@ workload () {
 
 #################### main #######################
 
-source supplychain/secrets/config-values.env
+source supply-chain/secrets/config-values.env
 
 case $1 in
 workload)
 	workload $2
     ;;
-supplychain)
-    supplychain $2
+supply-chain)
+    supply-chain $2
     ;;
 rockme-native)
     rockme-native $2

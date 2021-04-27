@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #################### configs #######################
-    source supplychain/secrets/config-values.env
+    source supply-chain/secrets/config-values.env
 
     HOST_NAME=$SUB_DOMAIN.$DOMAIN
     DET4PETS_FRONTEND_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION
@@ -101,10 +101,10 @@ create-namespaces-secrets () {
         --namespace=$ACC_NAMESPACE 
    
     #sso secret for dekt4pets-gatway 
-    kubectl create secret generic dekt4pets-sso --from-env-file=supplychain/secrets/dekt4pets-sso.txt -n $APP_NAMESPACE
+    kubectl create secret generic dekt4pets-sso --from-env-file=supply-chain/secrets/dekt4pets-sso.txt -n $APP_NAMESPACE
 
     #jwt secret for dekt4pets backend app
-    kubectl create secret generic dekt4pets-jwk --from-env-file=supplychain/secrets/dekt4pets-jwk.txt -n $APP_NAMESPACE
+    kubectl create secret generic dekt4pets-jwk --from-env-file=supply-chain/secrets/dekt4pets-jwk.txt -n $APP_NAMESPACE
 }
 
 #update-configs 
@@ -115,22 +115,22 @@ update-configs() {
     echo
 
     #dynamic values folders
-    mkdir -p {workloads/backend/.config,workloads/frontend/.config,supplychain/gateway/.config,supplychain/api-portal/.config,supplychain/sbo/.config,supplychain/acc/.config}    
+    mkdir -p {workload-backend/backend/.config,workload-backend/frontend/.config,supply-chain/gateway/.config,supply-chain/api-portal/.config,supply-chain/sbo/.config,supply-chain/acc/.config}    
     
-    update-dynamic-value "supplychain/gateway" "dekt4pets-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
-    update-dynamic-value "supplychain/gateway" "dekt4pets-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
-    update-dynamic-value "supplychain/acc" "acc-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
-    update-dynamic-value "supplychain/api-portal" "scg-openapi-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
-    update-dynamic-value "supplychain/api-portal" "api-portal-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
-    update-dynamic-value "supplychain/sbo" "sbo-deployment.yaml" "{OBSERVER_SERVER_IMAGE}" "$SBO_SERVER_IMAGE_LOCATION"
-    update-dynamic-value "supplychain/sbo" "sbo-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
-    update-dynamic-value "supplychain/sbo" "fortune-sidecar-example.yaml" "{FORTUNE_IMAGE}" "$FORTUNE_IMAGE_LOCATION" "{OBSERVER_SIDECAR_IMAGE}" "$SBO_SIDECAR_IMAGE_LOCATION"
-    update-dynamic-value "supplychain/sbo" "fortune-ingress.yaml" "{HOST_NAME}" "$SUB_DOMAIN.$DOMAIN"
-    update-dynamic-value "supplychain/api-portal" "datacheck-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
-    update-dynamic-value "supplychain/api-portal" "suppliers-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
-    update-dynamic-value "supplychain/api-portal" "donations-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
-    update-dynamic-value "workloads/backend" "dekt4pets-backend-app.yaml" "{BACKEND_IMAGE}" "$DET4PETS_BACKEND_IMAGE_LOCATION" "{OBSERVER_SIDECAR_IMAGE}" "$SBO_SIDECAR_IMAGE_LOCATION"
-    update-dynamic-value "workloads/frontend" "dekt4pets-frontend-app.yaml" "{FRONTEND_IMAGE}" "$DET4PETS_FRONTEND_IMAGE_LOCATION" 
+    update-dynamic-value "supply-chain/gateway" "dekt4pets-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
+    update-dynamic-value "supply-chain/gateway" "dekt4pets-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
+    update-dynamic-value "supply-chain/acc" "acc-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
+    update-dynamic-value "supply-chain/api-portal" "scg-openapi-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
+    update-dynamic-value "supply-chain/api-portal" "api-portal-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
+    update-dynamic-value "supply-chain/sbo" "sbo-deployment.yaml" "{OBSERVER_SERVER_IMAGE}" "$SBO_SERVER_IMAGE_LOCATION"
+    update-dynamic-value "supply-chain/sbo" "sbo-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
+    update-dynamic-value "supply-chain/sbo" "fortune-sidecar-example.yaml" "{FORTUNE_IMAGE}" "$FORTUNE_IMAGE_LOCATION" "{OBSERVER_SIDECAR_IMAGE}" "$SBO_SIDECAR_IMAGE_LOCATION"
+    update-dynamic-value "supply-chain/sbo" "fortune-ingress.yaml" "{HOST_NAME}" "$SUB_DOMAIN.$DOMAIN"
+    update-dynamic-value "supply-chain/api-portal" "datacheck-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
+    update-dynamic-value "supply-chain/api-portal" "suppliers-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
+    update-dynamic-value "supply-chain/api-portal" "donations-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
+    update-dynamic-value "workload-backend" "dekt4pets-backend-app.yaml" "{BACKEND_IMAGE}" "$DET4PETS_BACKEND_IMAGE_LOCATION" "{OBSERVER_SIDECAR_IMAGE}" "$SBO_SIDECAR_IMAGE_LOCATION"
+    update-dynamic-value "workload-frontend" "dekt4pets-frontend-app.yaml" "{FRONTEND_IMAGE}" "$DET4PETS_FRONTEND_IMAGE_LOCATION" 
 
 
     
@@ -150,8 +150,8 @@ install-gateway() {
     echo
     echo "=========> Start dekt4pets micro-gateway with public access..."
     echo
-    kustomize build supplychain/gateway | kubectl apply -f -
-    kubectl apply -f supplychain/gateway/.config/dekt4pets-ingress.yaml -n $APP_NAMESPACE
+    kustomize build supply-chain/gateway | kubectl apply -f -
+    kubectl apply -f supply-chain/gateway/.config/dekt4pets-ingress.yaml -n $APP_NAMESPACE
 }
 
 #install tanzu app accelerator 
@@ -171,7 +171,7 @@ install-acc() {
         | kbld -f /tmp/acc-bundle/.imgpkg/images.yml -f- \
         | kapp deploy -y -n $ACC_NAMESPACE -a accelerator -f-
 
-    kubectl apply -f supplychain/acc/.config/acc-ingress.yaml -n $ACC_NAMESPACE
+    kubectl apply -f supply-chain/acc/.config/acc-ingress.yaml -n $ACC_NAMESPACE
 
 }
 
@@ -190,7 +190,7 @@ install-tbs() {
         | kbld -f $TBS_INSTALL_DIR/images-relocated.lock -f- \
         | kapp deploy -a tanzu-build-service -f- -y
 
-    kp import -f supplychain/tbs/tbs-store-stacks-buildpacks.yaml
+    kp import -f supply-chain/tbs/tbs-store-stacks-buildpacks.yaml
 
 }
 
@@ -207,9 +207,9 @@ install-api-portal() {
 
     kubectl set env deployment.apps/api-portal-server API_PORTAL_SOURCE_URLS_CACHE_TTL_SEC=10 -n $HUB_NAMESPACE #so frontend apis will appear faster, just for this demo
 
-    kubectl apply -f supplychain/api-portal/.config/api-portal-ingress.yaml -n $HUB_NAMESPACE
+    kubectl apply -f supply-chain/api-portal/.config/api-portal-ingress.yaml -n $HUB_NAMESPACE
 
-    kubectl apply -f supplychain/api-portal/.config/scg-openapi-ingress.yaml -n $GW_NAMESPACE
+    kubectl apply -f supply-chain/api-portal/.config/scg-openapi-ingress.yaml -n $GW_NAMESPACE
 
    
 }
@@ -222,8 +222,8 @@ install-sbo () {
     echo
  
     # Create sbo deployment and ingress rule
-    kubectl apply -f supplychain/sbo/.config/sbo-deployment.yaml -n $SBO_NAMESPACE
-    kubectl apply -f supplychain/sbo/.config/sbo-ingress.yaml -n $SBO_NAMESPACE 
+    kubectl apply -f supply-chain/sbo/.config/sbo-deployment.yaml -n $SBO_NAMESPACE
+    kubectl apply -f supply-chain/sbo/.config/sbo-ingress.yaml -n $SBO_NAMESPACE 
 }
 
 #install-cnr (cloud native runtime)
@@ -253,18 +253,18 @@ setup-demo-examples() {
     echo
     echo "===> Setup SBO fortune service example..."
     echo
-    kubectl apply -f supplychain/sbo/.config/fortune-sidecar-example.yaml -n $APP_NAMESPACE 
+    kubectl apply -f supply-chain/sbo/.config/fortune-sidecar-example.yaml -n $APP_NAMESPACE 
 
     echo
     echo "===> Setup App Accelerator examples..."
     echo
-    supplychain/acc/add-examples.sh spring http://acc.$HOST_NAME #spring | dotnet 
+    supply-chain/acc/add-examples.sh spring http://acc.$HOST_NAME #spring | dotnet 
     
     
     echo
     echo "===> Setup brownfield APIs expamples..."
     echo
-    kustomize build supplychain/api-portal | kubectl apply -f -
+    kustomize build supply-chain/api-portal | kubectl apply -f -
 
     setup-dekt4pets-examples
 
@@ -279,7 +279,7 @@ setup-dekt4pets-examples() {
     echo
     kp builder create $BUILDER_NAME -n $APP_NAMESPACE \
     --tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BUILDER_NAME \
-    --order supplychain/tbs/dekt-builder-order.yaml \
+    --order supply-chain/tbs/dekt-builder-order.yaml \
     --stack full \
     --store default
   
@@ -288,11 +288,12 @@ setup-dekt4pets-examples() {
     echo
     kp image create $BACKEND_TBS_IMAGE -n $APP_NAMESPACE \
 	--tag $DET4PETS_BACKEND_IMAGE_LOCATION \
-    --builder $BUILDER_NAME \
     --git $DEMO_APP_GIT_REPO  \
-	--sub-path workloads/backend \
+	--sub-path ./workload-backend \
     --git-revision main \
     --wait
+
+    --builder $BUILDER_NAME \
 
     echo
     echo "===> Create dekt4pets-frontend TBS image..."
@@ -310,7 +311,7 @@ setup-dekt4pets-examples() {
 	#--tag $DET4PETS_FRONTEND_IMAGE_LOCATION \
 	#--git $DEMO_APP_GIT_REPO\
     #--git-revision main \
-   	#--sub-path ./frontend \
+   	#--sub-path ./workload-frontend \
 	#--wait
  
 }
@@ -339,7 +340,7 @@ relocate-core-images() {
 
     docker login -u $IMG_REGISTRY_USER -p $IMG_REGISTRY_PASSWORD $IMG_REGISTRY_URL
 
-    #supplychain/sbo/build-sbo-images.sh 
+    #supply-chain/sbo/build-sbo-images.sh 
 
     $API_HUB_INSTALL_DIR/scripts/relocate-images.sh $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO
 
@@ -381,7 +382,7 @@ install-contour() {
     echo
     
     #we use a modified install yaml to set externalTrafficPolicy: Cluster (from the local default) due to issues on AKS
-    kubectl apply -f supplychain/k8s-builders/contour-install.yaml
+    kubectl apply -f supply-chain/k8s-builders/contour-install.yaml
 
     update-dns "envoy" "projectcontour" "*.$SUB_DOMAIN" 
 }
@@ -425,13 +426,13 @@ cleanup() {
 
     case $1 in
     aks)
-	    supplychain/k8s-builders/build-aks-cluster.sh delete $CLUSTER_NAME
+	    supply-chain/k8s-builders/build-aks-cluster.sh delete $CLUSTER_NAME
         ;;
     tkg)
 	    remove-examples
 	    ;;
     *)
-  	    supplychain/k8s-builders/build-aks-cluster.sh delete $CLUSTER_NAME
+  	    supply-chain/k8s-builders/build-aks-cluster.sh delete $CLUSTER_NAME
   	    ;;
     esac
 }
@@ -443,17 +444,17 @@ remove-examples() {
     echo "===> Removing demo examples..."
     echo
     
-    kustomize build workloads/dekt4pets/backend | kubectl delete -f -
-    kustomize build workloads/dekt4pets/frontend | kubectl delete -f -
-    kubectl delete -f supplychain//gateway/.config/dekt4pets-ingress.yaml -n $APP_NAMESPACE
-    kustomize build supplychain/gateway | kubectl delete -f -
+    kustomize build workload-backend/dekt4pets/backend | kubectl delete -f -
+    kustomize build workload-frontend/dekt4pets/frontend | kubectl delete -f -
+    kubectl delete -f supply-chain//gateway/.config/dekt4pets-ingress.yaml -n $APP_NAMESPACE
+    kustomize build supply-chain/gateway | kubectl delete -f -
     #kustomize build acc | kubectl delete -f -
     kapp delete -n $ACC_NAMESPACE -a accelerator -y
     kustomize build legacy-apis | kubectl delete -f -
     helm uninstall spring-cloud-gateway -n $GW_NAMESPACE
     kapp deploy -a tanzu-build-service -y
-    kubectl delete -f supplychain/sbo/.config/sbo-deployment.yaml -n $SBO_NAMESPACE
-    kubectl delete -f supplychain/sbo/.config/sbo-ingress.yaml -n $SBO_NAMESPACE 
+    kubectl delete -f supply-chain/sbo/.config/sbo-deployment.yaml -n $SBO_NAMESPACE
+    kubectl delete -f supply-chain/sbo/.config/sbo-ingress.yaml -n $SBO_NAMESPACE 
     kubectl delete ns dekt-apps
     kubectl delete ns acc-system
     kubectl delete ns scgw-system 
@@ -481,11 +482,11 @@ incorrect-usage() {
 
 case $1 in
 aks)
-    supplychain/k8s-builders/build-aks-cluster.sh create $CLUSTER_NAME 5 #nodes
+    supply-chain/k8s-builders/build-aks-cluster.sh create $CLUSTER_NAME 5 #nodes
     install
     ;;
 tkg)
-    supplychain/k8s-builders/build-tkg-cluster.sh tkg-i $CLUSTER_NAME $TKGI_CLUSTER_PLAN 1 4
+    supply-chain/k8s-builders/build-tkg-cluster.sh tkg-i $CLUSTER_NAME $TKGI_CLUSTER_PLAN 1 4
     install
     ;;
 cleanup)

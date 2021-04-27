@@ -4,7 +4,7 @@ framework: AppStack
 homeUrl: https://github.com/spring-cloud-services-samples/animal-rescue
 iconUrl: https://raw.githubusercontent.com/simple-starters/icons/master/icon-boot.png
 maintainer: dekt
-name: supplychain-for-online-stores
+name: supply-chain-for-online-stores
 sourceUrl: https://github.com/dektlong/store-backend-api
 tags:
 - online-store

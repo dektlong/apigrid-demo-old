@@ -63,14 +63,14 @@ It is designed to run on any k8s substrate.
   - see example of a generator source repo here: ```https://github.com/dektlong/generator-boot-api-k8s```
   - see example of an accelerator source repo here: ```https://github.com/dektlong/store-backend-api```
 - Developer view: Click on online-store tag and show both frontend and backend Starters
-- DevOps view: show the supplychain template for devops to create
+- DevOps view: show the supply-chain template for devops to create
 - Developer view: Select the new ```backend-api-for-online-stores``` Starter and provide your own name (e.g. dekt4pets-backend)
 - Generate and open the zip in your local IDE
   - Show immediate local build with ```mvn clean spring-boot:build-image```
   - Show the pre-generated API configs
 
 ### The path-to-prod
-- ```./tanzu-apps.sh supplychain describe``` 
+- ```./tanzu-apps.sh supply-chain describe``` 
 - ```./tanzu-apps.sh workload create-backend```
 - Show how build service detects git-repo changes and auto re-build backend-image (if required)
 - Show how the ```dekt4pets-gateway``` micro-gateway starts quickly as just a component of your app

@@ -47,12 +47,12 @@ incorrect-usage() {
 
 #################### main #######################
 
-source supplychain/secrets/config-values.env
+source supply-chain/secrets/config-values.env
 
 case $1 in 
 create)
 	create-cluster $2 $3
-	open -a Terminal supplychain/k8s-builders/start_octant.sh
+	open -a Terminal supply-chain/k8s-builders/start_octant.sh
 	;;
 delete)
 	delete-cluster $2
