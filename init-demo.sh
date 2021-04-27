@@ -293,7 +293,7 @@ setup-dekt4pets-examples() {
     --git-revision main \
     --wait
 
-    --builder $BUILDER_NAME \
+    #--builder $BUILDER_NAME \
 
     echo
     echo "===> Create dekt4pets-frontend TBS image..."
