@@ -77,9 +77,9 @@ patch-backend() {
     echo
     
     #workaround for image refresh issue
-    kubectl delete -f workload/backend/dekt4pets-backend-app.yaml -n $APP_NAMESPACE > /dev/null 
+    kubectl delete -f workloads/backend/dekt4pets-backend-app.yaml -n $APP_NAMESPACE > /dev/null 
         
-    kustomize build workload/backend | kubectl apply -f -
+    kustomize build workloads/backend | kubectl apply -f -
 
 }
 
