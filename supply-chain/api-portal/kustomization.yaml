@@ -3,15 +3,15 @@ kind: Kustomization
 namespace: brownfield-apis
 
 resources:
-  - .config/datacheck-gateway.yaml
+  - config/datacheck-gateway.yaml
   - datacheck-service.yaml
   - datacheck-routes.yaml
   - datacheck-mapping.yaml
-  - .config/donations-gateway.yaml
+  - config/donations-gateway.yaml
   - donations-service.yaml
   - donations-routes.yaml
   - donations-mapping.yaml
-  - .config/suppliers-gateway.yaml
+  - config/suppliers-gateway.yaml
   - suppliers-service.yaml
   - suppliers-routes.yaml
   - suppliers-mapping.yaml

@@ -1,0 +1,16 @@
+# Ignore Mac system files
+.DS_store
+
+# Ignore the secrets folder
+secrets
+
+# Ignore config folders
+gateway/config
+api-portal/config
+sbo/config
+acc/config
+
+# Ignore files related to config values and credentials
+.env
+
+

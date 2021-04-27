@@ -115,7 +115,7 @@ update-configs() {
     echo
 
     #dynamic values folders
-    mkdir -p {workload-backend/backend/.config,workload-backend/frontend/.config,supply-chain/gateway/.config,supply-chain/api-portal/.config,supply-chain/sbo/.config,supply-chain/acc/.config}    
+    mkdir -p {workload-backend/config,workload-frontend/config,supply-chain/gateway/config,supply-chain/api-portal/config,supply-chain/sbo/config,supply-chain/acc/config}    
     
     update-dynamic-value "supply-chain/gateway" "dekt4pets-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
     update-dynamic-value "supply-chain/gateway" "dekt4pets-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
@@ -151,7 +151,7 @@ install-gateway() {
     echo "=========> Start dekt4pets micro-gateway with public access..."
     echo
     kustomize build supply-chain/gateway | kubectl apply -f -
-    kubectl apply -f supply-chain/gateway/.config/dekt4pets-ingress.yaml -n $APP_NAMESPACE
+    kubectl apply -f supply-chain/gateway/config/dekt4pets-ingress.yaml -n $APP_NAMESPACE
 }
 
 #install tanzu app accelerator 
@@ -171,7 +171,7 @@ install-acc() {
         | kbld -f /tmp/acc-bundle/.imgpkg/images.yml -f- \
         | kapp deploy -y -n $ACC_NAMESPACE -a accelerator -f-
 
-    kubectl apply -f supply-chain/acc/.config/acc-ingress.yaml -n $ACC_NAMESPACE
+    kubectl apply -f supply-chain/acc/config/acc-ingress.yaml -n $ACC_NAMESPACE
 
 }
 
@@ -207,9 +207,9 @@ install-api-portal() {
 
     kubectl set env deployment.apps/api-portal-server API_PORTAL_SOURCE_URLS_CACHE_TTL_SEC=10 -n $HUB_NAMESPACE #so frontend apis will appear faster, just for this demo
 
-    kubectl apply -f supply-chain/api-portal/.config/api-portal-ingress.yaml -n $HUB_NAMESPACE
+    kubectl apply -f supply-chain/api-portal/config/api-portal-ingress.yaml -n $HUB_NAMESPACE
 
-    kubectl apply -f supply-chain/api-portal/.config/scg-openapi-ingress.yaml -n $GW_NAMESPACE
+    kubectl apply -f supply-chain/api-portal/config/scg-openapi-ingress.yaml -n $GW_NAMESPACE
 
    
 }
@@ -222,8 +222,8 @@ install-sbo () {
     echo
  
     # Create sbo deployment and ingress rule
-    kubectl apply -f supply-chain/sbo/.config/sbo-deployment.yaml -n $SBO_NAMESPACE
-    kubectl apply -f supply-chain/sbo/.config/sbo-ingress.yaml -n $SBO_NAMESPACE 
+    kubectl apply -f supply-chain/sbo/config/sbo-deployment.yaml -n $SBO_NAMESPACE
+    kubectl apply -f supply-chain/sbo/config/sbo-ingress.yaml -n $SBO_NAMESPACE 
 }
 
 #install-cnr (cloud native runtime)
@@ -253,7 +253,7 @@ setup-demo-examples() {
     echo
     echo "===> Setup SBO fortune service example..."
     echo
-    kubectl apply -f supply-chain/sbo/.config/fortune-sidecar-example.yaml -n $APP_NAMESPACE 
+    kubectl apply -f supply-chain/sbo/config/fortune-sidecar-example.yaml -n $APP_NAMESPACE 
 
     echo
     echo "===> Setup App Accelerator examples..."
@@ -324,10 +324,10 @@ update-dynamic-value() {
     find=($3 $5 $7)
     replace=($4 $6 $8)
     
-    cp $subFolder/$fileName $subFolder/.config/$fileName
+    cp $subFolder/$fileName $subFolder/config/$fileName
 
     for i in ${!find[@]}; do
-        perl -pi -w -e "s|${find[$i]}|${replace[$i]}|g;" $subFolder/.config/$fileName
+        perl -pi -w -e "s|${find[$i]}|${replace[$i]}|g;" $subFolder/config/$fileName
     done
     
 }
@@ -446,15 +446,15 @@ remove-examples() {
     
     kustomize build workload-backend/dekt4pets/backend | kubectl delete -f -
     kustomize build workload-frontend/dekt4pets/frontend | kubectl delete -f -
-    kubectl delete -f supply-chain//gateway/.config/dekt4pets-ingress.yaml -n $APP_NAMESPACE
+    kubectl delete -f supply-chain//gateway/config/dekt4pets-ingress.yaml -n $APP_NAMESPACE
     kustomize build supply-chain/gateway | kubectl delete -f -
     #kustomize build acc | kubectl delete -f -
     kapp delete -n $ACC_NAMESPACE -a accelerator -y
     kustomize build legacy-apis | kubectl delete -f -
     helm uninstall spring-cloud-gateway -n $GW_NAMESPACE
     kapp deploy -a tanzu-build-service -y
-    kubectl delete -f supply-chain/sbo/.config/sbo-deployment.yaml -n $SBO_NAMESPACE
-    kubectl delete -f supply-chain/sbo/.config/sbo-ingress.yaml -n $SBO_NAMESPACE 
+    kubectl delete -f supply-chain/sbo/config/sbo-deployment.yaml -n $SBO_NAMESPACE
+    kubectl delete -f supply-chain/sbo/config/sbo-ingress.yaml -n $SBO_NAMESPACE 
     kubectl delete ns dekt-apps
     kubectl delete ns acc-system
     kubectl delete ns scgw-system 
