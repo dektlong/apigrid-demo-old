@@ -5,8 +5,8 @@
 supply-chain/secrets
 
 # Ignore .config folders
-workload-backend/backend/.config
-workload-frontend/frontend/.config
+workload-backend/.config
+workload-frontend/.config
 supply-chain/gateway/.config
 supply-chain/api-portal/.config
 supply-chain/sbo/.config
