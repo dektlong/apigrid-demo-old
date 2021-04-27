@@ -1,0 +1,16 @@
+commands: |-
+  kubernetesdotnet new
+  kubernetesdotnet update
+description: Deploy a Steeltoe using Docker for build, kustomize for YAML management,
+  and deploy using skaffold.
+displayName: Steeltoe Kubernetes Deployment using Skaffold
+homeUrl: https://gitlab.eng.vmware.com/tanzu-starter-service/tss/tree/master/tss-default-generators
+iconUrl: https://www.3dflow.net/forums/core/image.php?userid=98&dateline=1500310086
+maintainer: mpollack@vmware.com
+name: kubernetes-steeltoe-skaffold
+sourceUrl: gitlab.eng.vmware.com/tanzu-starter-service/tss/tree/master/tss-default-generators
+tags:
+- skaffold
+- kubernetes
+- steeltoe
+version: 1.0.0

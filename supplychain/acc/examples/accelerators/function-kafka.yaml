@@ -1,0 +1,15 @@
+description: A basic hello world Spring Cloud Function serverless app using kafka
+displayName: Spring Cloud Function Serverless App with Kafka
+framework: Spring Cloud
+generatorNames:
+- knative-kustomize-skaffold
+homeUrl: https://github.com/simple-starters/kafka-fun
+iconUrl: https://raw.githubusercontent.com/simple-starters/icons/master/icon-cloud.png
+language: Java
+maintainer: https://github.com/trisberg
+name: kafka-fun
+services: Kafka
+sourceUrl: github.com/simple-starters/kafka-fun
+tags:
+- my-dataflow
+version: 0.0.1-SNAPSHOT

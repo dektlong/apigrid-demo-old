@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dekt4pets-backend
+spec:
+  selector:
+    matchLabels:
+      app: dekt4pets-backend
+  template:
+    metadata:
+      labels:
+        app: dekt4pets-backend
+    spec:
+      imagePullSecrets: 
+      - name: imagereg-secret
+      containers:
+        - name: dekt4pets-backend
+          image: {BACKEND_IMAGE}
+          imagePullPolicy: Always
+          env:
+            - name: spring.profiles.active
+              value: k8s
+            - name: spring.security.oauth2.resourceserver.jwt.jwk-set-uri
+              valueFrom:
+                secretKeyRef:
+                  name: dekt4pets-jwk
+                  key: jwk-set-uri
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+        - name: spring-observer-sidecar
+          image: {OBSERVER_SIDECAR_IMAGE}
+          env:
+            - name: spring.boot.observer.sidecar.application-name
+              value: dekt4pets-backend
+            - name: spring.boot.observer.client.host
+              value: spring-boot-observer-server.sbo-system.svc.cluster.local
+          resources: {} 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dekt4pets-backend-service
+spec:
+  ports:
+    - port: 80
+      targetPort: 8080
+  selector:
+    app: dekt4pets-backend

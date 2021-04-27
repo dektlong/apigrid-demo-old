@@ -1,0 +1,12 @@
+commands: cloudfoundry new
+description: Deploy a Spring Boot application to Tanzu Application Service and add manifest file with RabbitMQ service.
+displayName: Spring Boot on Tanzu Application Service using the Java Buildpack and RabbitMQ service
+homeUrl: https://github.com/markpollack/generator-cloudfoundry
+iconUrl: https://pbs.twimg.com/profile_images/1151235235968716800/VJI_bxtd_400x400.jpg
+maintainer: mpollack@vmware.com
+name: boot-cloudfoundry
+sourceUrl: github.com/markpollack/generator-cloudfoundry
+tags:
+- cloud-foudndry
+- java-buildpack
+version: 2.4.1

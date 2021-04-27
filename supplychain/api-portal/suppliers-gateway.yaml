@@ -1,0 +1,11 @@
+apiVersion: "tanzu.vmware.com/v1"
+kind: SpringCloudGateway
+metadata:
+  name: suppliers-gateway
+spec:
+  count: 1
+  api:
+    serverUrl: https://suppliers.{HOST_NAME}
+    title: Suppliers Payments
+    description: APIs to help with issuing payments to suppliers
+    version: 0.5.0

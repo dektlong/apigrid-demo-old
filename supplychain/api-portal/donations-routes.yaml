@@ -1,0 +1,19 @@
+apiVersion: "tanzu.vmware.com/v1"
+kind: SpringCloudGatewayRouteConfig
+metadata:
+  name: donations-routes-config
+spec:
+  service: 
+    name: donations-service
+  routes:
+    - predicates:
+        - Path=/list-donations
+        - Method=GET
+      ssoEnabled: true
+    - predicates:
+        - Path=/process-donation/*/adoption-request/**
+        - Method=POST
+      ssoEnabled: true
+      filters:
+      - CircuitBreaker="donationsCircuitBreaker,forward:/alternate-donation-service"
+

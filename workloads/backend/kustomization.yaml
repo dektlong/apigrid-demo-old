@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: dekt-apps
+
+resources:
+  - .config/dekt4pets-backend-app.yaml
+  - routes/dekt4pets-backend-routes.yaml
+  - routes/dekt4pets-backend-mapping.yaml
+ 

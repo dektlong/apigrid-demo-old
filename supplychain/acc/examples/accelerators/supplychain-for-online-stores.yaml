@@ -1,0 +1,11 @@
+description: Template to create an AppStack Software Supply Chain for online Stores
+displayName: AppStack Supply Chain for Online Stores
+framework: AppStack
+homeUrl: https://github.com/spring-cloud-services-samples/animal-rescue
+iconUrl: https://raw.githubusercontent.com/simple-starters/icons/master/icon-boot.png
+maintainer: dekt
+name: supplychain-for-online-stores
+sourceUrl: https://github.com/dektlong/store-backend-api
+tags:
+- online-store
+version: 1.0.0
