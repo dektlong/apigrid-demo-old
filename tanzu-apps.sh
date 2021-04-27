@@ -157,12 +157,12 @@ supplychain() {
 	    echo "The following supplychains mockup configurations have been applied to this cluster:"
 	    echo
         echo "${bold}micro-gateways${normal}"
-        echo "  {SourceTemplate} defining Dekt4Pets, BackgroundCheck, Donations and Suppliers gateways"
+        echo "  {ConfigTemplate}  config Dekt4Pets, BackgroundCheck, Donations and Suppliers gateway instances"
         echo
         echo "${bold}dekt4Pets${normal}"
-        echo "  {SourceTemplate} defining Backend and Frontend microservices"
-        echo "  {BuildTemplate} defining Java and kNative builders"
-        echo "  {ConfigTemplate} defining Backend and Frontend api-routes"
+        echo "  {SourceTemplate} - git-repo source for the  Backend and Frontend microservices"
+        echo "  {BuildTemplate} - namespace builder supporting Java, Node and kNative buildpacks"
+        echo "  {ConfigTemplate} - config Backend and Frontend api-routes"
         echo
         ;;
     create)

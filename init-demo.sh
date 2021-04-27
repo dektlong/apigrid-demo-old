@@ -273,29 +273,29 @@ setup-demo-examples() {
 #setup-dekt4pets-examples
 setup-dekt4pets-examples() {
 
-    echo
-    echo "===> Setup dekt4pets TBS backend images..."
-    echo
-    #create a builder that can only run in dekt-apps ns and used to build java and nodejs apps
-    #kp builder create $BUILDER_NAME \
-    #--tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BUILDER_NAME \
-    #--order tbs/dekt-builder-order.yaml \
-    #--stack full \
-    #--store default \
-    #--namespace $APP_NAMESPACE
     
+    echo
+    echo "===> Create a builder dekt-apps ns with java, nodejs and knative buildpacks..."
+    echo
+    kp builder create $BUILDER_NAME -n $APP_NAMESPACE \
+    --tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BUILDER_NAME \
+    --order supplychain/tbs/dekt-builder-order.yaml \
+    --stack full \
+    --store default
   
-    kp image create $BACKEND_TBS_IMAGE \
+    echo
+    echo "===> Create dekt4pets-backend TBS image..."
+    echo
+    kp image create $BACKEND_TBS_IMAGE -n $APP_NAMESPACE \
 	--tag $DET4PETS_BACKEND_IMAGE_LOCATION \
+    --builder $BUILDER_NAME \
     --git $DEMO_APP_GIT_REPO  \
-	--git-revision main \
-	--sub-path ./backend \
-	--namespace $APP_NAMESPACE \
-	--wait
-    #--builder $BUILDER_NAME \
+	--sub-path workloads/backend \
+    --git-revision main \
+    --wait
 
     echo
-    echo "===> Setup dekt4pets TBS frontend image..."
+    echo "===> Create dekt4pets-frontend TBS image..."
     echo
     
     #frontend
@@ -306,12 +306,11 @@ setup-dekt4pets-examples() {
     docker tag springcloudservices/animal-rescue-frontend:latest $DET4PETS_FRONTEND_IMAGE_LOCATION
     docker push $DET4PETS_FRONTEND_IMAGE_LOCATION
 
-    #kp image create $FRONTEND_TBS_IMAGE \
+    #kp image create $FRONTEND_TBS_IMAGE -n $APP_NAMESPACE \
 	#--tag $DET4PETS_FRONTEND_IMAGE_LOCATION \
 	#--git $DEMO_APP_GIT_REPO\
     #--git-revision main \
    	#--sub-path ./frontend \
-	#--namespace $APP_NAMESPACE \
 	#--wait
  
 }
