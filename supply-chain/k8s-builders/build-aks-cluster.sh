@@ -52,7 +52,7 @@ source supply-chain/secrets/config-values.env
 case $1 in 
 create)
 	create-cluster $2 $3
-	open -a Terminal supply-chain/k8s-builders/start_octant.sh start
+	open -a Terminal supply-chain/k8s-builders/octant-wrapper.sh
 	;;
 delete)
 	delete-cluster $2

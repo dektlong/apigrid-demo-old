@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 
 case $1 in
-start)
-    octant -n dekt-apps --disable-open-browser
-    ;;
 stop)
     procid=$(pgrep octant)
     if [ "$procid" == "" ]
@@ -11,9 +8,10 @@ stop)
         echo "octant process is not running"
     else 
         kill $procid
+        osascript -e 'quit app "Terminal"'
     fi
     ;;
-*)
-    echo "please specify 'start' or 'stop'"
+*) #start
+    octant -n dekt-apps --disable-open-browser
     ;;
 esac
