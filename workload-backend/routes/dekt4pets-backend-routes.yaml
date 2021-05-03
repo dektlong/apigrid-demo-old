@@ -21,8 +21,3 @@ spec:
         - Method=POST,PUT,DELETE
       ssoEnabled: true
       tokenRelay: true
-     - predicates:
-        - Path=/api/check-adopter
-        - Method=GET
-      ssoEnabled: true
-      tokenRelay: true  
