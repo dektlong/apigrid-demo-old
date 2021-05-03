@@ -156,12 +156,14 @@ supply-chain() {
     	echo
 	    echo "The following supply-chains mockup configurations have been applied to this cluster:"
 	    echo
-        echo "${bold}micro-gateways${normal}"
-        echo "  {ConfigTemplate}  config Dekt4Pets, BackgroundCheck, Donations and Suppliers gateway instances"
+        echo "${bold}micro-gateways supply-chain${normal}"
+        echo "  {ConfigTemplate} - 4 micro-gateways definitions and lifecycle management"
+        kubectl get SpringCloudGateway -A | sed 's/^/     /'
         echo
-        echo "${bold}dekt4Pets${normal}"
+        echo "${bold}dekt4Pets supply-chain${normal}"
         echo "  {SourceTemplate} - git-repo source for the  Backend and Frontend microservices"
         echo "  {BuildTemplate} - cluster builder supporting Java, Node and kNative buildpacks"
+        kp builders list -n dekt-apps | sed 's/^/     /'
         echo "  {ConfigTemplate} - config Backend and Frontend api-routes"
         echo
         ;;
