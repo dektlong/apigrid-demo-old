@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source secrets/config-values.env
+source supply-chain/secrets/config-values.env
 
 pushd $BOOT_OBSERVER_INSTALL_DIR
 
@@ -11,7 +11,7 @@ pushd $BOOT_OBSERVER_INSTALL_DIR
 
 #git pull
 
-mvn -DskipTests clean install
+#mvn -DskipTests clean install
     
 #sbo-server
 cd spring-boot-observer-server

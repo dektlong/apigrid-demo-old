@@ -10,7 +10,7 @@
     SBO_SERVER_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/spring-boot-observer-server:0.0.1
     SBO_SIDECAR_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/spring-boot-observer-sidecar:0.0.1
     GW_NAMESPACE="scgw-system"
-    HUB_NAMESPACE="api-portal-system"
+    API_PORTAL_NAMESPACE="api-portal-system"
     ACC_NAMESPACE="acc-system"
     SBO_NAMESPACE="sbo-system"
     BROWNFIELD_NAMESPACE="brownfield-apis"
@@ -57,7 +57,7 @@ create-namespaces-secrets () {
     #namespaces
     kubectl create ns $APP_NAMESPACE
     kubectl create ns $GW_NAMESPACE
-    kubectl create ns $HUB_NAMESPACE
+    kubectl create ns $API_PORTAL_NAMESPACE
     kubectl create ns $ACC_NAMESPACE
     kubectl create ns $SBO_NAMESPACE
     kubectl create ns $BROWNFIELD_NAMESPACE
@@ -84,7 +84,7 @@ create-namespaces-secrets () {
         --docker-server=$IMG_REGISTRY_URL \
         --docker-username=$IMG_REGISTRY_USER \
         --docker-password=$IMG_REGISTRY_PASSWORD \
-        --namespace $HUB_NAMESPACE
+        --namespace $API_PORTAL_NAMESPACE
     
     #enable SBO to access image registry
     kubectl create secret docker-registry imagereg-secret \
@@ -201,13 +201,13 @@ install-api-portal() {
     echo "===> Installing API portal..."
     echo
 
-    $API_HUB_INSTALL_DIR/scripts/install-api-portal.sh $HUB_NAMESPACE
+    $API_PORTAL_INSTALL_DIR/scripts/install-api-portal.sh $API_PORTAL_NAMESPACE
     
-    kubectl set env deployment.apps/api-portal-server API_PORTAL_SOURCE_URLS=http://scg-openapi.$SUB_DOMAIN.$DOMAIN/openapi -n $HUB_NAMESPACE
+    kubectl set env deployment.apps/api-portal-server API_PORTAL_SOURCE_URLS=http://scg-openapi.$SUB_DOMAIN.$DOMAIN/openapi -n $API_PORTAL_NAMESPACE
 
-    kubectl set env deployment.apps/api-portal-server API_PORTAL_SOURCE_URLS_CACHE_TTL_SEC=10 -n $HUB_NAMESPACE #so frontend apis will appear faster, just for this demo
+    kubectl set env deployment.apps/api-portal-server API_PORTAL_SOURCE_URLS_CACHE_TTL_SEC=10 -n $API_PORTAL_NAMESPACE #so frontend apis will appear faster, just for this demo
 
-    kubectl apply -f supply-chain/api-portal/config/api-portal-ingress.yaml -n $HUB_NAMESPACE
+    kubectl apply -f supply-chain/api-portal/config/api-portal-ingress.yaml -n $API_PORTAL_NAMESPACE
 
     kubectl apply -f supply-chain/api-portal/config/scg-openapi-ingress.yaml -n $GW_NAMESPACE
 
@@ -307,12 +307,12 @@ setup-dekt4pets-examples() {
     docker tag springcloudservices/animal-rescue-frontend:latest $DET4PETS_FRONTEND_IMAGE_LOCATION
     docker push $DET4PETS_FRONTEND_IMAGE_LOCATION
 
-    #kp image create $FRONTEND_TBS_IMAGE -n $APP_NAMESPACE \
-	#--tag $DET4PETS_FRONTEND_IMAGE_LOCATION \
-	#--git $DEMO_APP_GIT_REPO\
-    #--git-revision main \
-   	#--sub-path ./workload-frontend \
-	#--wait
+    kp image create $FRONTEND_TBS_IMAGE -n $APP_NAMESPACE \
+	--tag $DET4PETS_FRONTEND_IMAGE_LOCATION \
+	--git $DEMO_APP_GIT_REPO\
+    --git-revision main \
+   	--sub-path ./workload-frontend \
+	--wait
  
 }
 
@@ -340,9 +340,9 @@ relocate-core-images() {
 
     docker login -u $IMG_REGISTRY_USER -p $IMG_REGISTRY_PASSWORD $IMG_REGISTRY_URL
 
-    #supply-chain/sbo/build-sbo-images.sh 
+    supply-chain/sbo/build-sbo-images.sh 
 
-    $API_HUB_INSTALL_DIR/scripts/relocate-images.sh $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO
+    $API_PORTAL_INSTALL_DIR/scripts/relocate-images.sh $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO
 
     kbld relocate -f $TBS_INSTALL_DIR/images.lock --lock-output $TBS_INSTALL_DIR/images-relocated.lock --repository $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/build-service
 
@@ -496,7 +496,7 @@ relocate-core-images)
     relocate-core-images
     ;;
 unit-test)
-    setup-demo-examples
+    install-sbo
     ;;
 *)
     incorrect-usage
