@@ -275,7 +275,7 @@ setup-dekt4pets-examples() {
 
     
     echo
-    echo "===> Create a builder dekt-apps ns with java, nodejs and knative buildpacks..."
+    echo "===> Create a namesspace builder $BUILDER_NAME with java, nodejs and knative buildpacks..."
     echo
     kp builder create $BUILDER_NAME -n $APP_NAMESPACE \
     --tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BUILDER_NAME \
@@ -307,12 +307,12 @@ setup-dekt4pets-examples() {
     docker tag springcloudservices/animal-rescue-frontend:latest $DET4PETS_FRONTEND_IMAGE_LOCATION
     docker push $DET4PETS_FRONTEND_IMAGE_LOCATION
 
-    kp image create $FRONTEND_TBS_IMAGE -n $APP_NAMESPACE \
-	--tag $DET4PETS_FRONTEND_IMAGE_LOCATION \
-	--git $DEMO_APP_GIT_REPO\
-    --git-revision main \
-   	--sub-path ./workload-frontend \
-	--wait
+    #kp image create $FRONTEND_TBS_IMAGE -n $APP_NAMESPACE \
+	#--tag $DET4PETS_FRONTEND_IMAGE_LOCATION \
+	#--git $DEMO_APP_GIT_REPO\
+    #--git-revision main \
+   	#--sub-path ./workload-frontend \
+	#--wait
  
 }
 
@@ -496,7 +496,7 @@ relocate-core-images)
     relocate-core-images
     ;;
 unit-test)
-    install-sbo
+    setup-dekt4pets-examples
     ;;
 *)
     incorrect-usage

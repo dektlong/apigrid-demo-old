@@ -162,15 +162,15 @@ supply-chain() {
         kubectl get SpringCloudGateway -A | sed 's/^/  /'
         echo
         echo "${bold}Source${normal}"
-        echo "A SourceTemplate with 2 git-repo source definitions for Backend and Frontend microservices"
+        echo "A SourceTemplate containing the dekt4pets application soure code"
         echo "  --git $DEMO_APP_GIT_REPO --sub-path ./workload-backend "
         echo "  --git $DEMO_APP_GIT_REPO --sub-path ./workload-frontend "
         echo
         echo "${bold}Build${normal}"
-        echo "A BuildTemplate with a cluster builder supporting Java, Node and kNative buildpacks"
+        echo "A BuildTemplate defining a namespace builder supporting Java, Node and kNative buildpacks"
         kp builders list -n dekt-apps | sed 's/^/  /'
         echo "${bold}API Routes${normal}"
-        echo "A ConfigTemplate with 2 definitions for Backend and Frontend api-routes"
+        echo "A ConfigTemplate containing the dekt4pets API routes definitions"
         echo "  /workload-backend/routes/dekt4pets-backend-routes.yaml"
         echo "  /workload-frontend/routes/dekt4pets-frontend-routes.yaml"
         echo
