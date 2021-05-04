@@ -41,13 +41,10 @@ public class AnimalController {
    	RestTemplate restTemplate = new RestTemplate();
    	String result = restTemplate.getForObject(adoptionHistoryCheckURI, String.class);
 
-		if (result == "cleared")
-		{      
-  			return "<h1>Congratulations,</h1>" + 
-					"<h2>You are cleared to adopt your next best friend.</h2>" +
-					"<p>token:"+adopterId+"</p>";
-		}
-  	}
+  	return "<h1>Congratulations,</h1>" + 
+			"<h2>You are cleared to adopt your next best friend.</h2>" +
+			"<p>token:"+adopterId+"</p>";
+	}
 
 	@GetMapping("/whoami")
 	public String whoami(Principal principal) {
