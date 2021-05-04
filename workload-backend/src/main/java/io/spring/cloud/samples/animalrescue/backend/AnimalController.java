@@ -37,7 +37,12 @@ public class AnimalController {
 		String adoptionHistoryCheckURI = "https://datacheck.apps.dekt.io/adoption-history/*";
 
    		RestTemplate restTemplate = new RestTemplate();
-   		String result = restTemplate.getForObject(adoptionHistoryCheckURI, String.class);
+		
+		try
+		{
+   			String result = restTemplate.getForObject(adoptionHistoryCheckURI, String.class);
+		}
+		catch {}
 
   		return "<h1>Congratulations,</h1>" + 
 				"<h2>You are cleared to adopt your next best friend.</h2>" +
