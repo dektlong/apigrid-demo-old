@@ -106,19 +106,23 @@ It is designed to run on any k8s substrate.
 ```
 - In ```workload-backend/src/main/.../AnimalController.java``` add
 ```
-		@GetMapping("/check-adopter")
+	@GetMapping("/check-adopter")
 	public String checkAdopter(Principal adopter) {
     
 		String adoptionHistoryCheckURI = //TODO add adoption-history request URL;
 
    		RestTemplate restTemplate = new RestTemplate();
-   		String result = restTemplate.getForObject(adoptionHistoryCheckURI, String.class);
+		
+		try
+		{
+   			String result = restTemplate.getForObject(adoptionHistoryCheckURI, String.class);
+		}
+		catch (Exception e) {}
 
   		return "<h1>Congratulations,</h1>" + 
 				"<h2>You are cleared to adopt your next best friend.</h2>" +
 				"<p>token:"+adopter.getName()+"</p>";
 	}
-
 
 ```
 - ```./tanzu-apps.sh workload patch-backend "```
