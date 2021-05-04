@@ -106,12 +106,12 @@ It is designed to run on any k8s substrate.
 ```
 - In ```workload-backend/src/main/.../AnimalController.java``` add
 ```
-  @GetMapping("/check-adopter")
+	@GetMapping("/check-adopter")
 	public String checkAdopter(Principal adopter) {
 
     String adopterId = adopter.getName();
     
-		final String adoptionHistoryCheckURI = //TODO add adoption-history request URL
+	final String adoptionHistoryCheckURI = //TODO add adoption-history request URL
 
    	RestTemplate restTemplate = new RestTemplate();
    	String result = restTemplate.getForObject(adoptionHistoryCheckURI, String.class);
@@ -121,8 +121,9 @@ It is designed to run on any k8s substrate.
   			return "<h1>Congratulations,</h1>" + 
 					"<h2>You are cleared to adopt your next best friend.</h2>" +
 					"<p>token:"+adopterId+"</p>";
-	  }
-  }
+		}
+  	}
+
 ```
 - ```./tanzu-apps.sh workload patch-backend "```
 - show how build-service is invoking a new image build based on the git-commit-id
