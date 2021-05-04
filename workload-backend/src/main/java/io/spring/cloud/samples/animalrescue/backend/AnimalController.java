@@ -35,16 +35,19 @@ public class AnimalController {
 
     	String adopterId = adopter.getName();
     
-		//TODO add API call to check for adoption history
-		curl -X 'GET' \
-  		'https://datacheck.apps.dekt.io/adoption-history/*' \
-  		-H 'accept: */*' 
-      
-  		String displayResults = "<h1>Congratulations,</h1>" + 
-								"<h2>You are cleared to adopt your next best friend.</h2>" +
-								"<p>token:"+adopterId+"</p>";
-		
-	  	return displayResults;
+		final String adoptionHistoryCheckURI = "curl -X 'GET' \
+  												'https://datacheck.apps.dekt.io/adoption-history/*' \
+  												-H 'accept: */*'"
+
+    	RestTemplate restTemplate = new RestTemplate();
+    	String result = restTemplate.getForObject(adoptionHistoryCheckURI, String.class);
+
+		if (result == "cleared")
+		{      
+  			return "<h1>Congratulations,</h1>" + 
+					"<h2>You are cleared to adopt your next best friend.</h2>" +
+					"<p>token:"+adopterId+"</p>";
+		}
   }
 
 	@GetMapping("/whoami")
