@@ -33,14 +33,12 @@ public class AnimalController {
 	@GetMapping("/check-adopter")
 	public String checkAdopter(Principal adopter) {
 
-    	String adopterId = adopter.getName();
+    String adopterId = adopter.getName();
     
-		final String adoptionHistoryCheckURI = "curl -X 'GET' \
-  												'https://datacheck.apps.dekt.io/adoption-history/*' \
-  												-H 'accept: */*'"
+	final String adoptionHistoryCheckURI = "https://datacheck.apps.dekt.io/adoption-history/*";
 
-    	RestTemplate restTemplate = new RestTemplate();
-    	String result = restTemplate.getForObject(adoptionHistoryCheckURI, String.class);
+   	RestTemplate restTemplate = new RestTemplate();
+   	String result = restTemplate.getForObject(adoptionHistoryCheckURI, String.class);
 
 		if (result == "cleared")
 		{      
@@ -48,7 +46,7 @@ public class AnimalController {
 					"<h2>You are cleared to adopt your next best friend.</h2>" +
 					"<p>token:"+adopterId+"</p>";
 		}
-  }
+  	}
 
 	@GetMapping("/whoami")
 	public String whoami(Principal principal) {
