@@ -42,7 +42,7 @@ public class AnimalController {
 		{
    			String result = restTemplate.getForObject(adoptionHistoryCheckURI, String.class);
 		}
-		catch {}
+		catch (Exception e) {}
 
   		return "<h1>Congratulations,</h1>" + 
 				"<h2>You are cleared to adopt your next best friend.</h2>" +
