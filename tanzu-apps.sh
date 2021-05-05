@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-bold=$(tput bold)
-normal=$(tput sgr0)
-
 #################### functions #######################
 
 #deploy-backend 
@@ -208,6 +205,8 @@ workload () {
 #################### main #######################
 
 source supply-chain/secrets/config-values.env
+bold=$(tput bold)
+normal=$(tput sgr0)
 
 case $1 in
 workload)

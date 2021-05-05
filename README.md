@@ -32,14 +32,14 @@ It is designed to run on any k8s substrate.
 - Copy ```config-values-UPDATE_ME``` to ```secrets``` directory and renamed it to ```config-values.env```
 
 - Set all variables in ```config-values.env```
-  - Note: all yaml files that are updated in runtime will be copied to ```config``` sub-directory in their respective directories during the init-demo phase
+  - Note: all yaml files that are updated in runtime will be copied to ```config``` sub-directory in their respective directories during the demo-builder phase
 
-- The ingress setup is based on GoDaddy DNS, if you are using a different one, please modify the ```update-dns``` function in ```init-demo.sh``` 
+- The ingress setup is based on GoDaddy DNS, if you are using a different one, please modify the ```update-dns``` function in ```demo-builder.sh``` 
 
 ## Installing the demo
 
-- If you update / first install the core Tanzu services ```./init-demo.sh relocate-core-images```
-- ```./init-demo.sh [aks | tkg]```
+- If you update / first install the core Tanzu services ```./demo-builder.sh upgrade core-images```
+- ```./demo-builder.sh create [ aks | tkg ]``
 - This script installs the following products
   - Spring Cloud Gateway
   - App Accelerator
@@ -135,6 +135,6 @@ dekt4pets.<SUB_DOMAIN>.<DOMAIN>/api/check-adopter
 
 ## Cleanup
 
-- ```./init-demo.sh cleanup```
+- ```./demo-builder.sh cleanup [ aks | tkg ]```
 
 # Enjoy!

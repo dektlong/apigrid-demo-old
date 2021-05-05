@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 #################### configs #######################
-    source supply-chain/secrets/config-values.env
 
     HOST_NAME=$SUB_DOMAIN.$DOMAIN
     DET4PETS_FRONTEND_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION
@@ -18,8 +17,67 @@
 
 #################### functions #######################
 
+#create
+create () {
+   
+    case $1 in
+    aks)
+        supply-chain/k8s-builders/build-aks-cluster.sh create $CLUSTER_NAME 5 #nodes
+        install-all
+        ;;
+    tkg)
+        supply-chain/k8s-builders/build-tkg-cluster.sh tkg-i $CLUSTER_NAME $TKGI_CLUSTER_PLAN 1 4
+        install-all
+        ;;
+    *)
+        incorrect-usage
+        ;;
+    esac
+}
+
+#upgrade
+upgrade () {
+
+    case $1 in
+    gateway)
+        create-namespaces-secrets
+        install-gateway
+        ;;
+    acc)
+        create-namespaces-secrets
+        install-acc
+        ;;
+    tbs)
+        create-namespaces-secrets
+        install-tbs
+        ;;
+    api-portal)
+        create-namespaces-secrets
+        install-api-portal
+        ;;
+    sbo)
+        create-namespaces-secrets
+        install-sbo
+        ;;
+    cnr)
+        create-namespaces-secrets
+        install-cnr
+        ;;
+    examples)
+        setup-demo-examples
+        ;;
+    core-images)
+        relocate-core-images
+        ;;
+    *)
+        incorrect-usage
+        ;;
+    esac
+}
+
+
 #install
-install() {
+install-all () {
 
     install-nginx
     #install-contour
@@ -309,9 +367,9 @@ setup-dekt4pets-examples() {
 
     #kp image create $FRONTEND_TBS_IMAGE -n $APP_NAMESPACE \
 	#--tag $DET4PETS_FRONTEND_IMAGE_LOCATION \
-	#--git $DEMO_APP_GIT_REPO\
+	#--git https://github.com/spring-cloud-services-samples/animal-rescue\
     #--git-revision main \
-   	#--sub-path ./workload-frontend \
+   	#--sub-path ./frontend \
 	#--wait
  
 }
@@ -432,8 +490,8 @@ cleanup() {
 	    remove-examples
 	    ;;
     *)
-  	    supply-chain/k8s-builders/build-aks-cluster.sh delete $CLUSTER_NAME
-  	    ;;
+        incorrect-usage
+        ;;
     esac
 }
 
@@ -466,13 +524,25 @@ remove-examples() {
 #incorrect usage
 incorrect-usage() {
 	echo
-	echo "Incorrect usage. Please specify one of the following:"
+	echo "Incorrect usage. Please specify one of the following commands"
 	echo
-  	echo "* aks"
-    echo "* tkg"
-    echo "* relocate-core-images"
-    echo "* unit-test"
-    echo "* cleanup [ aks | tkg  (default: aks) ]"
+  	echo "${bold}create${normal}"
+    echo "  aks"
+    echo "  tkg"
+    echo
+    echo "${bold}upgrade${normal}"
+    echo "  gateway"
+    echo "  acc"
+    echo "  tbs"
+    echo "  api-portal"
+    echo "  sbo"
+    echo "  cnr"
+    echo "  examples"
+    echo "  core-images"
+    echo
+    echo "${bold}cleanup${normal}"
+    echo "  aks"
+    echo "  tkg"
 	echo
   	exit   
  
@@ -480,23 +550,19 @@ incorrect-usage() {
 
 #################### main #######################
 
+source supply-chain/secrets/config-values.env
+bold=$(tput bold)
+normal=$(tput sgr0)
+
 case $1 in
-aks)
-    supply-chain/k8s-builders/build-aks-cluster.sh create $CLUSTER_NAME 5 #nodes
-    install
+create)
+    create $2 
     ;;
-tkg)
-    supply-chain/k8s-builders/build-tkg-cluster.sh tkg-i $CLUSTER_NAME $TKGI_CLUSTER_PLAN 1 4
-    install
+upgrade)
+    upgrade $2   
     ;;
 cleanup)
 	cleanup $2
-    ;;
-relocate-core-images)
-    relocate-core-images
-    ;;
-unit-test)
-    setup-dekt4pets-examples
     ;;
 *)
     incorrect-usage
