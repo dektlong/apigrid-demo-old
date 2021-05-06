@@ -34,7 +34,7 @@ public class AnimalController {
 	@GetMapping("/check-adopter")
 	public String checkAdopter(Principal adopter) {
     
-		String adoptionHistoryCheckURI = //TODO add adoption-history request URL;
+		String adoptionHistoryCheckURI = "";//TODO add adoption-history request URL;
 
    		RestTemplate restTemplate = new RestTemplate();
 		
