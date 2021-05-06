@@ -104,7 +104,7 @@ It is designed to run on any k8s substrate.
       ssoEnabled: true
       tokenRelay: true
       tags:
-        - "Adopters"      
+        - Adopters      
 ```
 - In ```workload-backend/src/main/.../AnimalController.java``` add
 ```

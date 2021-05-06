@@ -14,10 +14,10 @@ spec:
       ssoEnabled: true
       order: 0
       tags:
-        - "Users"
+        - Adopters
     - predicates:
         - Path=/rescue/**
         - Method=GET
       order: 1000
       tags:
-        - "Adoptions"
+        - Adoptions
