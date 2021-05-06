@@ -155,8 +155,10 @@ supply-chain() {
 	    echo
         echo
         echo "${bold}API Gateways${normal}"
+        echo
         echo "A ConfigTemplate with 4 micro-gateways definitions and lifecycle management"
-        kubectl get SpringCloudGateway -A | sed 's/^/  /'
+        kubectl get SpringCloudGateway -A -w | sed 's/^/  /'
+        echo "(Ingress rule on dekt4Pets gateway to enable external access)"
         echo
         echo "${bold}Source${normal}"
         echo "A SourceTemplate containing the dekt4pets application soure code"

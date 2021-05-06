@@ -2,6 +2,8 @@
 
 #################### configs #######################
 
+    source supply-chain/secrets/config-values.env
+    
     HOST_NAME=$SUB_DOMAIN.$DOMAIN
     DET4PETS_FRONTEND_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION
     DET4PETS_BACKEND_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION
@@ -68,6 +70,9 @@ upgrade () {
         ;;
     core-images)
         relocate-core-images
+        ;;
+    configs)
+        update-configs
         ;;
     *)
         incorrect-usage
@@ -523,6 +528,10 @@ remove-examples() {
 
 #incorrect usage
 incorrect-usage() {
+
+    bold=$(tput bold)
+    normal=$(tput sgr0)
+    
 	echo
 	echo "Incorrect usage. Please specify one of the following commands"
 	echo
@@ -539,6 +548,7 @@ incorrect-usage() {
     echo "  cnr"
     echo "  examples"
     echo "  core-images"
+    echo "  configs"
     echo
     echo "${bold}cleanup${normal}"
     echo "  aks"
@@ -549,10 +559,6 @@ incorrect-usage() {
 }
 
 #################### main #######################
-
-source supply-chain/secrets/config-values.env
-bold=$(tput bold)
-normal=$(tput sgr0)
 
 case $1 in
 create)

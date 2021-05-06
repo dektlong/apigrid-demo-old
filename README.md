@@ -102,7 +102,9 @@ It is designed to run on any k8s substrate.
         - Path=/api/check-adopter
         - Method=GET
       ssoEnabled: true
-      tokenRelay: true          
+      tokenRelay: true
+      tags:
+        - external-services          
 ```
 - In ```workload-backend/src/main/.../AnimalController.java``` add
 ```

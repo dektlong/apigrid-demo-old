@@ -13,7 +13,11 @@ spec:
         - RedirectTo=302, /rescue
       ssoEnabled: true
       order: 0
+      tags:
+        - "Users"
     - predicates:
         - Path=/rescue/**
         - Method=GET
       order: 1000
+      tags:
+        - "Adoptions"

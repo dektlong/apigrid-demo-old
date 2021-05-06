@@ -11,9 +11,13 @@ spec:
         - Method=GET
       filters:
         - RateLimit=2,15s
+    tags:
+        - "Adoptions"
     - predicates:
         - Path=/api/whoami
         - Method=GET
+    tags:
+        - "Users"
       ssoEnabled: true
       tokenRelay: true
     - predicates:
@@ -21,3 +25,22 @@ spec:
         - Method=POST,PUT,DELETE
       ssoEnabled: true
       tokenRelay: true
+      tags:
+        - "Adoptions"
+      model:
+        requestBody:
+          description: Manage adoption requests
+          content:
+            'application/json':
+              schema:
+                type: object
+                description: Adoption request schema
+                properties:
+                  adopterName:
+                    type: string
+                  email:
+                    type: string
+                    format: email
+                  notes:
+                    type: string
+                required: [ "adopterName", "email" ]
