@@ -155,23 +155,29 @@ supply-chain() {
 	    echo
         echo
         echo "${bold}API Gateways${normal}"
-        echo
-        echo "A ConfigTemplate with 4 micro-gateways definitions and lifecycle management"
-        kubectl get SpringCloudGateway -A -w | sed 's/^/  /'
-        echo "(Ingress rule on dekt4Pets gateway to enable external access)"
+        echo "{ConfigTemplate} with micro-gateways definitions and lifecycle management"
+        echo "  datacheck-gateway (brownfield-apis namespace)"
+        echo "  donations-gateway (brownfield-apis namespace)"
+        echo "  suppliers-gateway (brownfield-apis namespace)"
+        echo "  dekt4pets-gateway (dekt-apps namespace + Ingress rule for external access)"
         echo
         echo "${bold}Source${normal}"
-        echo "A SourceTemplate containing the dekt4pets application soure code"
-        echo "  --git $DEMO_APP_GIT_REPO --sub-path ./workload-backend "
-        echo "  --git $DEMO_APP_GIT_REPO --sub-path ./workload-frontend "
+        echo "{SourceTemplate} with the dekt4pets application soure code"
+        echo "  $DEMO_APP_GIT_REPO workload-backend "
+        echo "  $DEMO_APP_GIT_REPO workload-frontend "
         echo
         echo "${bold}Build${normal}"
-        echo "A BuildTemplate defining a namespace builder supporting Java, Node and kNative buildpacks"
-        kp builders list -n dekt-apps | sed 's/^/  /'
+        echo "{BuildTemplate} with Java, Node and kNative buildpacks"
+        echo "  online-stores-builder (dekt-apps namespace)"
+        echo "      tanzu-buildpacks/java"
+        echo "      tanzu-buildpacks/nodejs"
+        echo "      tanzu-buildpacks/java-native-image"
+        echo "      paketo-buildpacks/gradle"
+        echo
         echo "${bold}API Routes${normal}"
-        echo "A ConfigTemplate containing the dekt4pets API routes definitions"
-        echo "  /workload-backend/routes/dekt4pets-backend-routes.yaml"
-        echo "  /workload-frontend/routes/dekt4pets-frontend-routes.yaml"
+        echo "{ConfigTemplate} with the dekt4pets API routes definitions"
+        echo "  workload-backend/routes/dekt4pets-backend-routes.yaml"
+        echo "  workload-frontend/routes/dekt4pets-frontend-routes.yaml"
         echo
         ;;
     create)
