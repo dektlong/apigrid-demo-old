@@ -137,8 +137,8 @@ usage() {
     echo "  describe"
     echo
     echo "${bold}workload${normal}"
-    echo "  create-backend" 
-    echo "  create-frontend"
+    echo "  deploy-backend" 
+    echo "  deploy-frontend"
     echo "  patch-backend"
     echo
   	exit   
@@ -195,10 +195,10 @@ supply-chain() {
 workload () {
 
     case $1 in
-    create-backend)
+    deploy-backend)
     	deploy-backend
         ;;
-    create-frontend)
+    deploy-frontend)
 	    deploy-frontend
 	    ;;
     patch-backend)

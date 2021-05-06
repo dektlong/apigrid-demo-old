@@ -11,12 +11,12 @@ spec:
         - Method=GET
       filters:
         - RateLimit=2,15s
-    tags:
+      tags:
         - "Adoptions"
     - predicates:
         - Path=/api/whoami
         - Method=GET
-    tags:
+      tags:
         - "Users"
       ssoEnabled: true
       tokenRelay: true
