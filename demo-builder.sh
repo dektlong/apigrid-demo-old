@@ -19,15 +19,15 @@
 
 #################### functions #######################
 
-#create
-create () {
+#install
+install () {
    
     case $1 in
-    aks)
+    on-aks)
         supply-chain/k8s-builders/build-aks-cluster.sh create $CLUSTER_NAME 5 #nodes
         install-all
         ;;
-    tkg)
+    on-tkg)
         supply-chain/k8s-builders/build-tkg-cluster.sh tkg-i $CLUSTER_NAME $TKGI_CLUSTER_PLAN 1 4
         install-all
         ;;
@@ -338,17 +338,17 @@ setup-dekt4pets-examples() {
 
     
     echo
-    echo "===> Create a namesspace builder $BUILDER_NAME with java, nodejs and knative buildpacks..."
+    echo "===> Create dekt4pets builder and TBS images..."
     echo
+
     kp builder create $BUILDER_NAME -n $APP_NAMESPACE \
     --tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BUILDER_NAME \
     --order supply-chain/tbs/dekt-builder-order.yaml \
     --stack full \
     --store default
   
-    echo
-    echo "===> Create dekt4pets-backend TBS image..."
-    echo
+    
+    #backend images
     kp image create $BACKEND_TBS_IMAGE -n $APP_NAMESPACE \
 	--tag $DET4PETS_BACKEND_IMAGE_LOCATION \
     --git $DEMO_APP_GIT_REPO  \
@@ -358,18 +358,12 @@ setup-dekt4pets-examples() {
 
     #--builder $BUILDER_NAME \
 
-    echo
-    echo "===> Create dekt4pets-frontend TBS image..."
-    echo
-    
-    #frontend
-    #"!! since animals-frontend does *not* currently compile with TBS, 
-    # as a workaround we relocate the image from springcloudservices/animal-rescue-frontend"
-    
-    docker pull springcloudservices/animal-rescue-frontend
-    docker tag springcloudservices/animal-rescue-frontend:latest $DET4PETS_FRONTEND_IMAGE_LOCATION
-    docker push $DET4PETS_FRONTEND_IMAGE_LOCATION
+       
+    #frontend images
 
+    #"!! since animals-frontend does *not* currently compile with TBS, 
+    # as a workaround we relocate the image from springcloudservices/animal-rescue-frontend as part of core-images "
+  
     #kp image create $FRONTEND_TBS_IMAGE -n $APP_NAMESPACE \
 	#--tag $DET4PETS_FRONTEND_IMAGE_LOCATION \
 	#--git https://github.com/spring-cloud-services-samples/animal-rescue\
@@ -410,6 +404,11 @@ relocate-core-images() {
     kbld relocate -f $TBS_INSTALL_DIR/images.lock --lock-output $TBS_INSTALL_DIR/images-relocated.lock --repository $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/build-service
 
     $GW_INSTALL_DIR/scripts/relocate-images.sh $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO
+
+    #workaround to use for frontend-app
+    docker pull springcloudservices/animal-rescue-frontend
+    docker tag springcloudservices/animal-rescue-frontend:latest $DET4PETS_FRONTEND_IMAGE_LOCATION
+    docker push $DET4PETS_FRONTEND_IMAGE_LOCATION
 
 }
 
@@ -535,9 +534,9 @@ incorrect-usage() {
 	echo
 	echo "Incorrect usage. Please specify one of the following commands"
 	echo
-  	echo "${bold}create${normal}"
-    echo "  aks"
-    echo "  tkg"
+  	echo "${bold}install${normal}"
+    echo "  on-aks"
+    echo "  on-tkg"
     echo
     echo "${bold}upgrade${normal}"
     echo "  gateway"
@@ -561,8 +560,8 @@ incorrect-usage() {
 #################### main #######################
 
 case $1 in
-create)
-    create $2 
+install)
+    install $2 
     ;;
 upgrade)
     upgrade $2   

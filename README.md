@@ -39,7 +39,7 @@ It is designed to run on any k8s substrate.
 ## Installing the demo
 
 - If you update / first install the core Tanzu services ```./demo-builder.sh upgrade core-images```
-- ```./demo-builder.sh create [ aks | tkg ]``
+- ```./demo-builder.sh install [ on-aks | on-tkg ]``
 - This script installs the following products
   - Spring Cloud Gateway
   - App Accelerator
