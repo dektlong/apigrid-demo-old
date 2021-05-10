@@ -21,6 +21,13 @@ spec:
       ssoEnabled: true
       tokenRelay: true
     - predicates:
+        - Path=/api/check-adopter
+        - Method=GET
+      ssoEnabled: true
+      tokenRelay: true
+      tags:
+        - Adopters 
+    - predicates:
         - Path=/api/animals/*/adoption-requests/**
         - Method=POST,PUT,DELETE
       ssoEnabled: true
