@@ -14,6 +14,13 @@ spec:
       tags:
         - Adoptions
     - predicates:
+        - Path=/api/check-adopter
+        - Method=GET
+      ssoEnabled: true
+      tokenRelay: true
+      tags:
+        - Adopters   
+    - predicates:
         - Path=/api/whoami
         - Method=GET
       tags:
