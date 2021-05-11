@@ -156,7 +156,7 @@ workflow() {
         echo "  => deploy micro-gateways"
         echo "      => build workload(s)"
         echo "          => deploy workload(s)"
-        echo "              =>apply api routes(s)"
+        echo "              => apply api routes(s)"
         echo
         echo "${bold}Micro Gateways definitions${normal}"
         echo "  supply-chain/datacheck-gateway.yaml (brownfield-apis namespace)"
