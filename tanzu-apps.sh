@@ -132,50 +132,51 @@ usage() {
     echo
 	echo "A mockup script to illustrate upcoming AppStack concepts. Please specify one of the following:"
 	echo
-    echo "${bold}supply-chain${normal}"
+    echo "${bold}workflow${normal}"
     echo "  create"
     echo "  describe"
     echo
-    echo "${bold}workload${normal}"
-    echo "  deploy-backend" 
-    echo "  deploy-frontend"
-    echo "  patch-backend"
+    echo "${bold}application${normal}"
+    echo "  create-workload [name]"
+    echo "  patch-workload [name]"
     echo
   	exit   
  
 }
 
 #supply-chain
-supply-chain() {
+workflow() {
 
     case $1 in
     describe)
     	echo
-	    echo "The following ${bold}supply-chains${normal} mockup configurations have been applied to this cluster:"
+	    echo "The following ${bold}workflow${normal} (aka 'supply-chain') has been defined in to this cluster:"
 	    echo
+        echo "${bold}Lifecycle${normal}"
+        echo "  => deploy micro-gateways"
+        echo "      => build workload(s)"
+        echo "          => deploy workload(s)"
+        echo "              =>apply api routes(s)"
         echo
-        echo "${bold}API Gateways${normal}"
-        echo "{ConfigTemplate} with micro-gateways definitions and lifecycle management"
-        echo "  datacheck-gateway (brownfield-apis namespace)"
-        echo "  donations-gateway (brownfield-apis namespace)"
-        echo "  suppliers-gateway (brownfield-apis namespace)"
-        echo "  dekt4pets-gateway (dekt-apps namespace + Ingress rule for external access)"
+        echo "${bold}Micro Gateways definitions${normal}"
+        echo "  supply-chain/datacheck-gateway.yaml (brownfield-apis namespace)"
+        echo "  supply-chain/donations-gateway.yaml (brownfield-apis namespace)"
+        echo "  supply-chain/suppliers-gateway.yaml (brownfield-apis namespace)"
+        echo "  supply-chain/dekt4pets-gateway.yaml (dekt-apps namespace)"
+        echo "      supply-chain/dekt4pets-ingress.yaml (dekt-apps namespace)"
         echo
-        echo "${bold}Source${normal}"
-        echo "{SourceTemplate} with the dekt4pets application soure code"
+        echo "${bold}Source Repositories${normal}"
         echo "  $DEMO_APP_GIT_REPO workload-backend "
         echo "  $DEMO_APP_GIT_REPO workload-frontend "
         echo
-        echo "${bold}Build${normal}"
-        echo "{BuildTemplate} with Java, Node and kNative buildpacks"
+        echo "${bold}Build definitions ${normal}"
         echo "  online-stores-builder (dekt-apps namespace)"
         echo "      tanzu-buildpacks/java"
         echo "      tanzu-buildpacks/nodejs"
         echo "      tanzu-buildpacks/java-native-image"
         echo "      paketo-buildpacks/gradle"
         echo
-        echo "${bold}API Routes${normal}"
-        echo "{ConfigTemplate} with the dekt4pets API routes definitions"
+        echo "${bold}API Routes definitions${normal}"
         echo "  workload-backend/routes/dekt4pets-backend-routes.yaml"
         echo "  workload-frontend/routes/dekt4pets-frontend-routes.yaml"
         echo
@@ -195,14 +196,31 @@ supply-chain() {
 workload () {
 
     case $1 in
-    deploy-backend)
-    	deploy-backend
+    create-workload)
+        case $2 in
+        backend)
+            deploy-backend
+            ;;
+        frontend)
+            deploy-frontend 
+            ;;
+        *)
+  	        usage
+  	        ;;
+        esac
         ;;
-    deploy-frontend)
-	    deploy-frontend
-	    ;;
-    patch-backend)
-        patch-backend
+    patch-workload)
+	    case $2 in
+        backend)
+            patch-backend
+            ;;
+        frontend)
+            #patch-frontend 
+            ;;
+        *)
+  	        usage
+  	        ;;
+        esac
         ;;
     *)
   	    usage
@@ -217,11 +235,11 @@ bold=$(tput bold)
 normal=$(tput sgr0)
 
 case $1 in
-workload)
-	workload $2
+application)
+	workload $2 $3
     ;;
-supply-chain)
-    supply-chain $2
+workflow)
+    workflow $2
     ;;
 rockme-native)
     rockme-native $2
