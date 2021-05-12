@@ -152,33 +152,40 @@ workflow() {
     	echo
 	    echo "The following ${bold}workflow${normal} (aka 'supply-chain') has been defined in to this cluster:"
 	    echo
-        echo "${bold}Lifecycle${normal}"
+        echo "${bold}pipelines${normal}"
         echo "  => deploy micro-gateways"
         echo "      => build workload(s)"
         echo "          => deploy workload(s)"
         echo "              => apply api routes(s)"
         echo
-        echo "${bold}Micro Gateways definitions${normal}"
-        echo "  supply-chain/datacheck-gateway.yaml (brownfield-apis namespace)"
-        echo "  supply-chain/donations-gateway.yaml (brownfield-apis namespace)"
-        echo "  supply-chain/suppliers-gateway.yaml (brownfield-apis namespace)"
-        echo "  supply-chain/dekt4pets-gateway.yaml (dekt-apps namespace)"
-        echo "      supply-chain/dekt4pets-ingress.yaml (dekt-apps namespace)"
+        echo "${bold}workloads${normal}"
+        echo "  $DEMO_APP_GIT_REPO/workload-backend"
+        echo "  $DEMO_APP_GIT_REPO/workload-frontend"
         echo
-        echo "${bold}Source Repositories${normal}"
-        echo "  $DEMO_APP_GIT_REPO workload-backend "
-        echo "  $DEMO_APP_GIT_REPO workload-frontend "
-        echo
-        echo "${bold}Build definitions ${normal}"
+        echo "${bold}builders${normal}"
         echo "  online-stores-builder (dekt-apps namespace)"
         echo "      tanzu-buildpacks/java"
         echo "      tanzu-buildpacks/nodejs"
         echo "      tanzu-buildpacks/java-native-image"
         echo "      paketo-buildpacks/gradle"
         echo
-        echo "${bold}API Routes definitions${normal}"
-        echo "  workload-backend/routes/dekt4pets-backend-routes.yaml"
-        echo "  workload-frontend/routes/dekt4pets-frontend-routes.yaml"
+        echo "${bold}registries${normal}"
+        echo "  $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION"
+        echo "  $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION"
+        echo
+        echo "${bold}scanners${normal}"
+        echo "  https://github.com/quay/clair"
+        echo
+        echo ${bold}apis${normal}""
+        echo "  ${bold}micro-gateways${normal}"
+        echo "      supply-chain/datacheck-gateway.yaml (brownfield-apis namespace)"
+        echo "      supply-chain/donations-gateway.yaml (brownfield-apis namespace)"
+        echo "      supply-chain/suppliers-gateway.yaml (brownfield-apis namespace)"
+        echo "      supply-chain/dekt4pets-gateway.yaml (dekt-apps namespace)"
+        echo "          supply-chain/gateway/dekt4pets-ingress.yaml"
+        echo "  ${bold}routes${normal}"      
+        echo "      workload-backend/routes/dekt4pets-backend-routes.yaml"
+        echo "      workload-frontend/routes/dekt4pets-frontend-routes.yaml"
         echo
         ;;
     create)
