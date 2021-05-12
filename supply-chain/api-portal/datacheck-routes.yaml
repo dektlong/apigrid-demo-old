@@ -11,6 +11,8 @@ spec:
         - Method=GET
       ssoEnabled: true
       tokenRelay: true
+      filters:
+        - RateLimit=3,60s
     - predicates:
         - Path=/criminal-record/*
         - Method=GET
