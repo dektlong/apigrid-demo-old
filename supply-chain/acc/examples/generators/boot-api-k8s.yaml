@@ -8,8 +8,4 @@ iconUrl: https://icon-library.com/images/rick-sanchez-icon/rick-sanchez-icon-24.
 maintainer: dekel@vmware.com
 name: boot-api-k8s
 sourceUrl: github.com/dektlong/generator-boot-api-k8s
-tags:
-- kubernetes
-- boot
-- api
 version: 0.0.1

@@ -3,8 +3,6 @@ displayName: Backend API for online-stores
 framework: Spring Boot
 generatorNames:
 - boot-api-k8s
-- boot-k8s-kubectl
-- boot-cloudfoundry
 homeUrl: https://github.com/spring-cloud-services-samples/animal-rescue
 iconUrl: https://raw.githubusercontent.com/simple-starters/icons/master/icon-boot.png
 language: Java
