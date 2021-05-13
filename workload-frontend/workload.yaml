@@ -13,4 +13,4 @@ metadata:
           branch: main
     env:
       name: API_VALIDATION_LEVEL
-      value: external
+      value: internal

@@ -1,0 +1,13 @@
+# this is a mockup file to illustrate future AppStack concepts 
+apiVersion: experimental.kontinue.io/v1
+kind: SupplyChain
+metadata:
+  name: dekt4pets-micro-gateway
+  labels:
+    app.kubernetes.io/name: dekt4pets-micro-gateway
+    app.tanzu.vmware.com/workload-type: gateway
+  workloads:
+    - name: dekt4pets-frontend
+    - name: dekt4pets-backend
+  git:
+      url: https://github.com/dektlong/_dekt4pets-demo-supply-chain

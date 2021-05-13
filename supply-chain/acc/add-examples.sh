@@ -14,7 +14,7 @@ init () {
 add-spring-examples() {
 
     GENERATORS_FILES=("boot-api-k8s" "boot-k8s-kubectl" "boot-k8s-jpa" "boot-k8s-kustomize" "knative-kpack" "boot-knative-graalvm" "boot-knative-jib" "boot-cloudfoundry" "docker-compose" "web-k8s" "steeltoe-k8s-skaffold" "steeltoe-azure-spring-cloud")
-    ACCELERATORS_FILES=("music-store-steeltoe" "ebanking" "todo-service" "function-kafka" "spring-jpa" "ruby-simple" "dotnet-aspnet-hello" "boot-function-knative" "frontend-ux-for-online-stores" "backend-api-for-online-stores" "supplychain-for-online-stores")
+    ACCELERATORS_FILES=("frontend-ux-for-online-stores" "backend-api-for-online-stores" "supplychain-dataservices" "supplychain-microservices" "supplychain-api-gateways" "music-store-steeltoe" "ebanking" "todo-service" "function-kafka" "spring-jpa" "ruby-simple" "dotnet-aspnet-hello" "boot-function-knative")
 
     import-files
 }
@@ -23,7 +23,7 @@ add-spring-examples() {
 add-dotnet-examples() {
 
     GENERATORS_FILES=("boot-api-k8s" "web-k8s" "aks-resource-simple" "boot-aks-data" "boot-asc" "boot-function-azure" "boot-cloudfoundry" "docker-compose" "dotnet-web-azure" "kubernetes-steeltoe-skaffold" "steeltoe-asc" "boot-knative-graalvm")
-    ACCELERATORS_FILES=("dotnet-SQLServer-EFCore" "music-store-steeltoe" "todo-service-asc" "jpa-sqlserver" "spring-cosmosdb-jpa" "dotnet-aspnet-hello" "boot-function-azure" "frontend-ux-for-online-stores")
+    ACCELERATORS_FILES=("frontend-ux-for-online-stores" "backend-api-for-online-stores" "supplychain-for-online-stores" "micro-gateways" "dotnet-SQLServer-EFCore" "music-store-steeltoe" "todo-service-asc" "jpa-sqlserver" "spring-cosmosdb-jpa" "dotnet-aspnet-hello" "boot-function-azure")
 
     import-files
 }
