@@ -1,8 +1,6 @@
 description: A sample app illustrating how to use all of the  ASP.NET Core Steeltoe  components leveraging Azure services
 displayName: 'MusicStore built with Steeltoe '
 framework: ASP.NET Core Seeltoe
-generatorNames:
-- steeltoe-azure-spring-cloud
 homeUrl: https://github.com/SteeltoeOSS/Samples/tree/main/MusicStore
 iconUrl: https://raw.githubusercontent.com/simple-starters/icons/master/icon-steeltoe.png
 language: C#

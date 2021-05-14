@@ -1,7 +1,5 @@
-description: Template to create an AppStack supply-chain for operating api gateways
+description: Accelerator to create an AppStack supply-chain for operating api gateways
 displayName: Workflow for operating api gateways
-generatorNames: 
-- boot-api-k8s
 services: Spring Cloud Gateway
 homeUrl: https://github.com/spring-cloud-services-samples/animal-rescue
 iconUrl: https://raw.githubusercontent.com/simple-starters/icons/master/icon-boot.png

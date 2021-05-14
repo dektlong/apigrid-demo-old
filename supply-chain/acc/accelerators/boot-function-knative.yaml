@@ -2,8 +2,6 @@ description: A basic hello world Spring Cloud Function serverless app with Graal
   Native Image Compilation
 displayName: Spring Cloud Function Serverless Native Image App
 framework: Spring Cloud
-generatorNames:
-- boot-knative-graalvm
 homeUrl: https://github.com/simple-starters/native-fun
 iconUrl: https://raw.githubusercontent.com/simple-starters/icons/master/icon-cloud.png
 language: Java

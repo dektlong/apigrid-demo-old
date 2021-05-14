@@ -3,9 +3,6 @@ description: A Spring Boot microservice that uses the Spring Boot Web Starter to
   a REST API for an eBanking application
 displayName: Spring Boot eBanking service
 framework: Spring Boot
-generatorNames:
-- boot-k8s-kubectl
-- boot-k8s-kustomize
 homeUrl: https://github.com/ddobrin/ebanking-api
 iconUrl: https://raw.githubusercontent.com/simple-starters/icons/master/icon-boot.png
 language: Java

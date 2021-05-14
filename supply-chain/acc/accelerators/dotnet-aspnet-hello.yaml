@@ -1,8 +1,6 @@
 description: The Hello World ASP.NET application with SSO integration deployed as web app
 displayName: Base ASP.NET MVC Application -X
 framework: ASP.NET
-generatorNames:
-- k8s-web
 homeUrl: https://github.com/markpollack/HelloWorldAspNetCore
 iconUrl: https://raw.githubusercontent.com/simple-starters/icons/master/icon-dotnet.png
 language: C#

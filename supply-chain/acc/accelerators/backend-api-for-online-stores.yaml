@@ -1,8 +1,6 @@
 description: Accelerator to create Backend API service for online stores
 displayName: Backend API for online-stores
 framework: Spring Boot
-generatorNames: 
-- boot-api-k8s
 homeUrl: https://github.com/spring-cloud-services-samples/animal-rescue
 iconUrl: https://raw.githubusercontent.com/simple-starters/icons/master/icon-boot.png
 language: Java

@@ -2,8 +2,6 @@ description: A sample Boot function, that runs on Azure Functions, and is config
   with Spring Cloud Function.
 displayName: Simple Boot Function deployed to Azure Functions
 framework: Spring Boot, Spring Cloud
-generatorNames:
-- boot-function-azure
 homeUrl: https://github.com/simple-starters/hello-fun
 iconUrl: https://raw.githubusercontent.com/simple-starters/icons/master/icon-azure.png
 language: Java

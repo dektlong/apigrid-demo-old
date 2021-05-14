@@ -2,8 +2,6 @@ description: 'A Spring Boot application that connects to an Azure Cosmos DB usin
   Spring Data JPA '
 displayName: Spring Data JPA with Azure Cosmos DB
 framework: Spring Boot
-generatorNames:
-- boot-aks-data
 homeUrl: https://github.com/markpollack/gs-accessing-data-mysql
 iconUrl: https://raw.githubusercontent.com/simple-starters/icons/master/icon-azure.png
 language: Java

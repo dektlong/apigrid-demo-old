@@ -1,16 +1,13 @@
-description: A Spring Boot microservice that uses Azure Spring Cloud services to manage
+description: A Spring Boot microservice that uses spring-boot-starter-web to implement a REST API for TODO(s)
   API for TODO(s)
-displayName: TODO(s) sample Boot app using Spring Cloud Services
+displayName: Spring Boot TODO service
 framework: Spring Boot
-generatorNames:
-- aks-resource-simple
-- boot-azure-spring-cloud
 homeUrl: https://github.com/markpollack/todos-api
 iconUrl: https://raw.githubusercontent.com/simple-starters/icons/master/icon-boot.png
 language: Java
 maintainer: https://github.com/markpollack
-name: todo-service-asc
-services: Azure Spring Cloud, Spring Cloud Gateway
+name: todo-service
+services: MariaDB
 sourceUrl: github.com/markpollack/todos-api
 tags:
 - todos
