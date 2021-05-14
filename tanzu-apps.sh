@@ -8,7 +8,7 @@ deploy-backend() {
     echo
     echo "=========> Sync local code with remote git $DEMO_APP_GIT_REPO ..."
     echo
-    git-push "local-development-completed"
+    #git-push "local-development-completed"
     #codechanges=$?
 
     echo

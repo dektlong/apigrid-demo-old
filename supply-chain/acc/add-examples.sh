@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
-
+source supply-chain/secrets/config-values.env
+    
 #init
 init () {
 
-    if  [ "$1" != "" ]; then 
-        export tss_client_server_uri=$1 #remote server
-    fi
+    export tss_client_server_uri=http://$1.$SUB_DOMAIN.$DOMAIN
 
     acc login -u admin -p admin
 }
@@ -21,15 +20,15 @@ import-accelerators() {
 
 case $1 in
 dev)
-    init $2
+    init "acc-dev"
     ACCELERATORS_FILES=("frontend-ux-for-online-stores" "backend-api-for-online-stores" \
                         "music-store-steeltoe" "ebanking"  "todo-service" "todo-service-asc" \
                         "function-kafka" "spring-jpa" "ruby-simple" "dotnet-aspnet-hello" "boot-function-knative" \
-                        "dotnet-SQLServer-EFCore" "jpa-sqlserver" "spring-cosmosdb-jpa" "dotnet-aspnet-hello" "boot-function-azure")
+                        "dotnet-SQLServer-EFCore" "jpa-sqlserver" "spring-cosmosdb-jpa" "boot-function-azure")
     import-accelerators
     ;;
 devops)
-    init $2
+    init "acc-devops"
     ACCELERATORS_FILES=("supplychain-dataservices" "supplychain-microservices" "supplychain-api-gateways")
     import-accelerators
     ;;

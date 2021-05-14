@@ -9,5 +9,5 @@ name: backend-api-for-online-stores
 services: Spring Cloud Gateway
 sourceUrl: https://github.com/dektlong/store-backend-api
 tags:
-- onlinestore-devs
+- online-store
 version: 1.0.0
