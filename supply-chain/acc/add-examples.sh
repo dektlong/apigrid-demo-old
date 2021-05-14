@@ -20,23 +20,20 @@ import-accelerators() {
 
 
 case $1 in
-spring)
+dev)
     init $2
     ACCELERATORS_FILES=("frontend-ux-for-online-stores" "backend-api-for-online-stores" \
-                        "supplychain-dataservices" "supplychain-microservices" "supplychain-api-gateways" \
-                        "music-store-steeltoe" "ebanking"  "todo-service" \
-                        "function-kafka" "spring-jpa" "ruby-simple" "dotnet-aspnet-hello" "boot-function-knative")
-    import-accelerators
-    ;;
-dotnet)
-    init $2
-    ACCELERATORS_FILES=("frontend-ux-for-online-stores" "backend-api-for-online-stores" \
-                        "supplychain-dataservices" "supplychain-microservices" "supplychain-api-gateways" \
-                        "music-store-steeltoe" "ebanking" "todo-service-asc" \ 
+                        "music-store-steeltoe" "ebanking"  "todo-service" "todo-service-asc" \
+                        "function-kafka" "spring-jpa" "ruby-simple" "dotnet-aspnet-hello" "boot-function-knative" \
                         "dotnet-SQLServer-EFCore" "jpa-sqlserver" "spring-cosmosdb-jpa" "dotnet-aspnet-hello" "boot-function-azure")
     import-accelerators
     ;;
+devops)
+    init $2
+    ACCELERATORS_FILES=("supplychain-dataservices" "supplychain-microservices" "supplychain-api-gateways")
+    import-accelerators
+    ;;
 *)
-    echo "Incorrect usage. Please specify spring | dotnet"
+    echo "Incorrect usage. Please specify dev | devops"
     ;;
 esac

@@ -57,10 +57,9 @@ It is designed to run on any k8s substrate.
 ## Suggested demo flow
 
 ### The starting experience
-- Access TSS on ```tss.<SUB_DOMAIN>.<DOMAIN>```
-- Admin view: Show available Starters and Generators
-- Admin view: Create a new backend-api-for-online-stores with online-store as the tag
-  - see example of a generator source repo here: ```https://github.com/dektlong/generator-boot-api-k8s```
+- Access app accelerator developer instance  on ```acc-dev.<SUB_DOMAIN>.<DOMAIN>```
+- Access app accelerator devops instance  on ```acc-devops.<SUB_DOMAIN>.<DOMAIN>```
+- Show available Accelerators for both audiences
   - see example of an accelerator source repo here: ```https://github.com/dektlong/store-backend-api```
 - Developer view: Click on online-store tag and show both frontend and backend Starters
 - DevOps view: show the supply-chain template for devops to create
