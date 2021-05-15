@@ -20,15 +20,15 @@
 
 #################### menu functions ################
 
-    #install
-    install () {
+    #init
+    init () {
    
         case $1 in
-        on-aks)
+        aks)
             supply-chain/k8s-builders/build-aks-cluster.sh create $CLUSTER_NAME 5 #nodes
             install-all
             ;;
-        on-tkg)
+        tkg)
             supply-chain/k8s-builders/build-tkg-cluster.sh tkg-i $CLUSTER_NAME $TKGI_CLUSTER_PLAN 1 4
             install-all
             ;;
@@ -562,9 +562,9 @@
         echo
         echo "Incorrect usage. Please specify one of the following commands"
         echo
-        echo "${bold}install${normal}"
-        echo "  on-aks"
-        echo "  on-tkg"
+        echo "${bold}init${normal}"
+        echo "  aks"
+        echo "  tkg"
         echo
         echo "${bold}upgrade${normal}"
         echo "  gateway"
@@ -588,8 +588,8 @@
 #################### main ##########################
 
 case $1 in
-install)
-    install $2 
+init)
+    init $2 
     ;;
 upgrade)
     upgrade $2   
