@@ -1,7 +1,7 @@
 description: Accelerator to create an AppStack supply-chain for operating microservices
 displayName: Workflow for operating microservices
 framework: AppStack
-homeUrl: https://github.com/spring-cloud-services-samples/animal-rescue
+homeUrl: https://github.com/dektlong/supplychain-microservices
 iconUrl: https://raw.githubusercontent.com/simple-starters/icons/master/icon-boot.png
 maintainer: dekt
 name: supplychain-microservices
