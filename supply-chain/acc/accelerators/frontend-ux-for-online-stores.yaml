@@ -2,7 +2,7 @@ description: Accelerator to create fronted UX for online Stores
 displayName: Frontend UX for Online Stores
 framework: React, Angular
 homeUrl: https://github.com/spring-cloud-services-samples/animal-rescue
-iconUrl: https://raw.githubusercontent.com/dektlong/dekt-images/main/ReactJS.png
+iconUrl: https://raw.githubusercontent.com/dektlong/dekt-images/main/reactjs-logo.png
 language: ReactJS
 maintainer: dekt
 name: frontend-ux-for-online-stores
