@@ -140,12 +140,6 @@
         echo
     
         $GW_INSTALL_DIR/scripts/install-spring-cloud-gateway.sh $GW_NAMESPACE
-
-        echo
-        echo "=========> Start dekt4pets micro-gateway with public access..."
-        echo
-        kustomize build supply-chain/gateway | kubectl apply -f -
-        kubectl apply -f supply-chain/gateway/config/dekt4pets-ingress.yaml -n $APP_NAMESPACE
     }
 
     #install tanzu app accelerator 
@@ -292,6 +286,12 @@
         echo "===> Setup brownfield APIs expamples..."
         echo
         kustomize build supply-chain/api-portal | kubectl apply -f -
+
+        echo
+        echo "=========> Start dekt4pets micro-gateway with public access..."
+        echo
+        kustomize build supply-chain/gateway | kubectl apply -f -
+        kubectl apply -f supply-chain/gateway/config/dekt4pets-ingress.yaml -n $APP_NAMESPACE
 
         setup-dekt4pets-examples
 
