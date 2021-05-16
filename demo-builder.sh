@@ -84,8 +84,6 @@
     #cleanup
     cleanup() {
 
-        git commit -a -m "remove check-adpoter api"  
-        git push
         supply-chain/k8s-builders/octant-wrapper.sh stop
 
         case $1 in
