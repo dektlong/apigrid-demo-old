@@ -248,8 +248,6 @@
 
         docker login -u $IMG_REGISTRY_USER -p $IMG_REGISTRY_PASSWORD $IMG_REGISTRY_URL
 
-        supply-chain/sbo/build-sbo-images.sh 
-
         $API_PORTAL_INSTALL_DIR/scripts/relocate-images.sh $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO
 
         kbld relocate -f $TBS_INSTALL_DIR/images.lock --lock-output $TBS_INSTALL_DIR/images-relocated.lock --repository $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/build-service
@@ -262,6 +260,8 @@
         docker pull springcloudservices/animal-rescue-frontend
         docker tag springcloudservices/animal-rescue-frontend:latest $DET4PETS_FRONTEND_IMAGE_LOCATION
         docker push $DET4PETS_FRONTEND_IMAGE_LOCATION
+
+        supply-chain/sbo/build-sbo-images.sh 
 
     }
 
