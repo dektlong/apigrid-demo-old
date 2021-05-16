@@ -1,6 +1,6 @@
 description: Accelerator to create an AppStack supply-chain for operating api gateways
 displayName: Workflow for operating api gateways
-services: Spring Cloud Gateway
+framework: AppStack
 homeUrl: https://github.com/dektlong/supplychain-api-gateways
 iconUrl: https://raw.githubusercontent.com/simple-starters/icons/master/icon-boot.png
 maintainer: dekt
