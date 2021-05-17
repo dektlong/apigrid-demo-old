@@ -108,6 +108,7 @@
         #install-contour
         
         open -a Terminal supply-chain/k8s-builders/octant-wrapper.sh
+        osascript -e 'tell application "Terminal" to set miniaturized of every window to true'
         
         create-namespaces-secrets
 
