@@ -9,6 +9,3 @@ spec:
     title: Background Check Services
     description: APIs to help with background checks on pet adopters
     version: 0.5.0
-    cors:
-      allowedOrigins:
-        - api-portal.{HOST_NAME}

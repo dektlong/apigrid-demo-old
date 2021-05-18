@@ -11,6 +11,10 @@ spec:
     cors:
       allowedOrigins:
         - api-portal.{HOST_NAME}
+      allowedMethods:
+        - "GET"
+        - "PUT"
+        - "POST"
   count: 2
   sso:
     secret: dekt4pets-sso
