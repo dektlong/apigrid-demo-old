@@ -8,6 +8,9 @@ spec:
     title: Dekt4Pets
     description: APIs for building the dekt4pets online store. 
     version: 0.1.0
+    cors:
+      allowedOrigins:
+        - api-portal.{HOST_NAME}
   count: 2
   sso:
     secret: dekt4pets-sso

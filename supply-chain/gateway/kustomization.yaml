@@ -4,4 +4,5 @@ namespace: dekt-apps
 
 resources:
   - config/dekt4pets-gateway.yaml
+  - config/dekt4pets-ingress.yaml
   
