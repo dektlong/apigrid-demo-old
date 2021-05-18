@@ -266,8 +266,6 @@
 
     }
 
-#################### demo-apps functions ###########
-
     #setup-demo-examples
     setup-demo-examples() {
 
