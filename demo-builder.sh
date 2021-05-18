@@ -287,7 +287,7 @@
         kustomize build supply-chain/api-portal | kubectl apply -f -
 
         echo
-        echo "=========> Start dekt4pets micro-gateway with public access..."
+        echo "===> Start dekt4pets micro-gateway with public access..."
         echo
         kustomize build supply-chain/gateway | kubectl apply -f -
 
