@@ -136,9 +136,9 @@ usage() {
     echo "  create"
     echo "  describe"
     echo
-    echo "${bold}app${normal}"
-    echo "  create-workload [name]"
-    echo "  patch-workload [name]"
+    echo "${bold}workload${normal}"
+    echo "  create [name]"
+    echo "  patch [name]"
     echo
   	exit   
  
@@ -209,7 +209,7 @@ workflow() {
 workload () {
 
     case $1 in
-    create-workload)
+    create)
         case $2 in
         backend)
             deploy-backend
@@ -222,7 +222,7 @@ workload () {
   	        ;;
         esac
         ;;
-    patch-workload)
+    patch)
 	    case $2 in
         backend)
             patch-backend
@@ -248,7 +248,7 @@ bold=$(tput bold)
 normal=$(tput sgr0)
 
 case $1 in
-app)
+workload)
 	workload $2 $3
     ;;
 workflow)
