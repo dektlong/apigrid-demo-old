@@ -110,6 +110,19 @@ rockme-native () {
     esac
 }
 
+#delete-workloads
+delete-workloads() {
+
+    echo
+    echo "=========> Remove frontend and backend workloads..."
+    echo
+
+    kustomize build workload-backend | kubectl delete -f -
+
+    kustomize build workload-frontend | kubectl delete -f -    
+
+}
+
 #################### private functions #######################
 
 #git-push
@@ -137,8 +150,9 @@ usage() {
     echo "  describe"
     echo
     echo "${bold}workload${normal}"
-    echo "  create [name]"
-    echo "  patch [name]"
+    echo "  create"
+    echo "  patch"
+    echo "  delete"
     echo
   	exit   
  
@@ -234,6 +248,9 @@ workload () {
   	        usage
   	        ;;
         esac
+        ;;
+    delete)
+        delete-workloads
         ;;
     *)
   	    usage

@@ -150,11 +150,8 @@
         echo "===> Install Tanzu Application Accelerator (Dev and DevOps instances)..."
         echo
 
-        imgpkg pull -b $ACC_INSTALL_BUNDLE \
-       -o /tmp/acc-bundle
-
-        export acc_service_type=ClusterIP
-        export acc_import_on_startup=false
+        #export acc_service_type=ClusterIP //currently being changed in the /tmp/acc-bundle/values.yaml
+        #export acc_import_on_startup=false //currently being changed in the /tmp/acc-bundle/config/values.yaml
     
         ytt -f /tmp/acc-bundle/config -f /tmp/acc-bundle/values.yaml --data-values-env acc \
             | kbld -f /tmp/acc-bundle/.imgpkg/images.yml -f- \
@@ -255,7 +252,9 @@
 
         $GW_INSTALL_DIR/scripts/relocate-images.sh $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO
 
-        imgpkg pull -b $ACC_INSTALL_BUNDLE -o /tmp/acc-bundle #change values import_on_startup: false, service_type: "ClusterIP"
+        imgpkg pull -b $ACC_INSTALL_BUNDLE -o /tmp/acc-bundle #update values in /tmp/acc-bundle/values.yaml 
+                                                                                #import_on_startup: "false"
+                                                                                #service_type: "ClusterIP"
 
         #workaround to use for frontend-app
         docker pull springcloudservices/animal-rescue-frontend
