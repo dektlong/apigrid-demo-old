@@ -29,10 +29,10 @@ It is designed to run on any k8s.
 
 - Create a folder named ```secrets``` in the ```supply-chain``` directory
 
-- Create ```dekt4pets-jwk.txt``` and ```dekt4pets-sso.txt``` credential files and place them in the ```secrets``` directory
+- Create ```dekt4pets-jwk.txt``` and ```dekt4pets-sso.txt``` credential files and place them in the ```supply-chain/secrets``` directory
   - see example in ```https://github.com/spring-cloud-services-samples/animal-rescue/blob/main/k8s/deploy_to_k8s.md```
 
-- Copy ```config-values-UPDATE_ME``` to ```secrets``` directory and renamed it to ```config-values.env```
+- Copy ```config-values-UPDATE_ME``` to ```supply-chain/secrets``` directory and renamed it to ```config-values.env```
 
 - Set all variables in ```config-values.env```
   - Note: all yaml files that are updated in runtime will be copied to ```config``` sub-directory in their respective directories during the demo-builder phase
