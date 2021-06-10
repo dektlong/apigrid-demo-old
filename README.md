@@ -6,7 +6,7 @@ This repo contains artifacts to run a demo illustrating the vision of Tanzu Micr
 It is designed to run on any k8s.
 
 - [Demo slides](https://docs.google.com/presentation/d/105sp3K633nnTPWn_PGxrLRb2X0atNmNN4Wlu10FgQ00/edit#slide=id.gdbf1731422_0_3)
-- [Demo recording](bit.ly/api-grid)
+- [Demo recording](https://bit.ly/api-grid)
 
 ## Curated Start                                                   
 - Architects create patterns                                      
