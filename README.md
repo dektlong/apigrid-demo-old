@@ -73,14 +73,14 @@ It is designed to run on any k8s.
 
 ### The path-to-prod
 - ```./tanzu.sh workflow describe``` 
-- ```./tanzu.sh app create-workload backend```
+- ```./tanzu.sh workload create backend```
 - Show how build service detects git-repo changes and auto re-build backend-image (if required)
 - Show how the ```dekt4pets-gateway``` micro-gateway starts quickly as just a component of your app
 - Access API Hub on ```api-portal.<SUB_DOMAIN>.<DOMAIN>```
   - Show the dekt4Pets API group auto-populated with the API spec you defined
   - now the frontend team can easily discover and test the backend APIs and reuse
   - Show the other API groups ('brownfield APIs')
-- ```./tanzu.sh app create-workload frontend``
+- ```./tanzu.sh workload create frontend``
 - Access Spring Boot Observer at ```http://sbo.<SUB_DOMAIN>.<DOMAIN>/apps``` to show actuator information on the backend application 
 - Show the new frontend APIs that where auto-populated to the API portal
 - This phase will also add an ingress rule to the gateway, now you can show:
@@ -129,7 +129,7 @@ It is designed to run on any k8s.
 	}
 
 ```
-- ```./tanzu.sh app patch-workload backend "```
+- ```./tanzu.sh workload patch backend "```
 - show how build-service is invoking a new image build based on the git-commit-id
 - run the new check-adopter api 
 ```
