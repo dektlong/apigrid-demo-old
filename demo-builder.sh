@@ -12,11 +12,10 @@
     SBO_SIDECAR_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/spring-boot-observer-sidecar:0.0.1
     GW_NAMESPACE="scgw-system"
     API_PORTAL_NAMESPACE="api-portal-system"
-    ACC_DEV_NAMESPACE="acc-dev-system"
-    ACC_DEVOPS_NAMESPACE="acc-devops-system"
     SBO_NAMESPACE="sbo-system"
     BROWNFIELD_NAMESPACE="brownfield-apis"
-    ACC_INSTALL_BUNDLE="registry.pivotal.io/app-accelerator/acc-install-bundle:1.0.0-preview-20210322"
+    ACC_INSTALL_BUNDLE="dev.registry.pivotal.io/app-accelerator/acc-install-bundle:0.1.0-snapshot"
+    ACC_NAMESPACE="accelerator-system" #must be that specific name for now
 
 #################### menu functions ################
 
@@ -150,19 +149,15 @@
         echo "===> Install Tanzu Application Accelerator (Dev and DevOps instances)..."
         echo
 
-        #export acc_service_type=ClusterIP //currently being changed in the /tmp/acc-bundle/values.yaml
-        #export acc_import_on_startup=false //currently being changed in the /tmp/acc-bundle/config/values.yaml
+        kubectl apply -f https://gist.githubusercontent.com/trisberg/f53bbaa0b8aacba0ec64372a6fb6acdf/raw/44a923959945d64bad5865566e4ee6628c3cdd1f/acc-flux2.yaml
+
+        export acc_service_type=ClusterIP
     
-        ytt -f /tmp/acc-bundle/config -f /tmp/acc-bundle/values.yaml --data-values-env acc \
-            | kbld -f /tmp/acc-bundle/.imgpkg/images.yml -f- \
-            | kapp deploy -y -n $ACC_DEV_NAMESPACE -a accelerator -f-
+        ytt -f /tmp/acc-install-bundle/config -f /tmp/acc-install-bundle/values.yml --data-values-env acc  \
+            | kbld -f /tmp/acc-install-bundle/.imgpkg/images.yml -f- \
+            | kapp deploy -y -n $ACC_NAMESPACE  -a accelerator -f-
 
-        ytt -f /tmp/acc-bundle/config -f /tmp/acc-bundle/values.yaml --data-values-env acc \
-            | kbld -f /tmp/acc-bundle/.imgpkg/images.yml -f- \
-            | kapp deploy -y -n $ACC_DEVOPS_NAMESPACE -a accelerator -f-
-
-        kubectl apply -f supply-chain/acc/config/acc-dev-ingress.yaml -n $ACC_DEV_NAMESPACE
-        kubectl apply -f supply-chain/acc/config/acc-devops-ingress.yaml -n $ACC_DEVOPS_NAMESPACE
+        kubectl apply -f supply-chain/acc/config/acc-ingress.yaml -n $ACC_NAMESPACE
 
     }
 
@@ -252,9 +247,7 @@
 
         $GW_INSTALL_DIR/scripts/relocate-images.sh $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO
 
-        imgpkg pull -b $ACC_INSTALL_BUNDLE -o /tmp/acc-bundle #update values in /tmp/acc-bundle/values.yaml 
-                                                                                #import_on_startup: "false"
-                                                                                #service_type: "ClusterIP"
+        imgpkg pull -b $ACC_INSTALL_BUNDLE -o /tmp/acc-install-bundle
 
         #workaround to use for frontend-app
         docker pull springcloudservices/animal-rescue-frontend
@@ -276,9 +269,7 @@
         echo
         echo "===> Setup App Accelerator examples..."
         echo
-        supply-chain/acc/add-examples.sh dev 
-        supply-chain/acc/add-examples.sh devops 
-        
+        kubectl apply -f supply-chain/acc/add-accelerators.yaml
         
         echo
         echo "===> Setup brownfield APIs expamples..."
@@ -336,8 +327,7 @@
         kubectl create ns $APP_NAMESPACE
         kubectl create ns $GW_NAMESPACE
         kubectl create ns $API_PORTAL_NAMESPACE
-        kubectl create ns $ACC_DEV_NAMESPACE
-        kubectl create ns $ACC_DEVOPS_NAMESPACE
+        kubectl create ns $ACC_NAMESPACE
         kubectl create ns $SBO_NAMESPACE
         kubectl create ns $BROWNFIELD_NAMESPACE
 
@@ -373,18 +363,13 @@
             --namespace=$SBO_NAMESPACE
 
         #enable ACC to access registry.pivotal.io
-        kubectl create secret docker-registry acc-image-regcred \
-            --docker-server=registry.pivotal.io \
-            --docker-username=$TANZU_NETWORK_USER \
-            --docker-password=$TANZU_NETWORK_PASSWORD \
-            --namespace=$ACC_DEV_NAMESPACE 
 
-         kubectl create secret docker-registry acc-image-regcred \
-            --docker-server=registry.pivotal.io \
+        kubectl create secret docker-registry acc-image-regcred \
+            --docker-server=dev.registry.pivotal.io \
             --docker-username=$TANZU_NETWORK_USER \
             --docker-password=$TANZU_NETWORK_PASSWORD \
-            --namespace=$ACC_DEVOPS_NAMESPACE 
-    
+            --namespace=$ACC_NAMESPACE 
+        
         #sso secret for dekt4pets-gatway 
         kubectl create secret generic dekt4pets-sso --from-env-file=supply-chain/secrets/dekt4pets-sso.txt -n $APP_NAMESPACE
 
@@ -404,8 +389,7 @@
         
         update-dynamic-value "supply-chain/gateway" "dekt4pets-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
         update-dynamic-value "supply-chain/gateway" "dekt4pets-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
-        update-dynamic-value "supply-chain/acc" "acc-dev-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
-        update-dynamic-value "supply-chain/acc" "acc-devops-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
+        update-dynamic-value "supply-chain/acc" "acc-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
         update-dynamic-value "supply-chain/api-portal" "scg-openapi-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
         update-dynamic-value "supply-chain/api-portal" "api-portal-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
         update-dynamic-value "supply-chain/sbo" "sbo-deployment.yaml" "{OBSERVER_SERVER_IMAGE}" "$SBO_SERVER_IMAGE_LOCATION"
@@ -417,12 +401,9 @@
         update-dynamic-value "supply-chain/api-portal" "donations-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
         update-dynamic-value "workload-backend" "dekt4pets-backend-app.yaml" "{BACKEND_IMAGE}" "$DET4PETS_BACKEND_IMAGE_LOCATION" "{OBSERVER_SIDECAR_IMAGE}" "$SBO_SIDECAR_IMAGE_LOCATION"
         update-dynamic-value "workload-frontend" "dekt4pets-frontend-app.yaml" "{FRONTEND_IMAGE}" "$DET4PETS_FRONTEND_IMAGE_LOCATION" 
-
-
-        
-
-    
+   
     }
+
     #update-dynamic-value
     update-dynamic-value() {
 

@@ -1,9 +1,0 @@
-description: Accelerator to create an AppStack supply-chain for operating data services
-displayName: Workflow for operating data services
-framework: AppStack
-homeUrl: https://github.com/dektlong/supplychain-data-services
-iconUrl: https://raw.githubusercontent.com/dektlong/dekt-images/80bfdbf23040731d16310e286e7d40b57e3b23d5/tanzu.png
-maintainer: dekt
-name: supplychain-dataservices
-sourceUrl: https://github.com/dektlong/supplychain-data-services
-version: 1.0.0

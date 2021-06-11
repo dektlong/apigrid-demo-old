@@ -1,0 +1,129 @@
+apiVersion: accelerator.tanzu.vmware.com/v1alpha1
+kind: Accelerator
+metadata:
+  name: backend-api-for-online-stores
+spec:
+  git:
+    url: https://github.com/dektlong/store-backend-api
+    ref:
+      branch: master
+---
+apiVersion: accelerator.tanzu.vmware.com/v1alpha1
+kind: Accelerator
+metadata:
+  name: frontend-ux-for-online-stores
+spec:
+  git:
+    url: https://github.com/dektlong/store-frontend-ux
+    ref:
+      branch: main
+---
+apiVersion: accelerator.tanzu.vmware.com/v1alpha1
+kind: Accelerator
+metadata:
+  name: single-cluster-single-component-supplychain
+spec:
+  git:
+    url: https://github.com/dektlong/supplychain-apigrid
+    ref:
+      branch: main
+---
+apiVersion: accelerator.tanzu.vmware.com/v1alpha1
+kind: Accelerator
+metadata:
+  name:  single-cluster-multiple-components-supplychain
+spec:
+  git:
+    url: https://github.com/dektlong/supplychain-apigrid
+    ref:
+      branch: main
+---
+apiVersion: accelerator.tanzu.vmware.com/v1alpha1
+kind: Accelerator
+metadata:
+  name: single-cluster-multiple-components-api-grid-supplychain
+spec:
+  git:
+    url: https://github.com/dektlong/supplychain-apigrid
+    ref:
+      branch: main
+---
+apiVersion: accelerator.tanzu.vmware.com/v1alpha1
+kind: Accelerator
+metadata:
+  name: multi-cluster-multiple-components-api-grid-supplychain
+spec:
+  git:
+    url: https://github.com/dektlong/supplychain-apigrid
+    ref:
+      branch: main
+---
+apiVersion: accelerator.tanzu.vmware.com/v1alpha1
+kind: Accelerator
+metadata:
+  name: hello-function-azure
+spec:
+  git:
+    url: github.com/simple-starters/hello-fun
+    ref:
+      branch: master
+---
+apiVersion: accelerator.tanzu.vmware.com/v1alpha1
+kind: Accelerator
+metadata:
+  name: hello-fun-new
+spec:
+  git:
+    url: https://github.com/trisberg/hello-fun
+    ref:
+      branch: master
+---
+apiVersion: accelerator.tanzu.vmware.com/v1alpha1
+kind: Accelerator
+metadata:
+  name: ebanking-service
+spec:
+  git:
+    url: github.com/ddobrin/ebanking-api
+    ref:
+      branch: master
+---
+apiVersion: accelerator.tanzu.vmware.com/v1alpha1
+kind: Accelerator
+metadata:
+  name: music-store-steeltoe
+spec:
+  git:
+    url: https://github.com/SteeltoeOSS/Samples/tree/main/MusicStore
+    ref:
+      branch: main
+---
+apiVersion: accelerator.tanzu.vmware.com/v1alpha1
+kind: Accelerator
+metadata:
+  name: hello-ruby
+spec:
+  git:
+    url: github.com/simple-starters/hello-ruby
+    ref:
+      branch: master
+---
+apiVersion: accelerator.tanzu.vmware.com/v1alpha1
+kind: Accelerator
+metadata:
+  name: hello-ruby
+spec:
+  git:
+    url: github.com/simple-starters/hello-ruby
+    ref:
+      branch: master
+---
+apiVersion: accelerator.tanzu.vmware.com/v1alpha1
+kind: Accelerator
+metadata:
+  name: todo-service
+spec:
+  git:
+    url: github.com/markpollack/todos-api
+    ref:
+      branch: master
