@@ -3,7 +3,10 @@
 
 This repo contains artifacts to run a demo illustrating the vision of Tanzu Micro API Fabric.
 
-It is designed to run on any k8s substrate.
+It is designed to run on any k8s.
+
+- [Demo slides](https://docs.google.com/presentation/d/105sp3K633nnTPWn_PGxrLRb2X0atNmNN4Wlu10FgQ00/edit#slide=id.gdbf1731422_0_3)
+- [Demo recording](https://bit.ly/api-grid)
 
 ## Curated Start                                                   
 - Architects create patterns                                      
@@ -26,10 +29,10 @@ It is designed to run on any k8s substrate.
 
 - Create a folder named ```secrets``` in the ```supply-chain``` directory
 
-- Create ```dekt4pets-jwk.txt``` and ```dekt4pets-sso.txt``` credential files and place them in the ```secrets``` directory
+- Create ```dekt4pets-jwk.txt``` and ```dekt4pets-sso.txt``` credential files and place them in the ```supply-chain/secrets``` directory
   - see example in ```https://github.com/spring-cloud-services-samples/animal-rescue/blob/main/k8s/deploy_to_k8s.md```
 
-- Copy ```config-values-UPDATE_ME``` to ```secrets``` directory and renamed it to ```config-values.env```
+- Copy ```config-values-UPDATE_ME``` to ```supply-chain/secrets``` directory and renamed it to ```config-values.env```
 
 - Set all variables in ```config-values.env```
   - Note: all yaml files that are updated in runtime will be copied to ```config``` sub-directory in their respective directories during the demo-builder phase
@@ -38,8 +41,8 @@ It is designed to run on any k8s substrate.
 
 ## Installing the demo
 
-- If you update / first install the core Tanzu services ```./demo-builder.sh upgrade core-images```
-- ```./demo-builder.sh init [ aks | tkg ]``
+- If you update / first install the core Tanzu services , run ```./demo-builder.sh upgrade core-images```
+- run ```./demo-builder.sh init [ aks | tkg ]```
 - This script installs the following products
   - Spring Cloud Gateway
   - App Accelerator
@@ -70,14 +73,14 @@ It is designed to run on any k8s substrate.
 
 ### The path-to-prod
 - ```./tanzu.sh workflow describe``` 
-- ```./tanzu.sh app create-workload backend```
+- ```./tanzu.sh workload create backend```
 - Show how build service detects git-repo changes and auto re-build backend-image (if required)
 - Show how the ```dekt4pets-gateway``` micro-gateway starts quickly as just a component of your app
 - Access API Hub on ```api-portal.<SUB_DOMAIN>.<DOMAIN>```
   - Show the dekt4Pets API group auto-populated with the API spec you defined
   - now the frontend team can easily discover and test the backend APIs and reuse
   - Show the other API groups ('brownfield APIs')
-- ```./tanzu.sh app create-workload frontend``
+- ```./tanzu.sh workload create frontend``
 - Access Spring Boot Observer at ```http://sbo.<SUB_DOMAIN>.<DOMAIN>/apps``` to show actuator information on the backend application 
 - Show the new frontend APIs that where auto-populated to the API portal
 - This phase will also add an ingress rule to the gateway, now you can show:
@@ -126,7 +129,7 @@ It is designed to run on any k8s substrate.
 	}
 
 ```
-- ```./tanzu.sh app patch-workload backend "```
+- ```./tanzu.sh workload patch backend "```
 - show how build-service is invoking a new image build based on the git-commit-id
 - run the new check-adopter api 
 ```
