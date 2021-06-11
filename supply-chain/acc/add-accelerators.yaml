@@ -64,7 +64,7 @@ metadata:
   name: hello-function-azure
 spec:
   git:
-    url: github.com/simple-starters/hello-fun
+    url: https://github.com/simple-starters/hello-fun
     ref:
       branch: master
 ---
@@ -84,7 +84,7 @@ metadata:
   name: ebanking-service
 spec:
   git:
-    url: github.com/ddobrin/ebanking-api
+    url: https://github.com/ddobrin/ebanking-api
     ref:
       branch: master
 ---
@@ -104,17 +104,7 @@ metadata:
   name: hello-ruby
 spec:
   git:
-    url: github.com/simple-starters/hello-ruby
-    ref:
-      branch: master
----
-apiVersion: accelerator.tanzu.vmware.com/v1alpha1
-kind: Accelerator
-metadata:
-  name: hello-ruby
-spec:
-  git:
-    url: github.com/simple-starters/hello-ruby
+    url: https://github.com/simple-starters/hello-ruby
     ref:
       branch: master
 ---
@@ -124,6 +114,36 @@ metadata:
   name: todo-service
 spec:
   git:
-    url: github.com/markpollack/todos-api
+    url: https://github.com/markpollack/todos-api
+    ref:
+      branch: master
+---
+apiVersion: accelerator.tanzu.vmware.com/v1alpha1
+kind: Accelerator
+metadata:
+  name: dotnet-sqlserver-efcore
+spec:
+  git:
+    url: https://github.com/dektlong/dotnet-SQLServer-EFCore
+    ref:
+      branch: main
+---
+apiVersion: accelerator.tanzu.vmware.com/v1alpha1
+kind: Accelerator
+metadata:
+  name: spring-postgres-jpa
+spec:
+  git:
+    url: https://github.com/markpollack/docker-compose-postgres
+    ref:
+      branch: master
+---
+apiVersion: accelerator.tanzu.vmware.com/v1alpha1
+kind: Accelerator
+metadata:
+  name: jpa-sqlserver
+spec:
+  git:
+    url: https://github.com/markpollack/gs-accessing-data-mysql?ref=v0.9.0
     ref:
       branch: master
