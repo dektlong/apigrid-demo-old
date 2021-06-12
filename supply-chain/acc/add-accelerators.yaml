@@ -21,10 +21,10 @@ spec:
 apiVersion: accelerator.tanzu.vmware.com/v1alpha1
 kind: Accelerator
 metadata:
-  name: workflow-apidriven-microservices
+  name: api-microservices-workflow
 spec:
   git:
-    url: https://github.com/dektlong/supplychain-apigrid
+    url: https://github.com/dektlong/api-microservices-workflow
     ref:
       branch: main
 ---
@@ -34,7 +34,7 @@ metadata:
   name:  workflow-simple
 spec:
   git:
-    url: https://github.com/dektlong/supplychain-apigrid
+    url: https://github.com/dektlong/workflow-simple
     ref:
       branch: main
 ---
@@ -44,7 +44,7 @@ metadata:
   name: workflow-multicluster
 spec:
   git:
-    url: https://github.com/dektlong/supplychain-apigrid
+    url: https://github.com/dektlong/workflow-multicluster
     ref:
       branch: main
 ---
