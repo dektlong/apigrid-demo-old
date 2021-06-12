@@ -31,20 +31,20 @@ spec:
 apiVersion: accelerator.tanzu.vmware.com/v1alpha1
 kind: Accelerator
 metadata:
-  name:  workflow-simple
+  name:  simple-workflow
 spec:
   git:
-    url: https://github.com/dektlong/workflow-simple
+    url: https://github.com/dektlong/simple-workflow
     ref:
       branch: main
 ---
 apiVersion: accelerator.tanzu.vmware.com/v1alpha1
 kind: Accelerator
 metadata:
-  name: workflow-multicluster
+  name: multicluster-workflow
 spec:
   git:
-    url: https://github.com/dektlong/workflow-multicluster
+    url: https://github.com/dektlong/multicluster-workflow
     ref:
       branch: main
 ---
