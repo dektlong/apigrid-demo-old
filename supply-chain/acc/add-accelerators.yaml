@@ -21,7 +21,7 @@ spec:
 apiVersion: accelerator.tanzu.vmware.com/v1alpha1
 kind: Accelerator
 metadata:
-  name: single-cluster-single-component-supplychain
+  name: workflow-apidriven-microservices
 spec:
   git:
     url: https://github.com/dektlong/supplychain-apigrid
@@ -31,7 +31,7 @@ spec:
 apiVersion: accelerator.tanzu.vmware.com/v1alpha1
 kind: Accelerator
 metadata:
-  name:  single-cluster-multiple-components-supplychain
+  name:  workflow-simple
 spec:
   git:
     url: https://github.com/dektlong/supplychain-apigrid
@@ -41,17 +41,7 @@ spec:
 apiVersion: accelerator.tanzu.vmware.com/v1alpha1
 kind: Accelerator
 metadata:
-  name: single-cluster-multiple-components-api-grid-supplychain
-spec:
-  git:
-    url: https://github.com/dektlong/supplychain-apigrid
-    ref:
-      branch: main
----
-apiVersion: accelerator.tanzu.vmware.com/v1alpha1
-kind: Accelerator
-metadata:
-  name: multi-cluster-multiple-components-api-grid-supplychain
+  name: workflow-multicluster
 spec:
   git:
     url: https://github.com/dektlong/supplychain-apigrid
@@ -144,6 +134,6 @@ metadata:
   name: jpa-sqlserver
 spec:
   git:
-    url: https://github.com/markpollack/gs-accessing-data-mysql?ref=v0.9.0
+    url: https://github.com/markpollack/gs-accessing-data-mysql
     ref:
       branch: master
