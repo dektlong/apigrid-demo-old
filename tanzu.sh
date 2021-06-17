@@ -58,7 +58,7 @@ patch-backend() {
     echo  
     
     #apply new routes so you can show them in portal while new build is happening
-    kubectl apply -f supply-chain/workload-backend/routes/dekt4pets-backend-routes.yaml -n $APP_NAMESPACE >/dev/null &
+    kubectl apply -f workload-backend/routes/dekt4pets-backend-routes.yaml -n $APP_NAMESPACE >/dev/null &
     
     sleep 10 #enough time, instead of active polling which is not recommended by the TBS team
     
