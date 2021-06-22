@@ -45,24 +45,6 @@ public class AnimalController {
 		return animalRepository.findAll();
 	}
 
-	 @GetMapping("/check-adopter")
-	public String checkAdopter(Principal adopter) {
-    
-		String adoptionHistoryCheckURI = "https://datacheck.tanzu.dekt.io/adoption-history/*";
-
-   		RestTemplate restTemplate = new RestTemplate();
-		
-		try
-		{
-   			String result = restTemplate.getForObject(adoptionHistoryCheckURI, String.class);
-		}
-		catch (Exception e) {}
-
-  		return "<h1>Congratulations,</h1>" + 
-				"<h2>You are VERY cleared to adopt your next best friend.</h2>" +
-				"<p>token:"+adopter.getName()+"</p>";
-	}
-
 	@PostMapping("/animals/{id}/adoption-requests")
 	@ResponseStatus(HttpStatus.CREATED)
 	public void submitAdoptionRequest(
