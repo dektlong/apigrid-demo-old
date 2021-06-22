@@ -60,19 +60,17 @@ It is designed to run on any k8s.
 ## Suggested demo flow
 
 ### The starting experience
-- Access app accelerator developer instance  on ```acc-dev.<SUB_DOMAIN>.<DOMAIN>```
-- Access app accelerator devops instance  on ```acc-devops.<SUB_DOMAIN>.<DOMAIN>```
-- Show available Accelerators for both audiences
-  - see example of an accelerator source repo here: ```https://github.com/dektlong/store-backend-api```
-- Developer view: Click on online-store tag and show both frontend and backend Starters
-- DevOps view: show the supply-chain template for devops to create
-- Developer view: Select the new ```backend-api-for-online-stores``` Starter and provide your own name (e.g. dekt4pets-backend)
-- Generate and open the zip in your local IDE
+- Access app accelerator developer instance  on ```acc.<SUB_DOMAIN>.<DOMAIN>```
+- Show available Accelerators for Devs via the ```online-store-dev``` tag
+  - see example of a dev accelerator source repo here: ```https://github.com/dektlong/store-backend-api```
+- Show available Accelerators and options for DevOps via the ```online-store-devops``` tag
+  - - see example of a devops accelerator source repo here: ```https://github.com/dektlong/api-microservices-workflow```
+- Select options, generate and open the zip in your local IDE
   - Show immediate local build with ```mvn clean spring-boot:build-image```
   - Show the pre-generated API configs
+  - Show the supply chain created via ```./tanzu.sh workflow describe```
 
 ### The path-to-prod
-- ```./tanzu.sh workflow describe``` 
 - ```./tanzu.sh workload create backend```
 - Show how build service detects git-repo changes and auto re-build backend-image (if required)
 - Show how the ```dekt4pets-gateway``` micro-gateway starts quickly as just a component of your app
@@ -106,7 +104,7 @@ It is designed to run on any k8s.
       ssoEnabled: true
       tokenRelay: true
       tags:
-        - Adopters      
+        - pets      
 ```
 - In ```workload-backend/src/main/.../AnimalController.java``` add
 ```
