@@ -60,19 +60,25 @@ It is designed to run on any k8s.
 ## Suggested demo flow
 
 ### The starting experience
-- Access app accelerator developer instance  on ```acc-dev.<SUB_DOMAIN>.<DOMAIN>```
-- Access app accelerator devops instance  on ```acc-devops.<SUB_DOMAIN>.<DOMAIN>```
-- Show available Accelerators for both audiences
-  - see example of an accelerator source repo here: ```https://github.com/dektlong/store-backend-api```
-- Developer view: Click on online-store tag and show both frontend and backend Starters
-- DevOps view: show the supply-chain template for devops to create
-- Developer view: Select the new ```backend-api-for-online-stores``` Starter and provide your own name (e.g. dekt4pets-backend)
-- Generate and open the zip in your local IDE
+- Access app accelerator developer instance  on ```acc.<SUB_DOMAIN>.<DOMAIN>```
+- Development curated start 
+  - Select ```onlinestore-dev``` tag
+  - Select the ```Backend API for online-stores``` accelerator 
+  - Select the options according to the project
+  - Generate the zip file and import the folder to your favorite IDE
   - Show immediate local build with ```mvn clean spring-boot:build-image```
-  - Show the pre-generated API configs
+  - Show boiler-plate generated code configs
+  - Show boiler-plate generated API configs
+- DevOps curated start 
+  - Select ```onlinestore-devops``` tag
+  - Select the ```API Driven Microservices workflow``` accelerator 
+  - Select the options according to your DevOps policies
+  - Generate the zip file and import the folder to your favorite IDE
+  - Show the supply chain created via ```./tanzu.sh workflow describe```
+  - Show boiler-plate generated Build configs
+  - Show boiler-plate generated API configs
 
 ### The path-to-prod
-- ```./tanzu.sh workflow describe``` 
 - ```./tanzu.sh workload create backend```
 - Show how build service detects git-repo changes and auto re-build backend-image (if required)
 - Show how the ```dekt4pets-gateway``` micro-gateway starts quickly as just a component of your app
@@ -80,7 +86,7 @@ It is designed to run on any k8s.
   - Show the dekt4Pets API group auto-populated with the API spec you defined
   - now the frontend team can easily discover and test the backend APIs and reuse
   - Show the other API groups ('brownfield APIs')
-- ```./tanzu.sh workload create frontend``
+- ```./tanzu.sh workload create frontend```
 - Access Spring Boot Observer at ```http://sbo.<SUB_DOMAIN>.<DOMAIN>/apps``` to show actuator information on the backend application 
 - Show the new frontend APIs that where auto-populated to the API portal
 - This phase will also add an ingress rule to the gateway, now you can show:
@@ -106,7 +112,7 @@ It is designed to run on any k8s.
       ssoEnabled: true
       tokenRelay: true
       tags:
-        - Adopters      
+        - pets      
 ```
 - In ```workload-backend/src/main/.../AnimalController.java``` add
 ```
