@@ -61,14 +61,22 @@ It is designed to run on any k8s.
 
 ### The starting experience
 - Access app accelerator developer instance  on ```acc.<SUB_DOMAIN>.<DOMAIN>```
-- Show available Accelerators for Devs via the ```online-store-dev``` tag
-  - see example of a dev accelerator source repo here: ```https://github.com/dektlong/store-backend-api```
-- Show available Accelerators for DevOps via the ```online-store-devops``` tag
-  - see example of a devops accelerator source repo here: ```https://github.com/dektlong/api-microservices-workflow```
-- Select options, generate and open the zip in your local IDE
+- Development curated start 
+  - Select ```onlinestore-dev``` tag
+  - Select the ```Backend API for online-stores``` accelerator 
+  - Select the options according to the project
+  - Generate the zip file and import the folder to your favorite IDE
   - Show immediate local build with ```mvn clean spring-boot:build-image```
-  - Show the pre-generated API configs
+  - Show boiler-plate generated code configs
+  - Show boiler-plate generated API configs
+- DevOps curated start 
+  - Select ```onlinestore-devops``` tag
+  - Select the ```API Driven Microservices workflow``` accelerator 
+  - Select the options according to your DevOps policies
+  - Generate the zip file and import the folder to your favorite IDE
   - Show the supply chain created via ```./tanzu.sh workflow describe```
+  - Show boiler-plate generated Build configs
+  - Show boiler-plate generated API configs
 
 ### The path-to-prod
 - ```./tanzu.sh workload create backend```
