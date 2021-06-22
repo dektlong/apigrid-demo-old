@@ -59,7 +59,7 @@ public class AnimalController {
 		catch (Exception e) {}
 
   		return "<h1>Congratulations,</h1>" + 
-				"<h2>You are cleared to adopt your next best friend.</h2>" +
+				"<h2>You are VERY cleared to adopt your next best friend.</h2>" +
 				"<p>token:"+adopter.getName()+"</p>";
 	}
 
