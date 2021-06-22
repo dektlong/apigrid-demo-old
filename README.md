@@ -63,8 +63,8 @@ It is designed to run on any k8s.
 - Access app accelerator developer instance  on ```acc.<SUB_DOMAIN>.<DOMAIN>```
 - Show available Accelerators for Devs via the ```online-store-dev``` tag
   - see example of a dev accelerator source repo here: ```https://github.com/dektlong/store-backend-api```
-- Show available Accelerators and options for DevOps via the ```online-store-devops``` tag
-  - - see example of a devops accelerator source repo here: ```https://github.com/dektlong/api-microservices-workflow```
+- Show available Accelerators for DevOps via the ```online-store-devops``` tag
+  - see example of a devops accelerator source repo here: ```https://github.com/dektlong/api-microservices-workflow```
 - Select options, generate and open the zip in your local IDE
   - Show immediate local build with ```mvn clean spring-boot:build-image```
   - Show the pre-generated API configs
