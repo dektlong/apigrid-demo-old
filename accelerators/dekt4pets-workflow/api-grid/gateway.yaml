@@ -1,0 +1,16 @@
+apiVersion: "tanzu.vmware.com/v1"
+kind: SpringCloudGateway
+metadata:
+  name: dekt4pets-micro-gateway
+spec:
+  api:
+    serverUrl: https://dekt4pets.tanzu.dekt.io
+    title: dekt4pets micro-gateway
+    description: Micro Gateway to control internal APIs for building microservices for dekt4pets. 
+    version: 0.1.0
+    cors:
+      allowedOrigins:
+        - api-portal.tanzu.dekt.io
+  count: 2
+  sso:
+    secret: dekt4pets-google-secret

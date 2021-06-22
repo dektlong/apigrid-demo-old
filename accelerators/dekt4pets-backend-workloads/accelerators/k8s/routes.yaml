@@ -1,0 +1,41 @@
+apiVersion: "tanzu.vmware.com/v1"
+kind: SpringCloudGatewayRouteConfig
+metadata:
+  name: dekt4pets-backend-routes
+spec:
+  service: 
+    name: dekt4pets-backend-service
+  routes:
+    - predicates:
+        - Path=/api/pets
+        - Method=GET
+      filters:
+        - RateLimit=2,10s
+      tags:
+        - pets
+    - predicates:
+        - Path=/api/pets/adoptions/
+        - Method=POST,PUT,DELETE
+      filters:
+        - CircuitBreaker="myCircuitBreaker,forward:/inCaseOfFailureUseThis"
+      ssoEnabled: true
+      tokenRelay: true
+      tags:
+        - adoptions
+      model:
+        requestBody:
+          description: Manage adoptions
+          content:
+            'application/json':
+              schema:
+                type: object
+                description: adoptions schema
+                properties:
+                  itemName:
+                    type: string
+                  description:
+                    type: string
+                    format: email
+                  notes:
+                    type: string
+                required: [ "name", "description" ]
