@@ -1,0 +1,15 @@
+apiVersion: kp.kpack.io/v1alpha1
+kind: DependencyDescriptor
+stores:
+- name: default
+  sources:
+  - image: registry.pivotal.io/tanzu-java-buildpack/java@sha256:2cad7d20a18d21bfd28630e67f7a758cf3d6e97f5b8e9a59292384f6d7d130d1
+  - image: registry.pivotal.io/tanzu-nodejs-buildpack/nodejs@sha256:5050ac76d043395422e4ae3cab74d5bb31dc4e9f66414d0be3c4ebb7d1276312
+  - image: registry.pivotal.io/tanzu-java-native-image-buildpack/java-native-image@sha256:12f8ff3e904d1698442c05a73a7318bfbbaf535e582704ff02f675d1fe4ebe7f
+  - image: registry.pivotal.io/tbs-dependencies/paketo-buildpacks_procfile@sha256:bf6a4265db23ae25b34d402cd24e04c36dccdf24d6a6b9297f1d154a9d0b8062
+stacks:
+- name: base
+  buildImage:
+    image: registry.pivotal.io/tanzu-base-bionic-stack/build@sha256:00bea4d6ff08f84bea03a126375cf236cfec3de30735a59c1a540d0c1c9374fc
+  runImage:
+    image: registry.pivotal.io/tanzu-base-bionic-stack/run@sha256:d7ce225d0061cc80333a06577faeed266efe9e74c578470a948517b668b5630c

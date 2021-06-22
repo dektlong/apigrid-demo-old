@@ -1,0 +1,32 @@
+# this is a mockup file to illustrate future API validator concepts 
+metadata:
+  name: dekt4pets-api-validators
+spec:
+  validator: 
+    - name: project
+      # notRequired, alwaysRequired, updateOnly
+      sso: notRequired 
+      model: notRequired
+      path: alwaysRequired
+      method: updateOnly
+      rateLimit: notRequired
+      circuitBreaker: notRequired
+   - name: internal
+      # notRequired, alwaysRequired, updateOnly
+      sso: updateOnly 
+      model: updateOnly
+      path: alwaysRequired
+      method: alwaysRequired
+      rateLimit: updateOnly
+      circuitBreaker: notRequired
+   - name: external
+      # notRequired, alwaysRequired, updateOnly
+      sso: alwaysRequired 
+      model: updateOnly
+      path: alwaysRequired
+      method: alwaysRequired
+      rateLimit: alwaysRequired
+      circuitBreaker: alwaysRequired
+ activeValidator:
+   - name: external
+     

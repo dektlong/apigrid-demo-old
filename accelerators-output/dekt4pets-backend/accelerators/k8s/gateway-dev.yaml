@@ -1,0 +1,22 @@
+apiVersion: "tanzu.vmware.com/v1"
+kind: SpringCloudGatewayMapping
+metadata:
+  name: dekt4pets-backend-mapping
+spec:
+  gatewayRef:
+    name: dekt4pets-backend-gateway
+  routeConfigRef:
+    name: dekt4pets-backend-routes
+---
+apiVersion: "tanzu.vmware.com/v1"
+kind: SpringCloudGateway
+metadata:
+  name: dekt4pets-backend-dev-gateway
+spec:
+  api:
+    serverUrl: https://dekt4pets-backend.example.com
+    title: dekt4pets-backend dev gateway
+    description: Gateway for local development of dekt4pets-backend. 
+  count: 1
+  sso:
+    secret: dev-secret
