@@ -8,6 +8,7 @@ spec:
     title: dekt4pets micro-gateway
     description: Micro Gateway to control internal APIs for building microservices for dekt4pets. 
     version: 0.1.0
+    scorecards: https://app.demo.getcortexapp.com/demo/scorecards/vmware-governance
     cors:
       allowedOrigins:
         - api-portal.tanzu.dekt.io
