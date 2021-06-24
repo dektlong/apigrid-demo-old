@@ -6,7 +6,7 @@ spec:
   api:
     serverUrl: https://dekt4pets.{HOST_NAME}
     title: Dekt4Pets
-    description: Micro Gateway to control internal APIs in the dekt4pets online store
+    description: Micro Gateway to control API-driven microservices in the dekt4pets online store
     version: 0.1.0
     documentation: https://app.demo.getcortexapp.com/demo/scorecards/vmware-governance
     cors:
