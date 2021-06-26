@@ -15,3 +15,7 @@ spec:
   count: 2
   sso:
     secret: dekt4pets-google-secret
+  metrics:
+    secret: dekt4pets-observability
+  tracing:
+    secret: dekt4pets-observability
