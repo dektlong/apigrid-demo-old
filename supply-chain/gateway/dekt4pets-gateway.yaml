@@ -8,11 +8,14 @@ spec:
     title: Dekt4Pets
     description: Micro Gateway to control API-driven microservices in the dekt4pets online store
     version: 0.1.0
-    #documentation: https://app.demo.getcortexapp.com/demo/scorecards/vmware-governance
-    documentation: https://github.com/dektlong/_dekt4pets-demo/blob/main/README.md
+    documentation: https://app.demo.getcortexapp.com/demo/scorecards/vmware-governance
     cors:
       allowedOrigins:
         - api-portal.{HOST_NAME}
   count: 2
   sso:
     secret: dekt4pets-sso
+  metrics:
+    secret: dekt4pets-observability
+  tracing:
+    secret: dekt4pets-observability

@@ -139,7 +139,13 @@
         echo "===> Installing Spring Cloud Gateway operator..."
         echo
     
-        $GW_INSTALL_DIR/scripts/install-spring-cloud-gateway.sh $GW_NAMESPACE
+        /Users/dekt/Dropbox/Work/code/scgw-rnd-distro-wavefront/scripts/install-spring-cloud-gateway.sh \
+         --namespace scgw-system \
+         --operator_image harbor.apps.cf.tanzutime.com/dekt-system/scg-operator:0.0.0-dekt \
+         --gateway_image harbor.apps.cf.tanzutime.com/dekt-system/gateway:0.0.0-dekt \
+         --registry_credentials_secret spring-cloud-gateway-image-pull-secret
+        
+        #$GW_INSTALL_DIR/scripts/install-spring-cloud-gateway.sh $GW_NAMESPACE
     }
 
     #install tanzu app accelerator 
@@ -375,6 +381,9 @@
 
         #jwt secret for dekt4pets backend app
         kubectl create secret generic dekt4pets-jwk --from-env-file=supply-chain/secrets/dekt4pets-jwk.txt -n $APP_NAMESPACE
+
+        #wavefront secret for dekt4pets apps
+        kubectl create secret generic dekt4pets-observability --from-env-file=supply-chain/secrets/dekt4pets-observability.txt -n $APP_NAMESPACE
     }
 
     #update-configs 
