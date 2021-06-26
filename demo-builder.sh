@@ -157,8 +157,6 @@
 
         kubectl apply -f https://gist.githubusercontent.com/trisberg/f53bbaa0b8aacba0ec64372a6fb6acdf/raw/44a923959945d64bad5865566e4ee6628c3cdd1f/acc-flux2.yaml
 
-        export acc_service_type=ClusterIP
-    
         ytt -f /tmp/acc-install-bundle/config -f /tmp/acc-install-bundle/values.yml --data-values-env acc  \
             | kbld -f /tmp/acc-install-bundle/.imgpkg/images.yml -f- \
             | kapp deploy -y -n $ACC_NAMESPACE  -a accelerator -f-
