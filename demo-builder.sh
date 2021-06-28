@@ -143,11 +143,7 @@
         echo "===> Installing Spring Cloud Gateway operator..."
         echo
     
-        /Users/dekt/Dropbox/Work/code/scgw-rnd-distro-wavefront/scripts/install-spring-cloud-gateway.sh \
-         --namespace scgw-system \
-         --operator_image dev.registry.pivotal.io/spring-cloud-gateway-for-kubernetes/scg-operator:0.0.0-dekt \
-         --gateway_image dev.registry.pivotal.io/spring-cloud-gateway-for-kubernetes/gateway:0.0.0-dekt \
-         --registry_credentials_secret spring-cloud-gateway-image-pull-secret
+        install-SGGW-from-source 
         
         #$GW_INSTALL_DIR/scripts/install-spring-cloud-gateway.sh $GW_NAMESPACE
     }
@@ -360,7 +356,7 @@
         kubectl create secret generic dekt4pets-jwk --from-env-file=supply-chain/secrets/dekt4pets-jwk.txt -n $APP_NAMESPACE
 
         #wavefront secret for dekt4pets apps
-        kubectl create secret generic dekt4pets-observability --from-env-file=supply-chain/secrets/dekt4pets-observability.txt -n $APP_NAMESPACE
+        kubectl create secret generic dekt4pets-observability --from-env-file=supply-chain/secrets/dekt4pets-observability-creds.txt -n $APP_NAMESPACE
     }
 
     #update-configs 
@@ -478,6 +474,30 @@
             -d "[{\"data\": \"${ingress_public_ip}\"}]"
     }
 
+    #install SCGW from source code
+    install-SGGW-from-source() {
+
+        pushd ../spring-cloud-gateway-k8s
+
+        git pull
+
+        TARGET_REGISTRY_NAMESPACE=registry.pivotal.io/spring-cloud-gateway-for-kubernetes ./gradlew bootBuildImage
+
+        ./gradlew distTar
+
+        tar -xvf build/distributions/spring-cloud-gateway-k8s-0.0.0-$USER.tgz -C build/distributions
+
+        cd build/distributions/spring-cloud-gateway-k8s-0.0.0-$USER
+
+        scripts/relocate-images.sh $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO
+
+        scripts/install-spring-cloud-gateway.sh \
+         --namespace scgw-system \
+         --operator_image $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/scg-operator:0.0.0-dekt \
+         --gateway_image $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/gateway:0.0.0-dekt \
+         --registry_credentials_secret spring-cloud-gateway-image-pull-secret
+        
+    }
     #remove examples
     remove-examples() {
 
@@ -546,6 +566,9 @@ upgrade)
     ;;
 cleanup)
 	cleanup $2
+    ;;
+unit-test)
+    install-SGGW-from-source
     ;;
 *)
     incorrect-usage

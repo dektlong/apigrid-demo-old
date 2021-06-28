@@ -17,6 +17,8 @@ spec:
   sso:
     secret: dekt4pets-sso
   metrics:
-    secret: dekt4pets-observability
+    wavefront:
+      secret: dekt4pets-observability
   tracing:
-    secret: dekt4pets-observability
+    wavefront:
+      secret: dekt4pets-observability
