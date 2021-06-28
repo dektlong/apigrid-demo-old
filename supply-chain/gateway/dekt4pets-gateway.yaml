@@ -9,7 +9,7 @@ spec:
     description: Micro Gateway to control API-driven microservices in the dekt4pets online store
     version: 0.1.0
     #documentation: https://app.demo.getcortexapp.com/demo/scorecards/vmware-governance
-    documentation: https://vmware.wavefront.com/u/yFS1NnphFd?t=vmware
+    documentation: https://vmware.wavefront.com/u/xNrc03cJ7L?t=vmware
     cors:
       allowedOrigins:
         - api-portal.{HOST_NAME}

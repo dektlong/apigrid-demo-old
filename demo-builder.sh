@@ -40,36 +40,40 @@
     #upgrade
     upgrade () {
 
+        echo "Make sure the docker desktop deamon is running. Press any key to continue..."
+        read
+        docker login -u $IMG_REGISTRY_USER -p $IMG_REGISTRY_PASSWORD $IMG_REGISTRY_URL
+        
         case $1 in
         gateway)
-            create-namespaces-secrets
+            $GW_INSTALL_DIR/scripts/relocate-images.sh $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO
             install-gateway
             ;;
         acc)
-            create-namespaces-secrets
+            imgpkg pull -b $ACC_INSTALL_BUNDLE -o /tmp/acc-install-bundle
             install-acc
             ;;
         tbs)
-            create-namespaces-secrets
+            kbld relocate -f $TBS_INSTALL_DIR/images.lock --lock-output $TBS_INSTALL_DIR/images-relocated.lock --repository $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/build-service
             install-tbs
             ;;
         api-portal)
-            create-namespaces-secrets
+            $API_PORTAL_INSTALL_DIR/scripts/relocate-images.sh $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO
             install-api-portal
             ;;
         sbo)
-            create-namespaces-secrets
+            supply-chain/sbo/build-sbo-images.sh 
             install-sbo
             ;;
         cnr)
-            create-namespaces-secrets
+            #TBC
             install-cnr
             ;;
         examples)
+            docker pull springcloudservices/animal-rescue-frontend
+            docker tag springcloudservices/animal-rescue-frontend:latest $DET4PETS_FRONTEND_IMAGE_LOCATION
+            docker push $DET4PETS_FRONTEND_IMAGE_LOCATION
             setup-demo-examples
-            ;;
-        core-images)
-            relocate-core-images
             ;;
         configs)
             update-configs
@@ -141,8 +145,8 @@
     
         /Users/dekt/Dropbox/Work/code/scgw-rnd-distro-wavefront/scripts/install-spring-cloud-gateway.sh \
          --namespace scgw-system \
-         --operator_image harbor.apps.cf.tanzutime.com/dekt-system/scg-operator:0.0.0-dekt \
-         --gateway_image harbor.apps.cf.tanzutime.com/dekt-system/gateway:0.0.0-dekt \
+         --operator_image dev.registry.pivotal.io/spring-cloud-gateway-for-kubernetes/scg-operator:0.0.0-dekt \
+         --gateway_image dev.registry.pivotal.io/spring-cloud-gateway-for-kubernetes/gateway:0.0.0-dekt \
          --registry_credentials_secret spring-cloud-gateway-image-pull-secret
         
         #$GW_INSTALL_DIR/scripts/install-spring-cloud-gateway.sh $GW_NAMESPACE
@@ -235,31 +239,6 @@
             --namespace knative-serving \
             --type merge \
             --patch '{"data":{"*.native.$DOMAIN":""}}'
-    }
-
-    #relocate-core-images
-    relocate-core-images() {
-
-        echo "Make sure the docker desktop deamon is running. Press any key to continue..."
-        read
-
-        docker login -u $IMG_REGISTRY_USER -p $IMG_REGISTRY_PASSWORD $IMG_REGISTRY_URL
-
-        $API_PORTAL_INSTALL_DIR/scripts/relocate-images.sh $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO
-
-        kbld relocate -f $TBS_INSTALL_DIR/images.lock --lock-output $TBS_INSTALL_DIR/images-relocated.lock --repository $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/build-service
-
-        $GW_INSTALL_DIR/scripts/relocate-images.sh $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO
-
-        imgpkg pull -b $ACC_INSTALL_BUNDLE -o /tmp/acc-install-bundle
-
-        #workaround to use for frontend-app
-        docker pull springcloudservices/animal-rescue-frontend
-        docker tag springcloudservices/animal-rescue-frontend:latest $DET4PETS_FRONTEND_IMAGE_LOCATION
-        docker push $DET4PETS_FRONTEND_IMAGE_LOCATION
-
-        supply-chain/sbo/build-sbo-images.sh 
-
     }
 
     #setup-demo-examples
@@ -546,7 +525,6 @@
         echo "  sbo"
         echo "  cnr"
         echo "  examples"
-        echo "  core-images"
         echo "  configs"
         echo
         echo "${bold}cleanup${normal}"
