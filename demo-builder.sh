@@ -477,25 +477,24 @@
     #install SCGW from source code
     install-SGGW-from-source() {
 
-        pushd ../spring-cloud-gateway-k8s
+        #git pull
 
-        git pull
+        #TARGET_REGISTRY_NAMESPACE=registry.pivotal.io/spring-cloud-gateway-for-kubernetes ./gradlew bootBuildImage
 
-        TARGET_REGISTRY_NAMESPACE=registry.pivotal.io/spring-cloud-gateway-for-kubernetes ./gradlew bootBuildImage
+        #./gradlew distTar
 
-        ./gradlew distTar
+        #tar -xvf build/distributions/spring-cloud-gateway-k8s-0.0.0-$USER.tgz -C build/distributions
 
-        tar -xvf build/distributions/spring-cloud-gateway-k8s-0.0.0-$USER.tgz -C build/distributions
 
-        cd build/distributions/spring-cloud-gateway-k8s-0.0.0-$USER
+        #../spring-cloud-gateway-k8s/build/distributions/spring-cloud-gateway-k8s-0.0.0-$USER/scripts/relocate-images.sh $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO
 
-        scripts/relocate-images.sh $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO
-
-        scripts/install-spring-cloud-gateway.sh \
+        ../spring-cloud-gateway-k8s/build/distributions/spring-cloud-gateway-k8s-0.0.0-$USER/scripts/install-spring-cloud-gateway.sh \
          --namespace scgw-system \
          --operator_image $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/scg-operator:0.0.0-dekt \
          --gateway_image $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/gateway:0.0.0-dekt \
          --registry_credentials_secret spring-cloud-gateway-image-pull-secret
+
+
         
     }
     #remove examples
