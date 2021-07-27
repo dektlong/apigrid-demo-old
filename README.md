@@ -104,7 +104,7 @@ It is designed to run on any k8s.
 - now the backend team will leverage the 'brownfield' APIs to add background check functionality on potential adopters
 - access the 'datacheck' API group and test adoption-history and background-check APIs
 - explain that now our backend team can know exactly how to use a verified working version of both APIs (no tickets to off platform teams)
-- In ```workload-backend/routes/dekt4pets-backend-routes.yaml``` add
+- In ```workloads/dekt4pets/backend/routes/dekt4pets-backend-routes.yaml``` add
 ```
     - predicates:
         - Path=/api/check-adopter
@@ -114,7 +114,7 @@ It is designed to run on any k8s.
       tags:
         - pets      
 ```
-- In ```workload-backend/src/main/.../AnimalController.java``` add
+- In ```workloads/dekt4pets/backend/src/main/.../AnimalController.java``` add
 ```
 	@GetMapping("/check-adopter")
 	public String checkAdopter(Principal adopter) {

@@ -22,7 +22,7 @@ deploy-backend() {
     echo "=========> Apply backend app, service and routes ..."
     echo    
     #kubectl set image deployment/dekt4pets-backend dekt4pets-backend=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION -n $APP_NAMESPACE
-    kustomize build workload-backend | kubectl apply -f -
+    kustomize build workloads/dekt4pets/backend | kubectl apply -f -
     
 }
 
@@ -33,7 +33,7 @@ deploy-frontend() {
     echo "=========> Apply frontend app, service and routes ..."
     echo
 	
-    kustomize build workload-frontend | kubectl apply -f -
+    kustomize build workloads/dekt4pets/frontend | kubectl apply -f -
 
 }
 
@@ -58,7 +58,7 @@ patch-backend() {
     echo  
     
     #apply new routes so you can show them in portal while new build is happening
-    kubectl apply -f workload-backend/routes/dekt4pets-backend-routes.yaml -n $APP_NAMESPACE >/dev/null &
+    kubectl apply -f workloads/dekt4pets/backend/routes/dekt4pets-backend-routes.yaml -n $APP_NAMESPACE >/dev/null &
     
     sleep 10 #enough time, instead of active polling which is not recommended by the TBS team
     
@@ -77,9 +77,9 @@ patch-backend() {
     echo
     
     #workaround for image refresh issue
-    kubectl delete -f workload-backend/dekt4pets-backend-app.yaml -n $APP_NAMESPACE > /dev/null 
+    kubectl delete -f workloads/dekt4pets/backend/dekt4pets-backend-app.yaml -n $APP_NAMESPACE > /dev/null 
         
-    kustomize build workload-backend | kubectl apply -f -
+    kustomize build workloads/dekt4pets/backend | kubectl apply -f -
 
 }
 
@@ -120,9 +120,9 @@ delete-workloads() {
     echo "=========> Remove frontend and backend workloads..."
     echo
 
-    kustomize build workload-backend | kubectl delete -f -
+    kustomize build workloads/dekt4pets/backend | kubectl delete -f -
 
-    kustomize build workload-frontend | kubectl delete -f -    
+    kustomize build workloads/dekt4pets/frontend | kubectl delete -f -    
 
 }
 
@@ -178,8 +178,8 @@ workflow() {
         echo "              => apply api routes(s)"
         echo
         echo "  ${bold}workloads${normal}"
-        echo "      $DEMO_APP_GIT_REPO/workload-backend"
-        echo "      $DEMO_APP_GIT_REPO/workload-frontend"
+        echo "      $DEMO_APP_GIT_REPO/workloads/dekt4pets/backend"
+        echo "      $DEMO_APP_GIT_REPO/workloads/dekt4pets/frontend"
         echo
         echo "  ${bold}builders${normal}"
         echo "      online-stores-builder (dekt-apps namespace)"
@@ -207,8 +207,8 @@ workflow() {
         echo "      supply-chain/gateway/dekt4pets-ingress.yaml"
         echo
         echo "  ${bold}api-routes${normal}"      
-        echo "      workload-backend/routes/dekt4pets-backend-routes.yaml"
-        echo "      workload-frontend/routes/dekt4pets-frontend-routes.yaml"
+        echo "      workloads/dekt4pets/backend/routes/dekt4pets-backend-routes.yaml"
+        echo "      workloads/dekt4pets/frontend/routes/dekt4pets-frontend-routes.yaml"
         echo
         ;;
     create)

@@ -277,7 +277,7 @@
         kp image create $BACKEND_TBS_IMAGE -n $APP_NAMESPACE \
         --tag $DET4PETS_BACKEND_IMAGE_LOCATION \
         --git $DEMO_APP_GIT_REPO  \
-        --sub-path ./workload-backend \
+        --sub-path ./workloads/dekt4pest/backend \
         --git-revision main \
         --wait
         --builder $BUILDER_NAME 
@@ -291,7 +291,7 @@
         #--tag $DET4PETS_FRONTEND_IMAGE_LOCATION \
         #--git https://github.com/spring-cloud-services-samples/animal-rescue\
         #--git-revision main \
-        #--sub-path ./frontend \
+        #--sub-path ./workloads/dekt4pest/frontend \
         #--wait
     }
 
@@ -369,7 +369,7 @@
         echo
 
         #dynamic values folders
-        mkdir -p {workload-backend/config,workload-frontend/config,supply-chain/gateway/config,supply-chain/api-portal/config,supply-chain/sbo/config,supply-chain/acc/config}    
+        mkdir -p {workloads/dekt4pets/backend/config,workloads/dekt4pets/frontend/config,supply-chain/gateway/config,supply-chain/api-portal/config,supply-chain/sbo/config,supply-chain/acc/config}    
         
         update-dynamic-value "supply-chain/gateway" "dekt4pets-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
         update-dynamic-value "supply-chain/gateway" "dekt4pets-ingress.yaml" "{HOST_NAME}" "$HOST_NAME"
@@ -383,8 +383,8 @@
         update-dynamic-value "supply-chain/api-portal" "datacheck-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
         update-dynamic-value "supply-chain/api-portal" "suppliers-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
         update-dynamic-value "supply-chain/api-portal" "donations-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
-        update-dynamic-value "workload-backend" "dekt4pets-backend-app.yaml" "{BACKEND_IMAGE}" "$DET4PETS_BACKEND_IMAGE_LOCATION" "{OBSERVER_SIDECAR_IMAGE}" "$SBO_SIDECAR_IMAGE_LOCATION"
-        update-dynamic-value "workload-frontend" "dekt4pets-frontend-app.yaml" "{FRONTEND_IMAGE}" "$DET4PETS_FRONTEND_IMAGE_LOCATION" 
+        update-dynamic-value "workloads/dekt4pets/backend" "dekt4pets-backend-app.yaml" "{BACKEND_IMAGE}" "$DET4PETS_BACKEND_IMAGE_LOCATION" "{OBSERVER_SIDECAR_IMAGE}" "$SBO_SIDECAR_IMAGE_LOCATION"
+        update-dynamic-value "workloads/dekt4pets/frontend" "dekt4pets-frontend-app.yaml" "{FRONTEND_IMAGE}" "$DET4PETS_FRONTEND_IMAGE_LOCATION" 
    
     }
 
@@ -506,8 +506,8 @@
         echo "===> Removing demo examples..."
         echo
         
-        kustomize build workload-backend/dekt4pets/backend | kubectl delete -f -
-        kustomize build workload-frontend/dekt4pets/frontend | kubectl delete -f -
+        kustomize build workloads/dekt4pest/backend | kubectl delete -f -
+        kustomize build workloads/dekt4pest/frontend | kubectl delete -f -
         kubectl delete -f supply-chain//gateway/config/dekt4pets-ingress.yaml -n $APP_NAMESPACE
         kustomize build supply-chain/gateway | kubectl delete -f -
         #kustomize build acc | kubectl delete -f -
