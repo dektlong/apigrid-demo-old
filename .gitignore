@@ -1,0 +1,19 @@
+# Ignore Mac system files
+.DS_store
+
+# Ignore the secrets folder
+secrets
+
+# Ignore config folders
+supply-chain/gateway/config
+supply-chain/api-portal/config
+supply-chain/sbo/config
+supply-chain/acc/config
+workloads/dekt4pets/backend/config
+workloads/dekt4pets/frontend/config
+
+
+# Ignore files related to config values and credentials
+.env
+
+
