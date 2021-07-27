@@ -83,6 +83,14 @@ patch-backend() {
 
 }
 
+#deploy-fitness app
+deploy-fitness () {
+    
+    pushd workloads/dektFitness
+
+    kustomize build kubernetes-manifests/ | kubectl apply -f -
+}
+
 #rockme-native
 rockme-native () {
 
@@ -233,6 +241,9 @@ workload () {
             ;;
         frontend)
             deploy-frontend 
+            ;;
+        fitness)
+            deploy-fitness 
             ;;
         *)
   	        usage

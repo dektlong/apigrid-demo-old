@@ -24,11 +24,11 @@
    
         case $1 in
         aks)
-            supply-chain/k8s-builders/build-aks-cluster.sh create $CLUSTER_NAME 5 #nodes
+            supply-chain/k8s-builders/build-aks-cluster.sh create $CLUSTER_NAME 9 #nodes
             install-all
             ;;
         tkg)
-            supply-chain/k8s-builders/build-tkg-cluster.sh tkg-i $CLUSTER_NAME $TKGI_CLUSTER_PLAN 1 4
+            supply-chain/k8s-builders/build-tkg-cluster.sh tkg-i $CLUSTER_NAME $TKGI_CLUSTER_PLAN 1 9
             install-all
             ;;
         *)
