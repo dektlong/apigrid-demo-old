@@ -2,7 +2,7 @@
 
 #################### configs #######################
 
-    source supply-chain/secrets/config-values.env
+    source secrets/config-values.env
     
     HOST_NAME=$SUB_DOMAIN.$DOMAIN
     DET4PETS_FRONTEND_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION
@@ -277,10 +277,10 @@
         kp image create $BACKEND_TBS_IMAGE -n $APP_NAMESPACE \
         --tag $DET4PETS_BACKEND_IMAGE_LOCATION \
         --git $DEMO_APP_GIT_REPO  \
-        --sub-path ./workloads/dekt4pest/backend \
+        --sub-path ./workloads/dekt4pets/backend \
         --git-revision main \
         --wait
-        --builder $BUILDER_NAME 
+        #--builder $BUILDER_NAME 
         
         echo
         echo "===> Create dekt4pets-frontend TBS image..."
@@ -291,7 +291,7 @@
         #--tag $DET4PETS_FRONTEND_IMAGE_LOCATION \
         #--git https://github.com/spring-cloud-services-samples/animal-rescue\
         #--git-revision main \
-        #--sub-path ./workloads/dekt4pest/frontend \
+        #--sub-path ./workloads/dekt4pets/frontend \
         #--wait
     }
 
@@ -352,13 +352,13 @@
             --namespace=$ACC_NAMESPACE 
         
         #sso secret for dekt4pets-gatway 
-        kubectl create secret generic dekt4pets-sso --from-env-file=supply-chain/secrets/dekt4pets-sso.txt -n $APP_NAMESPACE
+        kubectl create secret generic dekt4pets-sso --from-env-file=secrets/dekt4pets-sso.txt -n $APP_NAMESPACE
 
         #jwt secret for dekt4pets backend app
-        kubectl create secret generic dekt4pets-jwk --from-env-file=supply-chain/secrets/dekt4pets-jwk.txt -n $APP_NAMESPACE
+        kubectl create secret generic dekt4pets-jwk --from-env-file=secrets/dekt4pets-jwk.txt -n $APP_NAMESPACE
 
         #wavefront secret for dekt4pets apps
-        kubectl create secret generic dekt4pets-observability --from-env-file=supply-chain/secrets/dekt4pets-observability-creds.txt -n $APP_NAMESPACE
+        kubectl create secret generic dekt4pets-observability --from-env-file=secrets/dekt4pets-observability-creds.txt -n $APP_NAMESPACE
     }
 
     #update-configs 

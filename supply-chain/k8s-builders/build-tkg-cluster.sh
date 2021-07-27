@@ -132,7 +132,7 @@ incorrect-usage() {
 
 #################### main #######################
 
-source supply-chain/secrets/config-values.env
+source secrets/config-values.env
 
 case $1 in
 tkg-m)

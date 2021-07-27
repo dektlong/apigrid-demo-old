@@ -263,7 +263,7 @@ workload () {
 
 #################### main #######################
 
-source supply-chain/secrets/config-values.env
+source secrets/config-values.env
 bold=$(tput bold)
 normal=$(tput sgr0)
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source supply-chain/secrets/config-values.env
+source secrets/config-values.env
 
 pushd $BOOT_OBSERVER_INSTALL_DIR
 
