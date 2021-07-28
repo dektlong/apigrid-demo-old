@@ -85,52 +85,48 @@ patch-backend() {
 
 #deploy-fitness app
 deploy-fitness () {
-    
+
     pushd workloads/dektFitness
 
     kustomize build kubernetes-manifests/ | kubectl apply -f -
 }
 
 #rockme-native
-rockme-native () {
+deploy-rockme-native () {
 
-    case $1 in
-    create)
-    	kn service create rockme-native \
-            --image $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/rockme:1.0.0 \
-            --env TARGET="revision 1 of rockme-native" \
-            --revision-name rockme-native-v1 \
-            -n $APP_NAMESPACE 
-        ;;
-    update)
-	    kn service update rockme-native \
-            --image $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/rockme:1.0.0 \
-            --env TARGET="revision 2 of rockme-native" \
-            --revision-name rockme-native-v2 \
-            --traffic @latest=20,rockme-native-v1=80 \
-            -n $APP_NAMESPACE 
-	    ;;
-    load)
-        siege -d1  -c200 -t60S  --content-type="text/plain" 'http://rockme-native.dekt-apps.native.dekt.io POST rock-on'
-        ;;
-    *)
-  	    echo
-        echo "usage: please specify { create | update | load }"
-      	exit 
-  	    ;;
-    esac
+ 	kn service create rockme-native \
+        --image $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/rockme:1.0.0 \
+        --env TARGET="revision 1 of rockme-native" \
+        --revision-name rockme-native-v1 \
+        -n $APP_NAMESPACE 
+
+    siege -d1  -c200 -t60S  --content-type="text/plain" 'http://rockme-native.dekt-apps.native.dekt.io POST rock-on'
+}
+
+update-rockme-native () {
+ 
+    kn service update rockme-native \
+        --image $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/rockme:1.0.0 \
+        --env TARGET="revision 2 of rockme-native" \
+        --revision-name rockme-native-v2 \
+        --traffic @latest=20,rockme-native-v1=80 \
+        -n $APP_NAMESPACE 
 }
 
 #delete-workloads
 delete-workloads() {
 
     echo
-    echo "=========> Remove frontend and backend workloads..."
+    echo "=========> Remove all workloads..."
     echo
 
     kustomize build workloads/dekt4pets/backend | kubectl delete -f -
 
-    kustomize build workloads/dekt4pets/frontend | kubectl delete -f -    
+    kustomize build workloads/dekt4pets/frontend | kubectl delete -f -  
+
+    kustomize build workloads/dektFitness/kubernetes-manifests/ | kubectl delete -f -  
+
+    kn service delete rockme-native -n $APP_NAMESPACE 
 
 }
 
@@ -156,115 +152,86 @@ usage() {
     echo
 	echo "A mockup script to illustrate upcoming Tanzu concepts. Please specify one of the following:"
 	echo
-    echo "${bold}workflow${normal}"
-    echo "  create"
-    echo "  describe"
+    echo "${bold}describe-workflows${normal}"
     echo
-    echo "${bold}workload${normal}"
-    echo "  create"
-    echo "  patch"
-    echo "  delete"
+    echo "${bold}create-workload${normal}"
+    echo "  dekt4pets-backend"
+    echo "  dekt4pets-frontend"
+    echo "  dektFitness"
+    echo "  rockme-native"
+    echo
+    echo "${bold}update-workload${normal}"
+    echo "  dekt4pets-backend"
+    echo "  rockme-native"
     echo
   	exit   
  
 }
 
 #supply-chain
-workflow() {
+describe-workflow() {
 
-    case $1 in
-    describe)
-    	echo
-	    echo "The following ${bold}workflows${normal} (aka 'supplychain') have been defined in to this cluster:"
-	    echo
-        echo "${bold}supplychain-microservices${normal}"
-        echo "--------------------------"
-        echo
-        echo "  ${bold}pipelines${normal}"
-        echo "      => build workload(s)"
-        echo "          => deploy workload(s)"
-        echo "              => apply api routes(s)"
-        echo
-        echo "  ${bold}workloads${normal}"
-        echo "      $DEMO_APP_GIT_REPO/workloads/dekt4pets/backend"
-        echo "      $DEMO_APP_GIT_REPO/workloads/dekt4pets/frontend"
-        echo
-        echo "  ${bold}builders${normal}"
-        echo "      online-stores-builder (dekt-apps namespace)"
-        echo "          tanzu-buildpacks/java"
-        echo "          tanzu-buildpacks/nodejs"
-        echo "          tanzu-buildpacks/java-native-image"
-        echo "          paketo-buildpacks/gradle"
-        echo
-        echo "  ${bold}images${normal}"
-        echo "      $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION"
-        echo "      $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION"
-        echo
-        echo "  ${bold}scanners${normal}"
-        echo "      https://github.com/quay/clair"
-        echo
-        echo
-        echo "${bold}supplychain-api-gateways${normal}"
-        echo "------------------------"
-        echo
-        echo "  ${bold}micro-gateways${normal}"
-        echo "      supply-chain/datacheck-gateway.yaml (brownfield-apis namespace)"
-        echo "      supply-chain/donations-gateway.yaml (brownfield-apis namespace)"
-        echo "      supply-chain/suppliers-gateway.yaml (brownfield-apis namespace)"
-        echo "      supply-chain/dekt4pets-gateway.yaml (dekt-apps namespace)"
-        echo "      supply-chain/gateway/dekt4pets-ingress.yaml"
-        echo
-        echo "  ${bold}api-routes${normal}"      
-        echo "      workloads/dekt4pets/backend/routes/dekt4pets-backend-routes.yaml"
-        echo "      workloads/dekt4pets/frontend/routes/dekt4pets-frontend-routes.yaml"
-        echo
-        ;;
-    create)
-	    echo
-        echo "Creating a new supply chain based on accelerator workload.yaml configuration ..."
-        echo
-        ;;
-    *)
-  	    usage
-  	    ;;
-    esac
+  	echo
+    echo "The following ${bold}workflows${normal} (aka 'supplychain') have been defined in to this cluster:"
+    echo
+    echo "${bold}supplychain-microservices${normal}"
+    echo "--------------------------"
+    echo
+    echo "  ${bold}pipelines${normal}"
+    echo "      => build workload(s)"
+    echo "          => deploy workload(s)"
+    echo "              => apply api routes(s)"
+    echo
+    echo "  ${bold}workloads${normal}"
+    echo "      $DEMO_APP_GIT_REPO/workloads/dekt4pets/backend"
+    echo "      $DEMO_APP_GIT_REPO/workloads/dekt4pets/frontend"
+    echo
+    echo "  ${bold}builders${normal}"
+    echo "      online-stores-builder (dekt-apps namespace)"
+    echo "          tanzu-buildpacks/java"
+    echo "          tanzu-buildpacks/nodejs"
+    echo "          tanzu-buildpacks/java-native-image"
+    echo "          paketo-buildpacks/gradle"
+    echo
+    echo "  ${bold}images${normal}"
+    echo "      $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION"
+    echo "      $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION"
+    echo
+    echo "  ${bold}scanners${normal}"
+    echo "      https://github.com/quay/clair"
+    echo
+    echo
+    echo "${bold}supplychain-api-gateways${normal}"
+    echo "------------------------"
+    echo
+    echo "  ${bold}micro-gateways${normal}"
+    echo "      supply-chain/datacheck-gateway.yaml (brownfield-apis namespace)"
+    echo "      supply-chain/donations-gateway.yaml (brownfield-apis namespace)"
+    echo "      supply-chain/suppliers-gateway.yaml (brownfield-apis namespace)"
+    echo "      supply-chain/dekt4pets-gateway.yaml (dekt-apps namespace)"
+    echo "      supply-chain/gateway/dekt4pets-ingress.yaml"
+    echo
+    echo "  ${bold}api-routes${normal}"      
+    echo "      workloads/dekt4pets/backend/routes/dekt4pets-backend-routes.yaml"
+    echo "      workloads/dekt4pets/frontend/routes/dekt4pets-frontend-routes.yaml"
+    echo
 }
 
-#workload
-workload () {
+#create-workload
+create-workload () {
 
     case $1 in
-    create)
-        case $2 in
-        backend)
-            deploy-backend
-            ;;
-        frontend)
-            deploy-frontend 
-            ;;
-        fitness)
-            deploy-fitness 
-            ;;
-        *)
-  	        usage
-  	        ;;
-        esac
+    dekt4pets-backend)
+        deploy-backend
         ;;
-    patch)
-	    case $2 in
-        backend)
-            patch-backend
-            ;;
-        frontend)
-            #patch-frontend 
-            ;;
-        *)
-  	        usage
-  	        ;;
-        esac
+    dekt4pets-frontend)
+        deploy-frontend 
         ;;
-    delete)
-        delete-workloads
+    dektFitness)
+        deploy-fitness
+        ;;
+    rockme-native)
+        create-rockme-native
         ;;
     *)
   	    usage
@@ -279,14 +246,17 @@ bold=$(tput bold)
 normal=$(tput sgr0)
 
 case $1 in
-workload)
-	workload $2 $3
+create-workload)
+	create-workload $2
     ;;
-workflow)
-    workflow $2
+update-workload)
+	update-workload $2
     ;;
-rockme-native)
-    rockme-native $2
+delete)
+    delete-workloads
+    ;;
+describe-workflows)
+    describe-workflow
     ;;
 *)
   	usage

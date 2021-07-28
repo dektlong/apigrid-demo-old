@@ -24,11 +24,11 @@
    
         case $1 in
         aks)
-            supply-chain/k8s-builders/build-aks-cluster.sh create $CLUSTER_NAME 9 #nodes
+            supply-chain/k8s-builders/build-aks-cluster.sh create $CLUSTER_NAME 5 #nodes
             install-all
             ;;
         tkg)
-            supply-chain/k8s-builders/build-tkg-cluster.sh tkg-i $CLUSTER_NAME $TKGI_CLUSTER_PLAN 1 9
+            supply-chain/k8s-builders/build-tkg-cluster.sh tkg-i $CLUSTER_NAME $TKGI_CLUSTER_PLAN 1 5
             install-all
             ;;
         *)
@@ -37,8 +37,8 @@
         esac
     }
     
-    #upgrade
-    upgrade () {
+    #update-core-images
+    update-core-images () {
 
         echo "Make sure the docker desktop deamon is running. Press any key to continue..."
         read
@@ -47,23 +47,18 @@
         case $1 in
         gateway)
             $GW_INSTALL_DIR/scripts/relocate-images.sh $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO
-            install-gateway
             ;;
         acc)
             imgpkg pull -b $ACC_INSTALL_BUNDLE -o /tmp/acc-install-bundle
-            install-acc
             ;;
         tbs)
             kbld relocate -f $TBS_INSTALL_DIR/images.lock --lock-output $TBS_INSTALL_DIR/images-relocated.lock --repository $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/build-service
-            install-tbs
             ;;
         api-portal)
             $API_PORTAL_INSTALL_DIR/scripts/relocate-images.sh $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO
-            install-api-portal
             ;;
         sbo)
             supply-chain/sbo/build-sbo-images.sh 
-            install-sbo
             ;;
         cnr)
             #TBC
@@ -123,7 +118,7 @@
         
         install-api-portal
         
-        install-sbo
+        #install-sbo
 
         install-tbs
 
@@ -143,9 +138,9 @@
         echo "===> Installing Spring Cloud Gateway operator..."
         echo
     
-        install-SGGW-from-source 
+        #install-SGGW-from-source 
         
-        #$GW_INSTALL_DIR/scripts/install-spring-cloud-gateway.sh $GW_NAMESPACE
+        $GW_INSTALL_DIR/scripts/install-spring-cloud-gateway.sh $GW_NAMESPACE
     }
 
     #install tanzu app accelerator 
@@ -242,10 +237,10 @@
     #setup-demo-examples
     setup-demo-examples() {
 
-        echo
-        echo "===> Setup SBO fortune service example..."
-        echo
-        kubectl apply -f supply-chain/sbo/config/fortune-sidecar-example.yaml -n $APP_NAMESPACE 
+        #echo
+        #echo "===> Setup SBO fortune service example..."
+        #echo
+        #kubectl apply -f supply-chain/sbo/config/fortune-sidecar-example.yaml -n $APP_NAMESPACE 
 
         echo
         echo "===> Setup App Accelerator examples..."
@@ -538,7 +533,7 @@
         echo "  aks"
         echo "  tkg"
         echo
-        echo "${bold}upgrade${normal}"
+        echo "${bold}update-core-images${normal}"
         echo "  gateway"
         echo "  acc"
         echo "  tbs"
@@ -562,8 +557,8 @@ case $1 in
 init)
     init $2 
     ;;
-upgrade)
-    upgrade $2   
+update-core-images)
+    update-core-images $2   
     ;;
 cleanup)
 	cleanup $2
