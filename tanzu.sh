@@ -152,7 +152,9 @@ usage() {
     echo
 	echo "A mockup script to illustrate upcoming Tanzu concepts. Please specify one of the following:"
 	echo
-    echo "${bold}describe-workflows${normal}"
+    echo "${bold}describe-workflow${normal}"
+    echo "  dektBuild"
+    echo "  dektApiGrid"
     echo
     echo "${bold}create-workload${normal}"
     echo "  dekt4pets-backend"
@@ -168,14 +170,12 @@ usage() {
  
 }
 
-#supply-chain
-describe-workflow() {
+#workflow-dektBuild
+workflow-dektBuild() {
 
-  	echo
-    echo "The following ${bold}workflows${normal} (aka 'supplychain') have been defined in to this cluster:"
     echo
-    echo "${bold}supplychain-microservices${normal}"
-    echo "--------------------------"
+    echo "${bold}dektBuild workflow${normal}"
+    echo "------------------"
     echo
     echo "  ${bold}pipelines${normal}"
     echo "      => build workload(s)"
@@ -200,10 +200,15 @@ describe-workflow() {
     echo "  ${bold}scanners${normal}"
     echo "      https://github.com/quay/clair"
     echo
+}
+
+#workflow-dektApiGrid
+workflow-dektApiGrid() {
+
     echo
-    echo "${bold}supplychain-api-gateways${normal}"
-    echo "------------------------"
-    echo
+    echo "${bold}dektApiGrid workflow${normal}"
+    echo "--------------------"
+    echo 
     echo "  ${bold}micro-gateways${normal}"
     echo "      supply-chain/datacheck-gateway.yaml (brownfield-apis namespace)"
     echo "      supply-chain/donations-gateway.yaml (brownfield-apis namespace)"
@@ -211,12 +216,15 @@ describe-workflow() {
     echo "      supply-chain/dekt4pets-gateway.yaml (dekt-apps namespace)"
     echo "      supply-chain/gateway/dekt4pets-ingress.yaml"
     echo
+    echo "  ${bold}api-portals${normal}"
+    echo "      supply-chain/api-portal/api-portal-ingress.yaml"
+    echo "      supply-chain/api-portal/scg-openapi-ingress.yaml"
+    echo
     echo "  ${bold}api-routes${normal}"      
     echo "      workloads/dekt4pets/backend/routes/dekt4pets-backend-routes.yaml"
     echo "      workloads/dekt4pets/frontend/routes/dekt4pets-frontend-routes.yaml"
     echo
 }
-
 #create-workload
 create-workload () {
 
@@ -232,6 +240,22 @@ create-workload () {
         ;;
     rockme-native)
         create-rockme-native
+        ;;
+    *)
+  	    usage
+  	    ;;
+    esac
+}
+
+#workflows
+workflows () {
+
+    case $1 in
+    dektBuild)
+        workflow-dektBuild
+        ;;
+    dektApiGrid)
+        workflow-dektApiGrid 
         ;;
     *)
   	    usage
@@ -255,8 +279,8 @@ update-workload)
 delete)
     delete-workloads
     ;;
-describe-workflows)
-    describe-workflow
+describe-workflow)
+    workflows $2
     ;;
 *)
   	usage
