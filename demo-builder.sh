@@ -21,20 +21,28 @@
 
     #init-aks
     init-aks () {
-   
+
         case $1 in
         apigrid)
-            supply-chain/k8s-builders/build-aks-cluster.sh create $CLUSTER_NAME_APIGRID 5 #nodes
+            supply-chain/k8s-builders/build-aks-cluster.sh create $CLUSTER_NAME $NUMBER_OF_WORKER_NODES
             install-apigrid
             ;;
         cnr)
-            supply-chain/k8s-builders/build-aks-cluster.sh create $CLUSTER_NAME_CNR 3 #nodes
-            install-cnr
+            supply-chain/k8s-builders/build-aks-cluster.sh create $CLUSTER_NAME $NUMBER_OF_WORKER_NODES
+            install-cnr-demo
+            ;;
+        blank)
+            supply-chain/k8s-builders/build-aks-cluster.sh create $CLUSTER_NAME $NUMBER_OF_WORKER_NODES
+            #do nothing
             ;;
         *)
             incorrect-usage
             ;;
         esac
+
+        echo
+        echo "Demo install completed. Enjoy your demo."
+        echo
     }
 
     #init-tkg
@@ -49,6 +57,10 @@
             incorrect-usage
             ;;
         esac
+
+        echo
+        echo "Demo install completed. Enjoy your demo."
+        echo
     }
     
     #update-core-images
@@ -100,8 +112,7 @@
 
         case $1 in
         aks)
-            supply-chain/k8s-builders/build-aks-cluster.sh delete $CLUSTER_NAME_APIGRID
-            supply-chain/k8s-builders/build-aks-cluster.sh delete $CLUSTER_NAME_CNR
+            supply-chain/k8s-builders/build-aks-cluster.sh delete $CLUSTER_NAME 
             ;;
         tkg)
             remove-examples
@@ -137,14 +148,10 @@
         install-tbs
 
         setup-demo-examples
-
-        echo
-        echo "Demo install completed. Enjoy your demo."
-        echo
     }
 
-    #install-cnr
-    install-cnr () {
+    #install-cnr-demo
+    install-cnr-demo () {
 
         open -a Terminal supply-chain/k8s-builders/octant-wrapper.sh
         osascript -e 'tell application "Terminal" to set miniaturized of every window to true'
@@ -155,9 +162,6 @@
         
         install-cnr
         
-        echo
-        echo "Demo install completed. Enjoy your demo."
-        echo
     }
 
     #install-gateway
@@ -183,6 +187,8 @@
 
         imgpkg pull -b $ACC_INSTALL_BUNDLE -o /tmp/acc-install-bundle
         
+        export acc_server_service_type=ClusterIP
+
         ytt -f /tmp/acc-install-bundle/config -f /tmp/acc-install-bundle/values.yml --data-values-env acc  \
             | kbld -f /tmp/acc-install-bundle/.imgpkg/images.yml -f- \
             | kapp deploy -y -n $ACC_NAMESPACE  -a accelerator -f-
@@ -459,8 +465,11 @@
         echo "=========> Install contour ingress controller ..."
         echo
         
+        kubectl apply -f https://projectcontour.io/quickstart/operator.yaml
+        kubectl apply -f https://projectcontour.io/quickstart/contour-custom-resource.yaml
+
         #we use a modified install yaml to set externalTrafficPolicy: Cluster (from the local default) due to issues on AKS
-        kubectl apply -f supply-chain/k8s-builders/contour-install.yaml
+        #kubectl apply -f supply-chain/k8s-builders/contour-install.yaml
 
         update-dns "envoy" "projectcontour" "*.$SUB_DOMAIN" 
     }
@@ -559,10 +568,12 @@
         echo "Incorrect usage. Please specify one of the following commands"
         echo
         echo "${bold}init-aks${normal}"
+        echo "  blank"
         echo "  apigrid"
         echo "  cnr"
         echo
         echo "${bold}init-tkg${normal}"
+        echo "  blank"
         echo "  apigrid"
         echo
         echo "${bold}update-core-images${normal}"
@@ -598,8 +609,18 @@ update-core-images)
 cleanup)
 	cleanup $2
     ;;
-unit-test)
-    install-gateway
+runme)
+    #create-namespaces-secrets
+    #update-configs
+    #install-gateway
+    #install-acc
+    #install-api-portal
+    #install-sbo
+    #install-tbs
+    #install-cnr
+    setup-demo-examples
+
+
     ;;
 *)
     incorrect-usage

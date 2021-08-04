@@ -4,8 +4,19 @@ metadata:
   name: donations-gateway
 spec:
   count: 1
+  sso:
+    secret: dekt4pets-sso
   api:
-    serverUrl: https://donations.{HOST_NAME}
+    serverUrl: http://donations.{HOST_NAME}
     title: Donation Processing 
     description: APIs to help with processing donations 
     version: 0.5.0
+    cors:
+      allowedOrigins:
+      - http://api-portal.{HOST_NAME}
+  metrics:
+    wavefront:
+      secret: dekt4pets-observability
+  tracing:
+    wavefront:
+      secret: dekt4pets-observability

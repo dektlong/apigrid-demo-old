@@ -4,8 +4,19 @@ metadata:
   name: datacheck-gateway
 spec:
   count: 1
+  sso:
+    secret: dekt4pets-sso
   api:
-    serverUrl: https://datacheck.{HOST_NAME}
+    serverUrl: http://datacheck.{HOST_NAME}
     title: Background Check Services
     description: APIs to help with background checks on pet adopters
     version: 0.5.0
+    cors:
+      allowedOrigins:
+      - http://api-portal.{HOST_NAME}
+  metrics:
+    wavefront:
+      secret: dekt4pets-observability
+  tracing:
+    wavefront:
+      secret: dekt4pets-observability

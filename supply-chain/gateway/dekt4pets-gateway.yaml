@@ -3,8 +3,11 @@ kind: SpringCloudGateway
 metadata:
   name: dekt4pets-gateway
 spec:
+  count: 2
+  sso:
+    secret: dekt4pets-sso
   api:
-    serverUrl: https://dekt4pets.{HOST_NAME}
+    serverUrl: http://dekt4pets.{HOST_NAME}
     title: Dekt4Pets
     description: Micro Gateway to control API-driven microservices in the dekt4pets online store
     version: 0.1.0
@@ -12,17 +15,10 @@ spec:
     documentation: https://vmware.wavefront.com/u/xNrc03cJ7L?t=vmware
     cors:
       allowedOrigins:
-        - api-portal.{HOST_NAME}
-  count: 2
-  sso:
-    secret: dekt4pets-sso
+      - http://api-portal.{HOST_NAME}
   metrics:
     wavefront:
       secret: dekt4pets-observability
-      application: dekt4pets
-      service: dekt4pets-gateway
   tracing:
     wavefront:
       secret: dekt4pets-observability
-      application: dekt4pets
-      service: dekt4pets-gateway
