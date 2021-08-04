@@ -100,7 +100,8 @@
 
         case $1 in
         aks)
-            supply-chain/k8s-builders/build-aks-cluster.sh delete $CLUSTER_NAME
+            supply-chain/k8s-builders/build-aks-cluster.sh delete $CLUSTER_NAME_APIGRID
+            supply-chain/k8s-builders/build-aks-cluster.sh delete $CLUSTER_NAME_CNR
             ;;
         tkg)
             remove-examples
