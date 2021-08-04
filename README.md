@@ -39,25 +39,23 @@ It is designed to run on any k8s.
 
 - The ingress setup is based on GoDaddy DNS, if you are using a different one, please modify the ```update-dns``` function in ```demo-builder.sh``` 
 
-## Installing the demo
+## API Grid
 
+### Installation
 - If you update / first install the core Tanzu services , run ```./demo-builder.sh upgrade core-images```
-- run ```./demo-builder.sh init [ aks | tkg ]```
+- run ```./demo-builder.sh init-aks apigrid```
 - This script installs the following products
   - Spring Cloud Gateway
   - App Accelerator
   - Api portal
   - Spring Boot Observer
   - Build Service
-  - Cloud Native Runtime
 - This script setup the following examples
   - Fortune sidecar for Spring Boot Observer
   - App Accelerators generators and accelerators
   - Brownfield APIs examples for API portal
   - Det4Pets backend TBS image
   - Det4Pets frontend TBS image
-
-## Suggested demo flow
 
 ### The starting experience
 - Access app accelerator developer instance  on ```acc.<SUB_DOMAIN>.<DOMAIN>```
@@ -97,8 +95,6 @@ It is designed to run on any k8s.
   https://dekt4pets.<SUB_DOMAIN>.<DOMAIN>
   ```
   - login and show SSO functionality 
-- Demo Tanzu Serverless
-  - ```./tanzu.sh rockme-knative```
 
 ### Changes in production
 - now the backend team will leverage the 'brownfield' APIs to add background check functionality on potential adopters
@@ -142,6 +138,19 @@ It is designed to run on any k8s.
 dekt4pets.<SUB_DOMAIN>.<DOMAIN>/api/check-adopter
 ```
 - you should see the 'Congratulations...' message with the same token you received following login
+
+## Cloud Native Runtime
+
+### Installation
+- run ```./demo-builder.sh init-aks cnr```
+- This script installs the following products
+  - App Accelerator
+  - Cloud Native Runtime
+### Service creation
+- ```./tanzu.sh create-workload dekt-fortune```
+
+### Service revision
+- ```./tanzu.sh update-workload dekt-fortune```
 
 ## Cleanup
 

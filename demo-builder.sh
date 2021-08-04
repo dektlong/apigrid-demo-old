@@ -19,17 +19,33 @@
 
 #################### menu functions ################
 
-    #init
-    init () {
+    #init-aks
+    init-aks () {
    
+        supply-chain/k8s-builders/build-aks-cluster.sh create $CLUSTER_NAME 5 #nodes
+
         case $1 in
-        aks)
-            supply-chain/k8s-builders/build-aks-cluster.sh create $CLUSTER_NAME 5 #nodes
-            install-all
+        apigrid)
+            install-apigrid
             ;;
-        tkg)
-            supply-chain/k8s-builders/build-tkg-cluster.sh tkg-i $CLUSTER_NAME $TKGI_CLUSTER_PLAN 1 5
-            install-all
+        cnr)
+            install-cnr
+            ;;
+        *)
+            incorrect-usage
+            ;;
+        esac
+    }
+
+    #init-tkg
+    init-tkg () {
+        
+        supply-chain/k8s-builders/build-tkg-cluster.sh tkg-i $CLUSTER_NAME $TKGI_CLUSTER_PLAN 1 5
+
+        case $1 in
+        apigrid)
+            supply-chain/k8s-builders/build-aks-cluster.sh create $CLUSTER_NAME 5 #nodes
+            install-apigrid
             ;;
         *)
             incorrect-usage
@@ -61,8 +77,8 @@
             supply-chain/sbo/build-sbo-images.sh 
             ;;
         cnr)
-            #TBC
-            install-cnr
+            imgpkg copy --lock $CNR_INSTALL_DIR/cloud-native-runtimes-1.0.1.lock --to-repo $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/cnr --lock-output $CNR_INSTALL_DIR/relocated.lock --registry-verify-certs=false 
+            imgpkg pull --lock $CNR_INSTALL_DIR/relocated.lock -o $CNR_INSTALL_DIR
             ;;
         examples)
             docker pull springcloudservices/animal-rescue-frontend
@@ -99,11 +115,10 @@
 
 #################### core functions ################
 
-    #install-all
-    install-all () {
+    #install-apigrid
+    install-apigrid () {
 
         install-nginx
-        #install-contour
         
         open -a Terminal supply-chain/k8s-builders/octant-wrapper.sh
         osascript -e 'tell application "Terminal" to set miniaturized of every window to true'
@@ -122,10 +137,25 @@
 
         install-tbs
 
-        #install-cnr
-        
         setup-demo-examples
 
+        echo
+        echo "Demo install completed. Enjoy your demo."
+        echo
+    }
+
+    #install-cnr
+    install-cnr () {
+
+        open -a Terminal supply-chain/k8s-builders/octant-wrapper.sh
+        osascript -e 'tell application "Terminal" to set miniaturized of every window to true'
+        
+        create-namespaces-secrets
+
+        install-acc
+        
+        install-cnr
+        
         echo
         echo "Demo install completed. Enjoy your demo."
         echo
@@ -140,14 +170,14 @@
     
         #install-SGGW-from-source 
         
-        $GW_INSTALL_DIR/scripts/install-spring-cloud-gateway.sh $GW_NAMESPACE
+        $GW_INSTALL_DIR/scripts/install-spring-cloud-gateway.sh --namespace $GW_NAMESPACE
     }
 
     #install tanzu app accelerator 
     install-acc() {
 
         echo
-        echo "===> Install Tanzu Application Accelerator (Dev and DevOps instances)..."
+        echo "===> Install Tanzu Application Accelerator..."
         echo
 
         kubectl apply -f https://gist.githubusercontent.com/trisberg/f53bbaa0b8aacba0ec64372a6fb6acdf/raw/44a923959945d64bad5865566e4ee6628c3cdd1f/acc-flux2.yaml
@@ -220,18 +250,18 @@
         echo "===> Installing Tanzu Cloud Native Runtime..."
         echo
 
-        export serverless_docker_server=registry.pivotal.io
-        export serverless_docker_username=$TANZU_NETWORK_USER
-        export serverless_docker_password=$TANZU_NETWORK_PASSWORD
-        
-        $SERVERLESS_INSTALL_DIR/bin/install-serverless.sh
+        kubectl apply -f https://github.com/vmware-tanzu/carvel-kapp-controller/releases/latest/download/release.yml
 
-        update-dns "envoy" "contour-external" "*.native"
+
+        export cnr_registry__server=$IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/cnr
+        export cnr_registry__username=$IMG_REGISTRY_USER
+        export cnr_registry__password=$IMG_REGISTRY_PASSWORD
+        
+        $CNR_INSTALL_DIR/bin/install.sh -y
+
+        update-dns "envoy" "contour-external" "*.cnr"
             
-        kubectl patch configmap/config-domain \
-            --namespace knative-serving \
-            --type merge \
-            --patch '{"data":{"*.native.$DOMAIN":""}}'
+        kubectl apply -f supply-chain/cnr/cnr-domain-conifg.yaml
     }
 
     #setup-demo-examples
@@ -529,9 +559,13 @@
         echo
         echo "Incorrect usage. Please specify one of the following commands"
         echo
-        echo "${bold}init${normal}"
-        echo "  aks"
-        echo "  tkg"
+        echo "${bold}init-aks${normal}"
+        echo "  apigrid"
+        echo "  cnr"
+        echo
+        echo "${bold}init-tkg${normal}"
+        echo "  apigrid"
+        echo "  cnr"
         echo
         echo "${bold}update-core-images${normal}"
         echo "  gateway"
@@ -554,8 +588,11 @@
 #################### main ##########################
 
 case $1 in
-init)
-    init $2 
+init-aks)
+    init-aks $2 
+    ;;
+init-tkg)
+    init-tkg $2 
     ;;
 update-core-images)
     update-core-images $2   
@@ -564,7 +601,7 @@ cleanup)
 	cleanup $2
     ;;
 unit-test)
-    install-SGGW-from-source
+    install-gateway
     ;;
 *)
     incorrect-usage

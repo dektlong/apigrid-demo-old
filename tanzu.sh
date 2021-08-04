@@ -2,8 +2,8 @@
 
 #################### functions #######################
 
-#deploy-backend 
-deploy-backend() {
+#create-backend 
+create-backend() {
 	
     echo
     echo "=========> Sync local code with remote git $DEMO_APP_GIT_REPO ..."
@@ -26,8 +26,8 @@ deploy-backend() {
     
 }
 
-#deploy-frontend 
-deploy-frontend() {
+#create-frontend 
+create-frontend() {
 	
     echo
     echo "=========> Apply frontend app, service and routes ..."
@@ -84,33 +84,47 @@ patch-backend() {
 }
 
 #deploy-fitness app
-deploy-fitness () {
+create-fitness () {
 
     pushd workloads/dektFitness
 
     kustomize build kubernetes-manifests/ | kubectl apply -f -
 }
 
-#rockme-native
-deploy-rockme-native () {
+#dekt44pets-native
+create-dekt4pets-native () {
 
- 	kn service create rockme-native \
-        --image $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/rockme:1.0.0 \
-        --env TARGET="revision 1 of rockme-native" \
-        --revision-name rockme-native-v1 \
-        -n $APP_NAMESPACE 
+    kn service create dekt4pets-frontend \
+        --image harbor.apps.cf.tanzutime.com/dekt-apps/dekt4pets-frontend:1.0.0 \
+        --env TARGET="revision 1 of dekt4pets-native-frontend" \
+        --revision-name dekt4pets-frontend-v1 \
+        -n dekt-apps 
 
-    siege -d1  -c200 -t60S  --content-type="text/plain" 'http://rockme-native.dekt-apps.native.dekt.io POST rock-on'
+    kn service create dekt4pets-backend \
+        --image harbor.apps.cf.tanzutime.com/dekt-apps/dekt4pets-backend:1.0.0\
+        --env TARGET="revision 1 of dekt4pets-native-backend" \
+        --revision-name dekt4pets-backend-v1 \
+        -n dekt-apps
 }
 
-update-rockme-native () {
+#dekt-fortune
+create-fortune () {
+
+    kn service create dekt-fortune \
+        --image harbor.apps.cf.tanzutime.com/dekt-apps/fortune-service:0.0.1 \
+        --env TARGET="revision 1 of dekt-fortune" \
+        --revision-name dekt-fortune-v1 \
+        --namespace $APP_NAMESPACE
+}
+
+update-fortune () {
  
-    kn service update rockme-native \
-        --image $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/rockme:1.0.0 \
-        --env TARGET="revision 2 of rockme-native" \
-        --revision-name rockme-native-v2 \
-        --traffic @latest=20,rockme-native-v1=80 \
-        -n $APP_NAMESPACE 
+    kn service update dekt-fortune \
+        --image $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/fortune-service:0.0.1 \
+        --env TARGET="revision 2 of dekt-fortune" \
+        --revision-name dekt-fortune-v2 \
+        --traffic @latest=20,dekt-fortune-v1=80 \
+        --namespace $APP_NAMESPACE 
 }
 
 #delete-workloads
@@ -160,11 +174,11 @@ usage() {
     echo "  dekt4pets-backend"
     echo "  dekt4pets-frontend"
     echo "  dektFitness"
-    echo "  rockme-native"
+    echo "  dekt-fortune"
     echo
     echo "${bold}update-workload${normal}"
     echo "  dekt4pets-backend"
-    echo "  rockme-native"
+    echo "  dekt-fortune"
     echo
   	exit   
  
@@ -225,21 +239,38 @@ workflow-dektApiGrid() {
     echo "      workloads/dekt4pets/frontend/routes/dekt4pets-frontend-routes.yaml"
     echo
 }
+
 #create-workload
 create-workload () {
 
     case $1 in
     dekt4pets-backend)
-        deploy-backend
+        create-backend
         ;;
     dekt4pets-frontend)
-        deploy-frontend 
+        create-frontend 
         ;;
     dektFitness)
-        deploy-fitness
+        create-fitness
         ;;
-    rockme-native)
-        create-rockme-native
+    dekt-fortune)
+        create-fortune
+        ;;
+    *)
+  	    usage
+  	    ;;
+    esac
+}
+
+#update-workload
+update-workload () {
+
+    case $1 in
+    dekt4pets-backend)
+        patch-backend
+        ;;
+    dekt-fortune)
+        update-fortune
         ;;
     *)
   	    usage
