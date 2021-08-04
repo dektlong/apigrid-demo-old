@@ -171,14 +171,14 @@ usage() {
     echo "  dektApiGrid"
     echo
     echo "${bold}create-workload${normal}"
-    echo "  dekt4pets-backend"
-    echo "  dekt4pets-frontend"
-    echo "  dektFitness"
-    echo "  dekt-fortune"
+    echo "  backend"
+    echo "  frontend"
+    echo "  fitness"
+    echo "  fortune"
     echo
     echo "${bold}update-workload${normal}"
-    echo "  dekt4pets-backend"
-    echo "  dekt-fortune"
+    echo "  backend"
+    echo "  fortune"
     echo
   	exit   
  
@@ -244,16 +244,16 @@ workflow-dektApiGrid() {
 create-workload () {
 
     case $1 in
-    dekt4pets-backend)
+    backend)
         create-backend
         ;;
-    dekt4pets-frontend)
+    frontend)
         create-frontend 
         ;;
-    dektFitness)
+    fitness)
         create-fitness
         ;;
-    dekt-fortune)
+    fortune)
         create-fortune
         ;;
     *)
@@ -266,10 +266,10 @@ create-workload () {
 update-workload () {
 
     case $1 in
-    dekt4pets-backend)
+    backend)
         patch-backend
         ;;
-    dekt-fortune)
+    fortune)
         update-fortune
         ;;
     *)
