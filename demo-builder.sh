@@ -22,13 +22,13 @@
     #init-aks
     init-aks () {
    
-        supply-chain/k8s-builders/build-aks-cluster.sh create $CLUSTER_NAME 5 #nodes
-
         case $1 in
         apigrid)
+            supply-chain/k8s-builders/build-aks-cluster.sh create $CLUSTER_NAME_APIGRID 5 #nodes
             install-apigrid
             ;;
         cnr)
+            supply-chain/k8s-builders/build-aks-cluster.sh create $CLUSTER_NAME_CNR 3 #nodes
             install-cnr
             ;;
         *)
@@ -40,11 +40,9 @@
     #init-tkg
     init-tkg () {
         
-        supply-chain/k8s-builders/build-tkg-cluster.sh tkg-i $CLUSTER_NAME $TKGI_CLUSTER_PLAN 1 5
-
         case $1 in
         apigrid)
-            supply-chain/k8s-builders/build-aks-cluster.sh create $CLUSTER_NAME 5 #nodes
+            supply-chain/k8s-builders/build-tkg-cluster.sh tkg-i $CLUSTER_NAME_APIGRID $TKGI_CLUSTER_PLAN 1 5
             install-apigrid
             ;;
         *)
@@ -565,7 +563,6 @@
         echo
         echo "${bold}init-tkg${normal}"
         echo "  apigrid"
-        echo "  cnr"
         echo
         echo "${bold}update-core-images${normal}"
         echo "  gateway"
