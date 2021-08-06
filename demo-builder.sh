@@ -6,6 +6,7 @@
     
     HOST_NAME=$SUB_DOMAIN.$DOMAIN
     DET4PETS_FRONTEND_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION
+    DET4PETS_FRONTEND_IMAGE_LOCATION=springcloudservices/animal-rescue-frontend #workaround for TBS issue
     DET4PETS_BACKEND_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION
     FORTUNE_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/fortune-service:0.0.1
     SBO_SERVER_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/spring-boot-observer-server:0.0.1
@@ -212,7 +213,7 @@
             | kbld -f $TBS_INSTALL_DIR/images-relocated.lock -f- \
             | kapp deploy -a tanzu-build-service -f- -y
 
-        kp import -f supply-chain/tbs/tbs-store-stacks-buildpacks.yaml
+        kp import -f supply-chain/tbs/dekt-descriptor.yaml
 
     }
 
@@ -295,11 +296,11 @@
         echo
         echo "===> Create dekt4pets builder..."
         echo
-        kp builder create $BUILDER_NAME -n $APP_NAMESPACE \
-        --tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BUILDER_NAME \
-        --order supply-chain/tbs/dekt-builder-order.yaml \
-        --stack full \
-        --store default
+        #kp builder create $BUILDER_NAME -n $APP_NAMESPACE \
+        #--tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BUILDER_NAME \
+        #--order supply-chain/tbs/dekt-builder-order.yaml \
+        #--stack full \
+        #--store default
     
         echo
         echo "===> Create dekt4pets-backend TBS image..."
@@ -315,14 +316,13 @@
         echo
         echo "===> Create dekt4pets-frontend TBS image..."
         echo
-        #"!! since animals-frontend does *not* currently compile with TBS, 
         # as a workaround we relocate the image from springcloudservices/animal-rescue-frontend as part of core-images "
-        #kp image create $FRONTEND_TBS_IMAGE -n $APP_NAMESPACE \
-        #--tag $DET4PETS_FRONTEND_IMAGE_LOCATION \
-        #--git https://github.com/spring-cloud-services-samples/animal-rescue\
-        #--git-revision main \
-        #--sub-path ./workloads/dekt4pets/frontend \
-        #--wait
+        kp image create $FRONTEND_TBS_IMAGE -n $APP_NAMESPACE \
+        --tag $DET4PETS_FRONTEND_IMAGE_LOCATION \
+        --git https://github.com/spring-cloud-services-samples/animal-rescue\
+        --git-revision main \
+        --sub-path ./frontend \
+        --wait
     }
 
 #################### helpers functions #############
@@ -611,14 +611,14 @@ cleanup)
     ;;
 runme)
     #create-namespaces-secrets
-    #update-configs
+    update-configs
     #install-gateway
     #install-acc
     #install-api-portal
     #install-sbo
     #install-tbs
     #install-cnr
-    setup-demo-examples
+    #setup-demo-examples
 
 
     ;;

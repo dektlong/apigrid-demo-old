@@ -1,5 +1,0 @@
-- group:
-  - id: tanzu-buildpacks/java
-  - id: tanzu-buildpacks/nodejs
-  - id: tanzu-buildpacks/java-native-image
-  - id: paketo-buildpacks/gradle
