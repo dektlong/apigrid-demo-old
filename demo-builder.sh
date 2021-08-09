@@ -610,17 +610,7 @@ cleanup)
 	cleanup $2
     ;;
 runme)
-    #create-namespaces-secrets
-    update-configs
-    #install-gateway
-    #install-acc
-    #install-api-portal
-    #install-sbo
-    #install-tbs
-    #install-cnr
-    #setup-demo-examples
-
-
+    $2
     ;;
 *)
     incorrect-usage
