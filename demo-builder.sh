@@ -447,14 +447,14 @@
         kubectl create ns nginx-system
 
         # Use Helm to deploy an NGINX ingress controller
-        helm install dekt4pets ingress-nginx/ingress-nginx \
+        helm install dekt ingress-nginx/ingress-nginx \
             --namespace nginx-system \
             --set controller.replicaCount=2 \
             --set controller.nodeSelector."beta\.kubernetes\.io/os"=linux \
             --set defaultBackend.nodeSelector."beta\.kubernetes\.io/os"=linux \
             --set controller.admissionWebhooks.patch.nodeSelector."beta\.kubernetes\.io/os"=linux
         
-        update-dns "dekt4pets-ingress-nginx-controller" "nginx-system" "*.$SUB_DOMAIN"
+        update-dns "dekt-ingress-nginx-controller" "nginx-system" "*.$SUB_DOMAIN"
 
     }
 
@@ -465,13 +465,23 @@
         echo "=========> Install contour ingress controller ..."
         echo
         
-        kubectl apply -f https://projectcontour.io/quickstart/operator.yaml
-        kubectl apply -f https://projectcontour.io/quickstart/contour-custom-resource.yaml
+        kubectl create ns contour-system
+
+        helm install dekt bitnami/contour \
+            --namespace contour-system \
+            --set controller.replicaCount=2 \
+            --set controller.nodeSelector."beta\.kubernetes\.io/os"=linux \
+            --set defaultBackend.nodeSelector."beta\.kubernetes\.io/os"=linux \
+            --set controller.admissionWebhooks.patch.nodeSelector."beta\.kubernetes\.io/os"=linux
+
+        #kubectl apply -f https://projectcontour.io/quickstart/operator.yaml
+        #kubectl apply -f https://projectcontour.io/quickstart/contour-custom-resource.yaml
 
         #we use a modified install yaml to set externalTrafficPolicy: Cluster (from the local default) due to issues on AKS
         #kubectl apply -f supply-chain/k8s-builders/contour-install.yaml
 
-        update-dns "envoy" "projectcontour" "*.$SUB_DOMAIN" 
+        #update-dns "envoy" "projectcontour" "*.$SUB_DOMAIN"
+        update-dns "dekt-contour-envoy" "contour-system" "*.$SUB_DOMAIN" 
     }
 
     #update-dns
