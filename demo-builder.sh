@@ -65,8 +65,6 @@
     #cleanup
     cleanup() {
 
-        supply-chain/k8s-builders/octant-wrapper.sh stop
-
         case $1 in
         aks)
             supply-chain/k8s-builders/build-aks-cluster.sh delete $CLUSTER_NAME 
@@ -553,7 +551,7 @@
 
 case $1 in
 init-aks)
-    supply-chain/k8s-builders/build-aks-cluster.sh create $CLUSTER_NAME $NUMBER_OF_WORKER_NODES
+    supply-chain/k8s-builders/build-aks-cluster.sh create $CLUSTER_NAME
     install-all 
     ;;
 init-tkg)
