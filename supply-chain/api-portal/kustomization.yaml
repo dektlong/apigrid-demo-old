@@ -11,10 +11,10 @@ resources:
   - donations-service.yaml
   - donations-routes.yaml
   - donations-mapping.yaml
-  #- config/suppliers-gateway.yaml
-  #- suppliers-service.yaml
-  #- suppliers-routes.yaml
-  #- suppliers-mapping.yaml
+  - config/suppliers-gateway.yaml
+  - suppliers-service.yaml
+  - suppliers-routes.yaml
+  - suppliers-mapping.yaml
 
 
 

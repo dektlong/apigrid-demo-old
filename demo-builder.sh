@@ -20,50 +20,6 @@
 
 #################### menu functions ################
 
-    #init-aks
-    init-aks () {
-
-        case $1 in
-        apigrid)
-            supply-chain/k8s-builders/build-aks-cluster.sh create $CLUSTER_NAME $NUMBER_OF_WORKER_NODES
-            install-apigrid
-            ;;
-        cnr)
-            supply-chain/k8s-builders/build-aks-cluster.sh create $CLUSTER_NAME $NUMBER_OF_WORKER_NODES
-            install-cnr-demo
-            ;;
-        blank)
-            supply-chain/k8s-builders/build-aks-cluster.sh create $CLUSTER_NAME $NUMBER_OF_WORKER_NODES
-            #do nothing
-            ;;
-        *)
-            incorrect-usage
-            ;;
-        esac
-
-        echo
-        echo "Demo install completed. Enjoy your demo."
-        echo
-    }
-
-    #init-tkg
-    init-tkg () {
-        
-        case $1 in
-        apigrid)
-            supply-chain/k8s-builders/build-tkg-cluster.sh tkg-i $CLUSTER_NAME_APIGRID $TKGI_CLUSTER_PLAN 1 5
-            install-apigrid
-            ;;
-        *)
-            incorrect-usage
-            ;;
-        esac
-
-        echo
-        echo "Demo install completed. Enjoy your demo."
-        echo
-    }
-    
     #update-core-images
     update-core-images () {
 
@@ -126,8 +82,8 @@
 
 #################### core functions ################
 
-    #install-apigrid
-    install-apigrid () {
+    #install all demo components
+    install-all () {
 
         install-nginx
         
@@ -144,25 +100,17 @@
         
         install-api-portal
         
-        #install-sbo
+        install-sbo
 
         install-tbs
 
-        setup-demo-examples
-    }
-
-    #install-cnr-demo
-    install-cnr-demo () {
-
-        open -a Terminal supply-chain/k8s-builders/octant-wrapper.sh
-        osascript -e 'tell application "Terminal" to set miniaturized of every window to true'
-        
-        create-namespaces-secrets
-
-        install-acc
-        
         install-cnr
-        
+
+        setup-demo-examples
+
+        echo
+        echo "Demo install completed. Enjoy your demo."
+        echo
     }
 
     #install-gateway
@@ -608,10 +556,12 @@
 
 case $1 in
 init-aks)
-    init-aks $2 
+    supply-chain/k8s-builders/build-aks-cluster.sh create $CLUSTER_NAME $NUMBER_OF_WORKER_NODES
+    install-all 
     ;;
 init-tkg)
-    init-tkg $2 
+    supply-chain/k8s-builders/build-tkg-cluster.sh tkg-i $CLUSTER_NAME_APIGRID $TKGI_CLUSTER_PLAN 1 10
+    install-all 
     ;;
 update-core-images)
     update-core-images $2   
