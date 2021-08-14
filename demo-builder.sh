@@ -99,9 +99,9 @@
 
         install-tbs
 
-        install-cnr
-
         setup-demo-examples
+
+        install-cnr
 
         echo
         echo "Demo install completed. Enjoy your demo."
