@@ -1,4 +1,4 @@
-package com.dekt4pets;
+package com.example.hello;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import java.util.function.Function;
 
 @SpringBootApplication
-public class CheckAdopterFunction {
+public class SpringNativeFunctionKnativeApplication {
 
     @Value("${TARGET:from-function}")
     String target;
@@ -20,7 +20,7 @@ public class CheckAdopterFunction {
     @Bean
     public Function<String, String> hello() {
         return (in) -> {
-            return "dekt: " + in + ", Source: " + target;
+            return "Hello: " + in + ", Source: " + target;
         };
     }
 }
