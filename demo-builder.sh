@@ -295,7 +295,7 @@
 
         # load test the service with Siege
         # install on Mac with `brew install siege` 
-        $ siege -d1  -c50 -t10S  --content-type="text/plain" 'adopter-check.dekt-apps.cnr.dekt.io POST test'
+        siege -d1  -c50 -t10S  --content-type="text/plain" 'adopter-check.dekt-apps.cnr.dekt.io POST test'
 
     }
 
