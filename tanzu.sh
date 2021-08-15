@@ -95,7 +95,7 @@ create-fitness () {
 create-dekt4pets-native () {
 
     kn service create dekt4pets-frontend \
-        --image harbor.apps.cf.tanzutime.com/dekt-apps/dekt4pets-frontend:1.0.0 \
+        --image springcloudservices/animal-rescue-frontend  \
         --env TARGET="revision 1 of dekt4pets-native-frontend" \
         --revision-name dekt4pets-frontend-v1 \
         -n dekt-apps 
