@@ -273,10 +273,11 @@
         echo
         echo "===> Create adopter-check TBS image..."
         echo        
-       kp image create adopter-check \
+        kp image create adopter-check \
         --tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/adopter-check:0.0.1 \
-        --git https://github.com/ddobrin/spring-native-function-knative.git \
+        --git $DEMO_APP_GIT_REPO \
         --git-revision main \
+        --sub-path ./workloads/dekt4pets/adopter-check \
         --cluster-builder base \
         --env BP_JVM_VERSION=11 \
         --env BP_MAVEN_BUILD_ARGUMENTS="-Dmaven.test.skip=true package spring-boot:repackage" \
@@ -289,6 +290,12 @@
         --revision-name adopter-check-v1 \
         --namespace dekt-apps
 
+        #test
+        curl -w'\n' -H 'Content-Type: text/plain' adopter-check.dekt-apps.cnr.dekt.io -d "test"
+
+        # load test the service with Siege
+        # install on Mac with `brew install siege` 
+        $ siege -d1  -c50 -t10S  --content-type="text/plain" 'adopter-check.dekt-apps.cnr.dekt.io POST test'
 
     }
 

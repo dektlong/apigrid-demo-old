@@ -8,11 +8,11 @@
         <version>2.5.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.example</groupId>
-    <artifactId>hello-function</artifactId>
+    <groupId>com.dekt4pets</groupId>
+    <artifactId>adopter-check</artifactId>
     <version>1.0.0</version>
-    <name>spring-native-function-knative</name>
-    <description>A simple example of a Function deployed in Knative, available as JVM or Native Image</description>
+    <name>adopter-check-function-knative</name>
+    <description>Example of calling a brownfield adoption-check API as Function deployed in Knative, available as Native Image</description>
     <properties>
         <java.version>11</java.version>
 		<spring-cloud.version>2020.0.3</spring-cloud.version>
