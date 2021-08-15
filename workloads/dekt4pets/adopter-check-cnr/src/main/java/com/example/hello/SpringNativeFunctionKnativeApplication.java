@@ -20,7 +20,7 @@ public class SpringNativeFunctionKnativeApplication {
     @Bean
     public Function<String, String> hello() {
         return (in) -> {
-            return "Hello: " + in + ", Source: " + target;
+            return "check-adpoter: " + in + ", brownfield api: " + target;
         };
     }
 }
