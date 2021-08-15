@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>adopter-check</artifactId>
+    <artifactId>hello-function</artifactId>
     <version>1.0.0</version>
     <name>spring-native-function-knative</name>
     <description>A simple example of a Function deployed in Knative, available as JVM or Native Image</description>
@@ -21,7 +21,7 @@
 
         <jvm-image-type>jvm</jvm-image-type>
         <native-image-type>native</native-image-type>
-        <registry>docker.io/triathlonguy</registry>
+        <registry>registryPrefix</registry>
         <repackage.classifier/>
     </properties>
     <dependencies>
@@ -122,7 +122,7 @@
         </profile>
         <!--end-jvm-->
         <!-- this is the snippet that will use the buildpacks to produce a container image of the JVM executable -->
-        <!--start-jvm-image
+        <!--start-jvm-image-->
         <profile>
             <id>jvm-image</id>
             <build>
@@ -171,7 +171,7 @@
                 </plugins>
             </build>
         </profile>
-        end-jvm-image-->
+        <!--end-jvm-image-->
         <!-- this is the snippet that will use the buildpacks to produce a container image of the Native executable -->
         <!--start-native-image-->
         <profile>
@@ -229,7 +229,7 @@
         </profile>
         <!--end-native-image-->
         <!-- this is the snippet that will invoke native-image during a regular maven build -->
-        <!--start-native
+        <!--start-native-->
         <profile>
             <id>native</id>
             <properties>
@@ -269,7 +269,7 @@
                 </plugins>
             </build>
         </profile>
-        end-native-->
+        <!--end-native-->
     </profiles>
     <pluginRepositories>
         <pluginRepository>

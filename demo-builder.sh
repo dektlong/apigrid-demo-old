@@ -268,6 +268,30 @@
         --wait
     }
 
+    adopter-check ()
+    {
+        echo
+        echo "===> Create adopter-check TBS image..."
+        echo        
+       kp image create adopter-check \
+        --tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/adopter-check:0.0.1 \
+        --git https://github.com/ddobrin/spring-native-function-knative.git \
+        --git-revision main \
+        --cluster-builder base \
+        --env BP_JVM_VERSION=11 \
+        --env BP_MAVEN_BUILD_ARGUMENTS="-Dmaven.test.skip=true package spring-boot:repackage" \
+        --namespace $APP_NAMESPACE \
+        --wait 
+
+        kn service create adopter-check \
+        --image $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/adopter-check:0.0.1 \
+        --env TARGET="revision 1 of adopter-check" \
+        --revision-name adopter-check-v1 \
+        --namespace dekt-apps
+
+
+    }
+
 #################### helpers functions #############
 
     #create-namespaces-secrets
