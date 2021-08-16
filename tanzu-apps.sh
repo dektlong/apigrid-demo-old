@@ -2,8 +2,7 @@
 
 #################### menu functions #######################
 
-#create-workload
-create-workload () {
+workload () {
 
     case $1 in
     backend)
@@ -20,41 +19,6 @@ create-workload () {
         ;;
     fortune)
         create-fortune
-        ;;
-    *)
-  	    usage
-  	    ;;
-    esac
-}
-
-#update-workload
-update-workload () {
-
-    case $1 in
-    backend)
-        patch-backend
-        ;;
-    check-adpoter)
-        update-check-adopter 
-        ;;
-    fortune)
-        update-fortune
-        ;;
-    *)
-  	    usage
-  	    ;;
-    esac
-}
-
-#workload
-workload () {
-
-    case $1 in
-    create)
-        create-workload $2
-        ;;
-    update)
-        update-workload $2
         ;;
     *)
   	    usage
@@ -259,16 +223,11 @@ usage() {
     echo "  dektFitness"
     echo
     echo "${bold}workload${normal}"
-    echo "  ${bold}create${normal}"
-    echo "    backend"
-    echo "    frontend"
-    echo "    adopter-check"
-    echo "    fitness"
-    echo "    fortune"
-    echo "  ${bold}update${normal}"
-    echo "    backend"
-    echo "    adopter-check"
-    echo "    fortune"
+    echo "  backend"
+    echo "  frontend"
+    echo "  adopter-check"
+    echo "  fitness"
+    echo "  fortune"
     echo
   	exit   
  
@@ -328,7 +287,10 @@ supplychain)
 	supplychain $2
     ;;
 workload)
-	workload $2 $3
+	workload $2
+    ;;
+patch-backend)
+    patch-backend 
     ;;
 *)
   	usage
