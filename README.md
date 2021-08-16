@@ -102,7 +102,8 @@ It is designed to run on any k8s.
 - now the backend team will leverage the 'brownfield' APIs to add background check functionality on potential adopters
 - access the 'datacheck' API group and test adoption-history and background-check APIs
 - explain that now other development teams can know exactly how to use a verified working version of both APIs (no tickets to off platform teams)
-- Demo brownfield API use via adding a route and patching the backend app
+
+#### Demo brownfield API use via adding a route and patching the backend app
   - In ```workloads/dekt4pets/backend/routes/dekt4pets-backend-routes.yaml``` add
   ```
     - predicates:
