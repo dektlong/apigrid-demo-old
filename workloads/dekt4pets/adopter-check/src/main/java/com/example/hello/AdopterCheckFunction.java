@@ -20,7 +20,7 @@ public class AdopterCheckFunction {
     @Bean
     public Function<String, String> hello() {
         return (in) -> {
-            return "Running adoption backgroud check using this API:" + in + ", Results: APPROVED" + ", Source: " + target;
+            return "\nRunning adoption backgroud check using this API: " + in + "\nResults: APPROVED" + "\nSource: " + target;
         };
     }
 }

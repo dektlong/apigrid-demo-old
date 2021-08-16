@@ -47,9 +47,8 @@
             imgpkg pull --lock $CNR_INSTALL_DIR/relocated.lock -o $CNR_INSTALL_DIR
             ;;
         examples)
-            docker pull springcloudservices/animal-rescue-frontend
-            docker tag springcloudservices/animal-rescue-frontend:latest $DET4PETS_FRONTEND_IMAGE_LOCATION
-            docker push $DET4PETS_FRONTEND_IMAGE_LOCATION
+            create-frontend-image
+            create-adopter-check-image
             setup-demo-examples
             ;;
         configs)
@@ -264,20 +263,6 @@
         --sub-path ./workloads/dekt4pets/frontend \
         --git-revision main \
         --wait
-
-        echo
-        echo "===> Create adopter-check TBS image..."
-        echo        
-        kp image create adopter-check \
-        --tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/adopter-check:0.0.1 \
-        --git $DEMO_APP_GIT_REPO \
-        --git-revision main \
-        --sub-path ./workloads/dekt4pets/adopter-check \
-        --cluster-builder base \
-        --env BP_JVM_VERSION=11 \
-        --env BP_MAVEN_BUILD_ARGUMENTS="-Dmaven.test.skip=true package spring-boot:repackage" \
-        --namespace $APP_NAMESPACE \
-        --wait 
     }
 
 #################### helpers functions #############
@@ -558,6 +543,30 @@
         echo
         exit   
     
+    }
+
+    #create adopter-check-image
+    create-adopter-check-image() {
+        echo
+        echo "===> Create adopter-check TBS image..."
+        echo        
+        kp image create adopter-check \
+        --tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/adopter-check:0.0.1 \
+        --git $DEMO_APP_GIT_REPO \
+        --git-revision main \
+        --sub-path ./workloads/dekt4pets/adopter-check \
+        --cluster-builder base \
+        --env BP_JVM_VERSION=11 \
+        --env BP_MAVEN_BUILD_ARGUMENTS="-Dmaven.test.skip=true package spring-boot:repackage" \
+        --namespace $APP_NAMESPACE \
+        --wait 
+    }
+
+    #create frontend image
+    create-frontend-image () {
+        docker pull springcloudservices/animal-rescue-frontend
+        docker tag springcloudservices/animal-rescue-frontend:latest $DET4PETS_FRONTEND_IMAGE_LOCATION
+        docker push $DET4PETS_FRONTEND_IMAGE_LOCATION
     }
 
 #################### main ##########################
