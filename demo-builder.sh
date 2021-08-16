@@ -272,7 +272,7 @@
         --tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/adopter-check:0.0.1 \
         --git $DEMO_APP_GIT_REPO \
         --git-revision main \
-        --sub-path ./workloads/dekt4pets/adopter-check-cnr \
+        --sub-path ./workloads/dekt4pets/adopter-check \
         --cluster-builder base \
         --env BP_JVM_VERSION=11 \
         --env BP_MAVEN_BUILD_ARGUMENTS="-Dmaven.test.skip=true package spring-boot:repackage" \
