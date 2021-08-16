@@ -142,7 +142,7 @@ It is designed to run on any k8s.
   dekt4pets.<SUB_DOMAIN>.<DOMAIN>/api/check-adopter
   ```
   - you should see the 'Congratulations...' message with the same token you received following login
-- Demo brownfield API use Cloud Native Runtime function
+#### Demo brownfield API use Cloud Native Runtime function
   - ```./tanzu-apps workload adopter-check ```
   - ```curl -w'\n' -H 'Content-Type: text/plain' adopter-check.dekt-apps.cnr.dekt.io -d "datacheck.tanzu.dekt.io/adoption-history/109141744605375013560" ```
   - ```./tanzu-apps workload adopter-check -u ```
