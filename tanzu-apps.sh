@@ -200,8 +200,10 @@ update-adopter-check () {
         --image $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/adopter-check:0.0.1 \
         --env TARGET="revision 2 of adopter-check" \
         --revision-name adopter-check-v2 \
-        --traffic adopter-check-v2=20,adopter-check-v1=80 \
+        --traffic adopter-check-v2=30,adopter-check-v1=70 \
         --namespace $APP_NAMESPACE
+
+    kn service describe adopter-check -n $APP_NAMESPACE
 }
 
 #delete-workloads
@@ -217,7 +219,9 @@ delete-workloads() {
 
     kustomize build workloads/dektFitness/kubernetes-manifests/ | kubectl delete -f -  
 
-    kn service delete rockme-native -n $APP_NAMESPACE 
+    kn service delete adopter-check -n $APP_NAMESPACE 
+
+    kn service delete dekt-fortune -n $APP_NAMESPACE 
 
 }
 
@@ -314,6 +318,9 @@ supplychain)
     ;;
 workload)
 	workload $2 $3
+    ;;
+cleanup)
+    delete-workloads
     ;;
 *)
   	usage
