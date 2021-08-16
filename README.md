@@ -74,19 +74,19 @@ It is designed to run on any k8s.
   - Select the ```API Driven Microservices workflow``` accelerator 
   - Select the options according to your DevOps policies
   - Generate the zip file and import the folder to your favorite IDE
-  - Show the supply chain created via ```./tanzu.sh workflow describe```
+  - Show the supply chain created via ```./tanzu-apps.sh supplychain dekt4pets```
   - Show boiler-plate generated Build configs
   - Show boiler-plate generated API configs
 
 ### The path-to-prod
-- ```./tanzu.sh workload create backend```
+- ```./tanzu-apps.sh workload create backend```
 - Show how build service detects git-repo changes and auto re-build backend-image (if required)
 - Show how the ```dekt4pets-gateway``` micro-gateway starts quickly as just a component of your app
 - Access API Hub on ```api-portal.<SUB_DOMAIN>.<DOMAIN>```
   - Show the dekt4Pets API group auto-populated with the API spec you defined
   - now the frontend team can easily discover and test the backend APIs and reuse
   - Show the other API groups ('brownfield APIs')
-- ```./tanzu.sh workload create frontend```
+- ```./tanzu-apps.sh workload create frontend```
 - Access Spring Boot Observer at ```http://sbo.<SUB_DOMAIN>.<DOMAIN>/apps``` to show actuator information on the backend application 
 - Show the new frontend APIs that where auto-populated to the API portal
 - This phase will also add an ingress rule to the gateway, now you can show:
@@ -133,7 +133,7 @@ It is designed to run on any k8s.
 	}
 
 ```
-- ```./tanzu.sh workload patch backend "```
+- ```./tanzu-apps.sh workload update backend "```
 - show how build-service is invoking a new image build based on the git-commit-id
 - run the new check-adopter api 
 ```
@@ -149,10 +149,10 @@ dekt4pets.<SUB_DOMAIN>.<DOMAIN>/api/check-adopter
   - App Accelerator
   - Cloud Native Runtime
 ### Service creation
-- ```./tanzu.sh create-workload dekt-fortune```
+- ```./tanzu-apps.sh workload create fortune```
 
 ### Service revision
-- ```./tanzu.sh update-workload dekt-fortune```
+- ```./tanzu-apps.sh workload update fortune```
 
 ## Cleanup
 
