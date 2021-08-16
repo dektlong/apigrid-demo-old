@@ -28,7 +28,12 @@ workload () {
         create-fitness
         ;;
     fortune)
-        create-fortune
+        if [ "$2" == "-u" ]
+        then
+            update-fortune
+        else
+            create-fortune
+        fi
         ;;
     *)
   	    usage
@@ -191,11 +196,11 @@ create-adopter-check () {
 
 update-adopter-check () {
 
-    kn service create adopter-check \
+    kn service update adopter-check \
         --image $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/adopter-check:0.0.1 \
         --env TARGET="revision 2 of adopter-check" \
         --revision-name adopter-check-v2 \
-        --traffic adopter-check-v2=20,adopter-check-v2=80 \
+        --traffic adopter-check-v2=20,adopter-check-v1=80 \
         --namespace $APP_NAMESPACE
 }
 

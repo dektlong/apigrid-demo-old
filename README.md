@@ -98,12 +98,13 @@ It is designed to run on any k8s.
   ```
   - login and show SSO functionality 
 
-### Changes in production
+### Brownfield APIs
 - now the backend team will leverage the 'brownfield' APIs to add background check functionality on potential adopters
 - access the 'datacheck' API group and test adoption-history and background-check APIs
-- explain that now our backend team can know exactly how to use a verified working version of both APIs (no tickets to off platform teams)
-- In ```workloads/dekt4pets/backend/routes/dekt4pets-backend-routes.yaml``` add
-```
+- explain that now other development teams can know exactly how to use a verified working version of both APIs (no tickets to off platform teams)
+- Demo brownfield API use via adding a route and patching the backend app
+  - In ```workloads/dekt4pets/backend/routes/dekt4pets-backend-routes.yaml``` add
+  ```
     - predicates:
         - Path=/api/check-adopter
         - Method=GET
@@ -111,36 +112,40 @@ It is designed to run on any k8s.
       tokenRelay: true
       tags:
         - pets      
-```
-- In ```workloads/dekt4pets/backend/src/main/.../AnimalController.java``` add
-```
-	@GetMapping("/check-adopter")
-	public String checkAdopter(Principal adopter) {
+  ```
+  - In ```workloads/dekt4pets/backend/src/main/.../AnimalController.java``` add
+  ```
+	  @GetMapping("/check-adopter")
+	  public String checkAdopter(Principal adopter) {
     
-		String adoptionHistoryCheckURI = //TODO add adoption-history request URL;
+		  String adoptionHistoryCheckURI = //TODO add adoption-history request URL;
 
    		RestTemplate restTemplate = new RestTemplate();
 		
-		try
-		{
+		  try
+		  {
    			String result = restTemplate.getForObject(adoptionHistoryCheckURI, String.class);
-		}
-		catch (Exception e) {}
+		  }
+		  catch (Exception e) {}
 
   		return "<h1>Congratulations,</h1>" + 
 				"<h2>You are cleared to adopt your next best friend.</h2>" +
 				"<p>token:"+adopter.getName()+"</p>";
-	}
+	  }
 
-```
-- ```./tanzu-apps.sh patch-backend "```
-- show how build-service is invoking a new image build based on the git-commit-id
-- run the new check-adopter api 
-```
-dekt4pets.<SUB_DOMAIN>.<DOMAIN>/api/check-adopter
-```
-- you should see the 'Congratulations...' message with the same token you received following login
-
+  ```
+  - ```./tanzu-apps.sh workload backend -u ```
+  - show how build-service is invoking a new image build based on the git-commit-id
+  - run the new check-adopter api 
+  ```
+  dekt4pets.<SUB_DOMAIN>.<DOMAIN>/api/check-adopter
+  ```
+  - you should see the 'Congratulations...' message with the same token you received following login
+- Demo brownfield API use Cloud Native Runtime function
+  - ```./tanzu-apps workload adopter-check ```
+  - ```curl -w'\n' -H 'Content-Type: text/plain' adopter-check.dekt-apps.cnr.dekt.io -d "datacheck.tanzu.dekt.io/adoption-history/109141744605375013560" ```
+  - ```./tanzu-apps workload adopter-check -u ```
+  - show how a new revision recieving 20% of the traffic is created
 
 ## Cleanup
 
