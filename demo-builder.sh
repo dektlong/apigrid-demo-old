@@ -6,7 +6,6 @@
     
     HOST_NAME=$SUB_DOMAIN.$DOMAIN
     DET4PETS_FRONTEND_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION
-    DET4PETS_FRONTEND_IMAGE_LOCATION=springcloudservices/animal-rescue-frontend #workaround for TBS issue
     DET4PETS_BACKEND_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION
     FORTUNE_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/fortune-service:0.0.1
     SBO_SERVER_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/spring-boot-observer-server:0.0.1
@@ -156,7 +155,7 @@
             | kbld -f $TBS_INSTALL_DIR/images-relocated.lock -f- \
             | kapp deploy -a tanzu-build-service -f- -y
 
-        kp import -f supply-chain/tbs/dekt-descriptor.yaml
+        kp import -f supply-chain/tbs/descriptor-full.yaml
 
     }
 
@@ -239,11 +238,11 @@
         echo
         echo "===> Create dekt4pets builder..."
         echo
-        #kp builder create $BUILDER_NAME -n $APP_NAMESPACE \
-        #--tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BUILDER_NAME \
-        #--order supply-chain/tbs/dekt-builder-order.yaml \
-        #--stack full \
-        #--store default
+        kp builder create $BUILDER_NAME -n $APP_NAMESPACE \
+        --tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BUILDER_NAME \
+        --order supply-chain/tbs/dekt-builder-order.yaml \
+        --stack full \
+        --store default
     
         echo
         echo "===> Create dekt4pets-backend TBS image..."
@@ -258,13 +257,12 @@
         
         echo
         echo "===> Create dekt4pets-frontend TBS image..."
-        echo
-        # as a workaround we relocate the image from springcloudservices/animal-rescue-frontend as part of core-images "
+        echo        
         kp image create $FRONTEND_TBS_IMAGE -n $APP_NAMESPACE \
         --tag $DET4PETS_FRONTEND_IMAGE_LOCATION \
-        --git https://github.com/spring-cloud-services-samples/animal-rescue\
+        --git $DEMO_APP_GIT_REPO  \
+        --sub-path ./workloads/dekt4pets/frontend \
         --git-revision main \
-        --sub-path ./frontend \
         --wait
     }
 
@@ -388,8 +386,9 @@
         update-dynamic-value "supply-chain/api-portal" "suppliers-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
         update-dynamic-value "supply-chain/api-portal" "donations-gateway.yaml" "{HOST_NAME}" "$HOST_NAME"
         update-dynamic-value "workloads/dekt4pets/backend" "dekt4pets-backend-app.yaml" "{BACKEND_IMAGE}" "$DET4PETS_BACKEND_IMAGE_LOCATION" "{OBSERVER_SIDECAR_IMAGE}" "$SBO_SIDECAR_IMAGE_LOCATION"
-        update-dynamic-value "workloads/dekt4pets/frontend" "dekt4pets-frontend-app.yaml" "{FRONTEND_IMAGE}" "$DET4PETS_FRONTEND_IMAGE_LOCATION" 
-   
+        #update-dynamic-value "workloads/dekt4pets/frontend" "dekt4pets-frontend-app.yaml" "{FRONTEND_IMAGE}" "$DET4PETS_FRONTEND_IMAGE_LOCATION" 
+        #workaround for TBS issue
+        update-dynamic-value "workloads/dekt4pets/frontend" "dekt4pets-frontend-app.yaml" "{FRONTEND_IMAGE}" "springcloudservices/animal-rescue-frontend" 
     }
 
     #update-dynamic-value

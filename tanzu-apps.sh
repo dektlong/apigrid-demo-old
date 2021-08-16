@@ -1,6 +1,84 @@
 #!/usr/bin/env bash
 
-#################### functions #######################
+#################### menu functions #######################
+
+#create-workload
+create-workload () {
+
+    case $1 in
+    backend)
+        create-backend
+        ;;
+    frontend)
+        create-frontend 
+        ;;
+    check-adopter)
+        create-check-adopter 
+        ;;
+    fitness)
+        create-fitness
+        ;;
+    fortune)
+        create-fortune
+        ;;
+    *)
+  	    usage
+  	    ;;
+    esac
+}
+
+#update-workload
+update-workload () {
+
+    case $1 in
+    backend)
+        patch-backend
+        ;;
+    check-adpoter)
+        update-check-adopter 
+        ;;
+    fortune)
+        update-fortune
+        ;;
+    *)
+  	    usage
+  	    ;;
+    esac
+}
+
+#workload
+workload () {
+
+    case $1 in
+    create)
+        create-workload $2
+        ;;
+    update)
+        update-workload $2
+        ;;
+    *)
+  	    usage
+  	    ;;
+    esac
+}
+
+#supplychain
+supplychain () {
+
+    case $1 in
+    dekt4pets)
+        supplychain-dekt4pets
+        ;;
+    dektFitness)
+        supplychain-dektFitness 
+        ;;
+    *)
+  	    usage
+  	    ;;
+    esac
+}
+
+#################### core functions #######################
 
 #create-backend 
 create-backend() {
@@ -127,6 +205,17 @@ update-fortune () {
         --namespace $APP_NAMESPACE 
 }
 
+#check-adopter
+create-check-adopter () {
+
+    echo "TBC, create-check-adopter"
+}
+
+update-check-adopter () {
+
+    echo "TBC, update-check-adopter"
+}
+
 #delete-workloads
 delete-workloads() {
 
@@ -144,7 +233,7 @@ delete-workloads() {
 
 }
 
-#################### private functions #######################
+#################### helper functions #######################
 
 #git-push
 #   param: commit message
@@ -164,135 +253,70 @@ git-push() {
 usage() {
 
     echo
-	echo "A mockup script to illustrate upcoming Tanzu concepts. Please specify one of the following:"
+	echo "A mockup script to illustrate upcoming App Stack concepts. Please specify one of the following:"
 	echo
-    echo "${bold}describe-workflow${normal}"
-    echo "  dektBuild"
-    echo "  dektApiGrid"
+    echo "${bold}supplychain${normal}"
+    echo "  dekt4pets"
+    echo "  dektFitness"
     echo
-    echo "${bold}create-workload${normal}"
-    echo "  backend"
-    echo "  frontend"
-    echo "  fitness"
-    echo "  fortune"
-    echo
-    echo "${bold}update-workload${normal}"
-    echo "  backend"
-    echo "  fortune"
+    echo "${bold}workload${normal}"
+    echo "  ${bold}create${normal}"
+    echo "    backend"
+    echo "    frontend"
+    echo "    check-adopter"
+    echo "    fitness"
+    echo "    fortune"
+    echo "  ${bold}update${normal}"
+    echo "    backend"
+    echo "    check-adpoter"
+    echo "    fortune"
     echo
   	exit   
  
 }
 
-#workflow-dektBuild
-workflow-dektBuild() {
+#supplychain-dekt4pets
+supplychain-dekt4pets() {
 
     echo
-    echo "${bold}dektBuild workflow${normal}"
+    echo "${bold}dekt4pets supplychain${normal}"
+    echo "---------------------"
+    echo
+    echo "${bold}Workload Repositories${normal}"
+    echo "NAME                      URL                                                 STATUS"
+    echo "dekt4pets-source          https://github.com/dektlong/_dekt4pets-demo         Fetched revision: main"
+    echo
+    echo "${bold}Workload Images${normal}"
+    kp images list -n $APP_NAMESPACE
+    echo "${bold}Cluster Builders${normal}"
+    kp builder list -n $APP_NAMESPACE
+    echo "${bold}Image Scanners${normal}"
+    echo "NAME              URL"
+    echo "dekt-scanner      https://github.com/quay/clair"
+    echo
+    echo "${bold}Delivery${normal}"
+    echo "NAME                          KIND                INFO"
+    echo "dekt4pets-gateway             gateway-config      config/dekt4pets-gateway.yaml"
+    echo "dekt4pets-backend             app                 config/dekt4pets-backend-app.yaml"
+    echo "dekt4pets-backend-routes      api-routes          routes/dekt4pets-backend-routes.yaml"
+    echo "dekt4pets-backend-mapping     route-mapping       routes/dekt4pets-backend-mapping.yaml"
+    echo "dekt4pets-backend             app                 config/dekt4pets-frontend-app.yaml"
+    echo "dekt4pets-frontend-routes     api-routes          routes/dekt4pets-frontend-routes.yaml"
+    echo "dekt4pets-frontend-mapping    route-mapping       routes/dekt4pets-frontend-mapping.yaml"
+    echo
+}
+
+#supplychain-dektFitness
+supplychain-dektFitness() {
+
+    echo
+    echo "${bold}dekt4Fitness supplychain${normal}"
     echo "------------------"
     echo
-    echo "  ${bold}pipelines${normal}"
-    echo "      => build workload(s)"
-    echo "          => deploy workload(s)"
-    echo "              => apply api routes(s)"
-    echo
-    echo "  ${bold}workloads${normal}"
-    echo "      $DEMO_APP_GIT_REPO/workloads/dekt4pets/backend"
-    echo "      $DEMO_APP_GIT_REPO/workloads/dekt4pets/frontend"
-    echo
-    echo "  ${bold}builders${normal}"
-    echo "      online-stores-builder (dekt-apps namespace)"
-    echo "          tanzu-buildpacks/java"
-    echo "          tanzu-buildpacks/nodejs"
-    echo "          tanzu-buildpacks/java-native-image"
-    echo "          paketo-buildpacks/gradle"
-    echo
-    echo "  ${bold}images${normal}"
-    echo "      $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION"
-    echo "      $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION"
-    echo
-    echo "  ${bold}scanners${normal}"
-    echo "      https://github.com/quay/clair"
+    echo "WORK IN PROGRESS..."
     echo
 }
 
-#workflow-dektApiGrid
-workflow-dektApiGrid() {
-
-    echo
-    echo "${bold}dektApiGrid workflow${normal}"
-    echo "--------------------"
-    echo 
-    echo "  ${bold}micro-gateways${normal}"
-    echo "      supply-chain/datacheck-gateway.yaml (brownfield-apis namespace)"
-    echo "      supply-chain/donations-gateway.yaml (brownfield-apis namespace)"
-    echo "      supply-chain/suppliers-gateway.yaml (brownfield-apis namespace)"
-    echo "      supply-chain/dekt4pets-gateway.yaml (dekt-apps namespace)"
-    echo "      supply-chain/gateway/dekt4pets-ingress.yaml"
-    echo
-    echo "  ${bold}api-portals${normal}"
-    echo "      supply-chain/api-portal/api-portal-ingress.yaml"
-    echo "      supply-chain/api-portal/scg-openapi-ingress.yaml"
-    echo
-    echo "  ${bold}api-routes${normal}"      
-    echo "      workloads/dekt4pets/backend/routes/dekt4pets-backend-routes.yaml"
-    echo "      workloads/dekt4pets/frontend/routes/dekt4pets-frontend-routes.yaml"
-    echo
-}
-
-#create-workload
-create-workload () {
-
-    case $1 in
-    backend)
-        create-backend
-        ;;
-    frontend)
-        create-frontend 
-        ;;
-    fitness)
-        create-fitness
-        ;;
-    fortune)
-        create-fortune
-        ;;
-    *)
-  	    usage
-  	    ;;
-    esac
-}
-
-#update-workload
-update-workload () {
-
-    case $1 in
-    backend)
-        patch-backend
-        ;;
-    fortune)
-        update-fortune
-        ;;
-    *)
-  	    usage
-  	    ;;
-    esac
-}
-
-#workflows
-workflows () {
-
-    case $1 in
-    dektBuild)
-        workflow-dektBuild
-        ;;
-    dektApiGrid)
-        workflow-dektApiGrid 
-        ;;
-    *)
-  	    usage
-  	    ;;
-    esac
-}
 
 #################### main #######################
 
@@ -301,17 +325,11 @@ bold=$(tput bold)
 normal=$(tput sgr0)
 
 case $1 in
-create-workload)
-	create-workload $2
+supplychain)
+	supplychain $2
     ;;
-update-workload)
-	update-workload $2
-    ;;
-delete)
-    delete-workloads
-    ;;
-describe-workflow)
-    workflows $2
+workload)
+	workload $2 $3
     ;;
 *)
   	usage
