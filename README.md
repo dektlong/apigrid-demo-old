@@ -142,10 +142,26 @@ It is designed to run on any k8s.
   dekt4pets.<SUB_DOMAIN>.<DOMAIN>/api/check-adopter
   ```
   - you should see the 'Congratulations...' message with the same token you received following login
-#### Demo brownfield API use Cloud Native Runtime function
+#### Demo brownfield API use via a Cloud Native Runtime function
   - ```./tanzu-apps workload adopter-check ```
-  - ```curl -w'\n' -H 'Content-Type: text/plain' adopter-check.dekt-apps.cnr.dekt.io -d "datacheck.tanzu.dekt.io/adoption-history/109141744605375013560" ```
-  - ```./tanzu-apps workload adopter-check -u ```
+  - call the function via curl
+  ```
+    curl -w'\n' -H 'Content-Type: text/plain' adopter-check.dekt-apps.cnr.dekt.io \
+    -d "datacheck.tanzu.dekt.io/adoption-history/109141744605375013560"
+  ```
+  - example output
+  ```
+    Running adoption history check..
+
+    API: datacheck.tanzu.dekt.io/adoption-history/109141744605375013560
+    Result: APPROVED
+
+    Source: revision 1 of adopter-check
+  ```
+  - show how the function scales to zero after no use for 60 seconds
+  ``` kubectl get pods -n dekt-apps ```
+  - create a new revision
+  ```./tanzu-apps workload adopter-check -u ```
   - show how a new revision recieving 20% of the traffic is created
 
 ## Cleanup
