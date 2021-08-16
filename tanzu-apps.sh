@@ -172,11 +172,15 @@ update-fortune () {
 #adopter-check
 create-adopter-check () {
 
+    echo
+    echo "=========> Create Cloud Native Runtime service adopter-check..."
+    echo
     kn service create adopter-check \
         --image $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/adopter-check:0.0.1 \
         --env TARGET="revision 1 of adopter-check" \
         --revision-name adopter-check-v1 \
-        --namespace dekt-apps
+        --scale-max 10 \
+        --namespace $APP_NAMESPACE
 }
 
 #delete-workloads
