@@ -6,13 +6,23 @@ workload () {
 
     case $1 in
     backend)
-        create-backend
+        if [ "$2" == "-u" ]
+        then
+            patch-backend
+        else
+            create-backend
+        fi
         ;;
     frontend)
         create-frontend 
         ;;
     adopter-check)
-        create-adopter-check
+        if [ "$2" == "-u" ]
+        then
+            update-adopter-check
+        else
+            create-adopter-check
+        fi
         ;;
     fitness)
         create-fitness
@@ -172,14 +182,20 @@ update-fortune () {
 #adopter-check
 create-adopter-check () {
 
-    echo
-    echo "=========> Create Cloud Native Runtime service adopter-check..."
-    echo
     kn service create adopter-check \
         --image $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/adopter-check:0.0.1 \
         --env TARGET="revision 1 of adopter-check" \
         --revision-name adopter-check-v1 \
-        --scale-max 10 \
+        --namespace $APP_NAMESPACE
+}
+
+update-adopter-check () {
+
+    kn service create adopter-check \
+        --image $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/adopter-check:0.0.1 \
+        --env TARGET="revision 2 of adopter-check" \
+        --revision-name adopter-check-v2 \
+        --traffic adopter-check-v2=20,adopter-check-v2=80 \
         --namespace $APP_NAMESPACE
 }
 
@@ -233,6 +249,7 @@ usage() {
     echo "  fitness"
     echo "  fortune"
     echo
+    echo "(use -u for update)"
   	exit   
  
 }
@@ -291,10 +308,7 @@ supplychain)
 	supplychain $2
     ;;
 workload)
-	workload $2
-    ;;
-patch-backend)
-    patch-backend 
+	workload $2 $3
     ;;
 *)
   	usage
