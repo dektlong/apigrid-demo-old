@@ -79,14 +79,14 @@ It is designed to run on any k8s.
   - Show boiler-plate generated API configs
 
 ### The path-to-prod
-- ```./tanzu-apps.sh workload create backend```
+- ```./tanzu-apps.sh workload backend```
 - Show how build service detects git-repo changes and auto re-build backend-image (if required)
 - Show how the ```dekt4pets-gateway``` micro-gateway starts quickly as just a component of your app
 - Access API Hub on ```api-portal.<SUB_DOMAIN>.<DOMAIN>```
   - Show the dekt4Pets API group auto-populated with the API spec you defined
   - now the frontend team can easily discover and test the backend APIs and reuse
   - Show the other API groups ('brownfield APIs')
-- ```./tanzu-apps.sh workload create frontend```
+- ```./tanzu-apps.sh workload frontend```
 - Access Spring Boot Observer at ```http://sbo.<SUB_DOMAIN>.<DOMAIN>/apps``` to show actuator information on the backend application 
 - Show the new frontend APIs that where auto-populated to the API portal
 - This phase will also add an ingress rule to the gateway, now you can show:
@@ -133,7 +133,7 @@ It is designed to run on any k8s.
 	}
 
 ```
-- ```./tanzu-apps.sh workload update backend "```
+- ```./tanzu-apps.sh patch-backend "```
 - show how build-service is invoking a new image build based on the git-commit-id
 - run the new check-adopter api 
 ```
@@ -141,18 +141,6 @@ dekt4pets.<SUB_DOMAIN>.<DOMAIN>/api/check-adopter
 ```
 - you should see the 'Congratulations...' message with the same token you received following login
 
-## Cloud Native Runtime
-
-### Installation
-- run ```./demo-builder.sh init-aks cnr```
-- This script installs the following products
-  - App Accelerator
-  - Cloud Native Runtime
-### Service creation
-- ```./tanzu-apps.sh workload create fortune```
-
-### Service revision
-- ```./tanzu-apps.sh workload update fortune```
 
 ## Cleanup
 
