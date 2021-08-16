@@ -12,8 +12,8 @@ create-workload () {
     frontend)
         create-frontend 
         ;;
-    check-adopter)
-        create-check-adopter 
+    adopter-check)
+        create-adopter-check
         ;;
     fitness)
         create-fitness
@@ -213,13 +213,6 @@ create-adopter-check () {
         --env TARGET="revision 1 of adopter-check" \
         --revision-name adopter-check-v1 \
         --namespace dekt-apps
-
-    #test
-    #curl -w'\n' -H 'Content-Type: text/plain' adopter-check.dekt-apps.cnr.dekt.io -d "test"
-
-    # load test the service with Siege
-    # install on Mac with `brew install siege` 
-    #siege -d1  -c50 -t10S  --content-type="text/plain" 'adopter-check.dekt-apps.cnr.dekt.io POST test'
 }
 
 #delete-workloads
@@ -269,7 +262,7 @@ usage() {
     echo "  ${bold}create${normal}"
     echo "    backend"
     echo "    frontend"
-    echo "    check-adopter"
+    echo "    adopter-check"
     echo "    fitness"
     echo "    fortune"
     echo "  ${bold}update${normal}"
