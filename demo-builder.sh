@@ -215,10 +215,10 @@
     #setup-demo-examples
     setup-demo-examples() {
 
-        #echo
-        #echo "===> Setup SBO fortune service example..."
-        #echo
-        #kubectl apply -f supply-chain/sbo/config/fortune-sidecar-example.yaml -n $APP_NAMESPACE 
+        echo
+        echo "===> Setup SBO fortune service example..."
+        echo
+        kubectl apply -f supply-chain/sbo/config/fortune-sidecar-example.yaml -n $APP_NAMESPACE 
 
         echo
         echo "===> Setup App Accelerator examples..."
@@ -264,10 +264,7 @@
         --sub-path ./workloads/dekt4pets/frontend \
         --git-revision main \
         --wait
-    }
 
-    adopter-check ()
-    {
         echo
         echo "===> Create adopter-check TBS image..."
         echo        
@@ -275,26 +272,12 @@
         --tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/adopter-check:0.0.1 \
         --git $DEMO_APP_GIT_REPO \
         --git-revision main \
-        --sub-path ./workloads/dekt4pets/adopter-check \
+        --sub-path ./workloads/dekt4pets/adopter-check-cnr \
         --cluster-builder base \
         --env BP_JVM_VERSION=11 \
         --env BP_MAVEN_BUILD_ARGUMENTS="-Dmaven.test.skip=true package spring-boot:repackage" \
         --namespace $APP_NAMESPACE \
         --wait 
-
-        kn service create adopter-check \
-        --image $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/adopter-check:0.0.1 \
-        --env TARGET="revision 1 of adopter-check" \
-        --revision-name adopter-check-v1 \
-        --namespace dekt-apps
-
-        #test
-        curl -w'\n' -H 'Content-Type: text/plain' adopter-check.dekt-apps.cnr.dekt.io -d "test"
-
-        # load test the service with Siege
-        # install on Mac with `brew install siege` 
-        siege -d1  -c50 -t10S  --content-type="text/plain" 'adopter-check.dekt-apps.cnr.dekt.io POST test'
-
     }
 
 #################### helpers functions #############
