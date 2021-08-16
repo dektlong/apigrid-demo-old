@@ -20,7 +20,7 @@ public class SpringNativeFunctionKnativeApplication {
     @Bean
     public Function<String, String> hello() {
         return (in) -> {
-            return "Hello: " + in + ", Source: " + target;
+            return "Running adoption backgroud check using this API:" + in + ", Results: APPROVED" + ", Source: " + target;
         };
     }
 }

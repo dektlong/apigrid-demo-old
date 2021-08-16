@@ -205,8 +205,8 @@ update-fortune () {
         --namespace $APP_NAMESPACE 
 }
 
-#check-adopter
-create-check-adopter () {
+#adopter-check
+create-adopter-check () {
 
     kn service create adopter-check \
         --image $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/adopter-check:0.0.1 \
@@ -215,16 +215,11 @@ create-check-adopter () {
         --namespace dekt-apps
 
     #test
-    curl -w'\n' -H 'Content-Type: text/plain' adopter-check.dekt-apps.cnr.dekt.io -d "test"
+    #curl -w'\n' -H 'Content-Type: text/plain' adopter-check.dekt-apps.cnr.dekt.io -d "test"
 
     # load test the service with Siege
     # install on Mac with `brew install siege` 
-    siege -d1  -c50 -t10S  --content-type="text/plain" 'adopter-check.dekt-apps.cnr.dekt.io POST test'
-}
-
-update-check-adopter () {
-
-    echo "TBC, update-check-adopter"
+    #siege -d1  -c50 -t10S  --content-type="text/plain" 'adopter-check.dekt-apps.cnr.dekt.io POST test'
 }
 
 #delete-workloads
@@ -279,7 +274,7 @@ usage() {
     echo "    fortune"
     echo "  ${bold}update${normal}"
     echo "    backend"
-    echo "    check-adpoter"
+    echo "    adopter-check"
     echo "    fortune"
     echo
   	exit   
