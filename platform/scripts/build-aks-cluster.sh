@@ -37,25 +37,6 @@ delete-cluster() {
 
 }
 
-#start-octant
-start-octant() {
-
-	open -a Terminal supply-chain/k8s-builders/octant-wrapper.sh
-        
-    osascript -e 'tell application "Terminal" to set miniaturized of every window to true'
-}
-
-stop-octant() {
-	procid=$(pgrep octant)
-    if [ "$procid" == "" ]
-    then
-        echo "octant process is not running"
-    else 
-        kill $procid
-        osascript -e 'quit app "Terminal"'
-    fi
-}
-
 #incorrect usage
 incorrect-usage() {
 	
@@ -71,11 +52,11 @@ source secrets/config-values.env
 case $1 in 
 create)
 	create-cluster $2 $3
-	start-octant
+	platform/scripts/start-app.sh "octant-wrapper.sh"
 	;;
 delete)
 	delete-cluster $2
-	stop-octant
+	platform/scripts/stop-app.sh "octant"
   	;;
 *)
   	incorrect-usage

@@ -7,6 +7,17 @@ spec:
     name: datacheck-service
   routes:
     - predicates:
+        - Path=/api/v1/resources/dogs/all
+        - Method=GET
+      filters:
+        - RateLimit=1,20s
+    - predicates:
+        - Path=/api/v1/resources/dogs?number=*
+        - Method=GET
+    - predicates:
+        - Path=/api/v1/resources/dogs?index=*
+        - Method=GET
+    - predicates:
         - Path=/adoption-history/*
         - Method=GET
       ssoEnabled: true
