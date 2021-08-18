@@ -6,7 +6,7 @@ spec:
   git:
     url: https://github.com/dektlong/store-backend-api
     ref:
-      branch: master
+      branch: main
 ---
 apiVersion: accelerator.tanzu.vmware.com/v1alpha1
 kind: Accelerator
