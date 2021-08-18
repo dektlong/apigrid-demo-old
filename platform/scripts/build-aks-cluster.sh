@@ -52,7 +52,7 @@ source secrets/config-values.env
 case $1 in 
 create)
 	create-cluster $2 $3
-	platform/scripts/start-app.sh "octant-wrapper.sh"
+	platform/scripts/start-app.sh "octant"
 	;;
 delete)
 	delete-cluster $2
