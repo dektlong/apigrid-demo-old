@@ -57,7 +57,6 @@ create)
 delete)
 	delete-cluster $2
 	platform/scripts/stop-app.sh "octant"
-	platform/scripts/stop-app.sh "Python"
   	;;
 *)
   	incorrect-usage

@@ -248,6 +248,7 @@
 
         case $1 in
         aks)
+            platform/scripts/stop-app.sh "Python"
             platform/scripts/build-aks-cluster.sh delete $CLUSTER_NAME 
             ;;
         tkg)
@@ -397,6 +398,7 @@
         kubectl delete ns acc-system
         kubectl delete ns scgw-system 
         kubectl delete ns sbo-system 
+        platform/scripts/stop-app.sh "Python"
 
         
     }
