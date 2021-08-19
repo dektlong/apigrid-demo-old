@@ -166,10 +166,9 @@
         kubectl apply -f platform/acc/add-accelerators.yaml
         
         echo
-        echo "===> Setup brownfield APIs expamples..."
+        echo "===> Setup brownfield APIs examples..."
         echo
         kustomize build platform/api-portal | kubectl apply -f -
-        platform/scripts/start-app.sh dogfacts
 
         echo
         echo "===> Start dekt4pets micro-gateway with public access..."
@@ -344,9 +343,10 @@
         platform/scripts/replace-tokens.sh "platform/sbo" "sbo-ingress.yaml" "{HOST_NAME}" "$hostName"
         platform/scripts/replace-tokens.sh "platform/sbo" "fortune-sidecar-example.yaml" "{FORTUNE_IMAGE}" "$FORTUNE_IMAGE_LOCATION" "{OBSERVER_SIDECAR_IMAGE}" "$SBO_SIDECAR_IMAGE_LOCATION"
         platform/scripts/replace-tokens.sh "platform/sbo" "fortune-ingress.yaml" "{HOST_NAME}" "$SUB_DOMAIN.$DOMAIN"
-        platform/scripts/replace-tokens.sh "platform/api-portal" "datacheck-gateway.yaml" "{HOST_NAME}" "$hostName"
-        platform/scripts/replace-tokens.sh "platform/api-portal" "suppliers-gateway.yaml" "{HOST_NAME}" "$hostName"
-        platform/scripts/replace-tokens.sh "platform/api-portal" "donations-gateway.yaml" "{HOST_NAME}" "$hostName"
+        platform/scripts/replace-tokens.sh "platform/api-portal" "datacheck-brownfield-api.yaml" "{HOST_NAME}" "$hostName"
+        platform/scripts/replace-tokens.sh "platform/api-portal" "suppliers-brownfield-api.yaml" "{HOST_NAME}" "$hostName"
+        platform/scripts/replace-tokens.sh "platform/api-portal" "donations-brownfield-api.yaml" "{HOST_NAME}" "$hostName"
+        platform/scripts/replace-tokens.sh "platform/api-portal" "datacheck-ingress.yaml" "{HOST_NAME}" "$hostName"
         platform/scripts/replace-tokens.sh "workloads/dekt4pets/backend" "dekt4pets-backend-app.yaml" "{BACKEND_IMAGE}" "$DET4PETS_BACKEND_IMAGE_LOCATION" "{OBSERVER_SIDECAR_IMAGE}" "$SBO_SIDECAR_IMAGE_LOCATION"
         #platform/scripts/replace-tokens.sh "workloads/dekt4pets/frontend" "dekt4pets-frontend-app.yaml" "{FRONTEND_IMAGE}" "$DET4PETS_FRONTEND_IMAGE_LOCATION" 
         #workaround for TBS issue

@@ -15,9 +15,13 @@ spec:
       order: 0
       tags:
         - adoptions
+      title: "Login to the secure adoption portal"
+      description: "Login adopters to the secure adoption portal using SSO key"
     - predicates:
         - Path=/rescue/**
         - Method=GET
       order: 1000
       tags:
         - pets
+      title: "Public entry point to the adoption store"
+      description: "Public entry point to the adoption store. No adoption available until login"
