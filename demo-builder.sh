@@ -445,6 +445,20 @@
         docker push $DET4PETS_FRONTEND_IMAGE_LOCATION
     }
 
+    create-adopter-check-image () {
+
+        kp image save adopter-check-image -n $APP_NAMESPACE \
+            --tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/adopter-check:0.0.1 \
+            --git $DEMO_APP_GIT_REPO  \
+            --sub-path ./workloads/dekt4pets/adopter-check \
+            --cluster-builder tiny \
+            --env BP_BOOT_NATIVE_IMAGE=1 \
+            --env BP_JVM_VERSION=11 \
+            --env BP_MAVEN_BUILD_ARGUMENTS="-Dmaven.test.skip=true package spring-boot:repackage" \
+            --env BP_BOOT_NATIVE_IMAGE_BUILD_ARGUMENTS="-Dspring.spel.ignore=true -Dspring.xml.ignore=true -Dspring.native.remove-yaml-support=true --enable-all-security-services" \
+            --wait 
+    }
+
 #################### main ##########################
 
 case $1 in
