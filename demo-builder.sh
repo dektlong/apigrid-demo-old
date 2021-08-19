@@ -447,7 +447,7 @@
 
     create-adopter-check-image () {
 
-        kp image save adopter-check-image -n $APP_NAMESPACE \
+        kp image save adopter-check -n $APP_NAMESPACE \
             --tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/adopter-check:0.0.1 \
             --git $DEMO_APP_GIT_REPO  \
             --sub-path ./workloads/dekt4pets/adopter-check \

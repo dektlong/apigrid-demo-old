@@ -189,7 +189,6 @@ create-adopter-check () {
 
     kn service create adopter-check \
         --image $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/adopter-check:0.0.1 \
-        --env API_CALL="http://datacheck.tanzu.dekt.io/api/adoption-history?adopterID="
         --env TARGET="revision 1 of adopter-check" \
         --revision-name adopter-check-v1 \
         --namespace $APP_NAMESPACE
@@ -200,7 +199,6 @@ update-adopter-check () {
     kn service update adopter-check \
         --image $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/adopter-check:0.0.1 \
         --env TARGET="revision 2 of adopter-check" \
-        --env API_CALL="http://datacheck.tanzu.dekt.io/api/adoption-history?adopterID="
         --revision-name adopter-check-v2 \
         --traffic adopter-check-v2=30,adopter-check-v1=70 \
         --namespace $APP_NAMESPACE
