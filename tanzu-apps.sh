@@ -187,7 +187,7 @@ update-fortune () {
 #adopter-check
 create-adopter-check () {
 
-    kn service create adopter-check \
+    kn service create adoption \
         --image $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/adopter-check:0.0.1 \
         --env TARGET="revision 1 of adopter-check" \
         --revision-name adopter-check-v1 \
