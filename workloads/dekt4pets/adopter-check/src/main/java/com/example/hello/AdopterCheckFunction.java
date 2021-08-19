@@ -10,6 +10,9 @@ import java.util.function.Function;
 @SpringBootApplication
 public class AdopterCheckFunction {
 
+    @Value("${API_CALL:from-function}")
+    String api-call;
+
     @Value("${TARGET:from-function}")
     String target;
 
@@ -20,7 +23,7 @@ public class AdopterCheckFunction {
     @Bean
     public Function<String, String> hello() {
         return (in) -> {
-            return "\nRunning adoption history check..\n\nAPI: " + in + "\nResult: Adoption history is clean" + "\n\nSource: " + target;
+            return "\nRunning adoption history check..\n\nAPI: " + api-call + in + "\nResult: Adoption history is clean" + "\n\nSource: " + target;
         };
     }
 }
