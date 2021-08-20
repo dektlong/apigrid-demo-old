@@ -20,13 +20,13 @@ public class AdopterCheckFunction {
     @Bean
     public Function<String, String> hello() {
         return (in) -> {
-            String intro = "Welcome to " + target + "\n\n" + "Starting background checks for adoption candidate with id:" + id + "\n\n";
+            String intro = "Welcome to " + target + "\n\n" + "Starting background checks for adoption candidate with id:" + in + "\n\n";
             
             String adoptionHistory = "1. Running adoption history check...\nAPI: " + "datacheck.tanzu.dekt.io/api/adoption-history?adopterID=" + in + "\nResult: Adoption history is good\n\n"; 
 
             String backgroundCheck = "2. Searching for criminal record...\nAPI: " + "http://datacheck.tanzu.dekt.io/api/criminal-record/" + in + "\nResult: Criminal record is clean\n\n"; 
             
-            String summary = "Congratulations!. Candidate " + id + " is clear to adopt their next best friend.\n";
+            String summary = "Congratulations!. Candidate " + in + " is clear to adopt their next best friend.\n";
             
             return intro+adoptionHistory+backgroundCheck+summary;
         };
