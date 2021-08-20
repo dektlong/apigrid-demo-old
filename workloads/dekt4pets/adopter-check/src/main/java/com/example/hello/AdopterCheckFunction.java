@@ -24,7 +24,7 @@ public class AdopterCheckFunction {
             
             RestTemplate restTemplate = new RestTemplate();
 
-            String output = "\n\n*** Welcome to " + target + " ***";
+            String output = "\n\n*** Welcome to " + target + " ***\n";
 
             String adoptionHistoryAPI = "datacheck.tanzu.dekt.io/api/adoption-history?adopterID=" + in;
 
@@ -45,7 +45,7 @@ public class AdopterCheckFunction {
 		    catch (Exception e) {/*check failure*/}
             
 
-            output = output + "\n\n\nCongratulations!! Candidate " + in + " is clear to adopt their next best friend.\n";
+            output = output + "\n\nCongratulations!! Candidate " + in + " is clear to adopt their next best friend.\n";
             
             return output;
         };
