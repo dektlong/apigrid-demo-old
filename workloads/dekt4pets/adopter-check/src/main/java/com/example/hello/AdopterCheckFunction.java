@@ -26,7 +26,7 @@ public class AdopterCheckFunction {
 
             String backgroundCheck = "2. Searching for criminal record...\nAPI: " + "http://datacheck.tanzu.dekt.io/api/criminal-record/" + in + "\nResult: Criminal record is clean\n\n"; 
             
-            String summary = "Congratulations!. Candidate " + id + " is clear to adopt their next best friend.\n"
+            String summary = "Congratulations!. Candidate " + id + " is clear to adopt their next best friend.\n";
             
             return intro+adoptionHistory+backgroundCheck+summary;
         };
