@@ -20,7 +20,7 @@ public class AdopterCheckFunction {
     @Bean
     public Function<String, String> hello() {
         return (in) -> {
-            String intro = "Welcome to " + target + "\n\n" + "Starting background checks for adoption candidate with id:" + in + "\n\n";
+            String intro = "\n\n-----Welcome to " + target + "\n\n" + "Starting background checks for adoption candidate " + in + "\n\n";
             
             String adoptionHistory = "1. Running adoption history check...\nAPI: " + "datacheck.tanzu.dekt.io/api/adoption-history?adopterID=" + in + "\nResult: Adoption history is good\n\n"; 
 
