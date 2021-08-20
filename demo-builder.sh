@@ -251,7 +251,6 @@
 
         case $1 in
         aks)
-            platform/scripts/stop-app.sh "Python"
             platform/scripts/build-aks-cluster.sh delete $CLUSTER_NAME 
             ;;
         tkg)
