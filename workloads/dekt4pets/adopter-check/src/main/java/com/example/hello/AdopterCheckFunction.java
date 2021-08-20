@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.function.Function;
 
@@ -20,15 +21,35 @@ public class AdopterCheckFunction {
     @Bean
     public Function<String, String> hello() {
         return (in) -> {
-            String intro = "\n\n-----Welcome to " + target + "\n\n" + "Starting background checks for adoption candidate " + in + "\n\n";
             
-            String adoptionHistory = "1. Running adoption history check...\nAPI: " + "datacheck.tanzu.dekt.io/api/adoption-history?adopterID=" + in + "\nResult: Adoption history is good\n\n"; 
+            RestTemplate restTemplate = new RestTemplate();
 
-            String backgroundCheck = "2. Searching for criminal record...\nAPI: " + "http://datacheck.tanzu.dekt.io/api/criminal-record/" + in + "\nResult: Criminal record is clean\n\n"; 
+            String output = "\n\n-----Welcome to " + target + "\n\n" + "Starting background checks for adoption candidate " + in ;
+
+            String adoptionHistoryAPI = "datacheck.tanzu.dekt.io/api/adoption-history?adopterID=" + in;
+
+            String criminalRecordAPI = "http://datacheck.tanzu.dekt.io/api/criminal-record/" + in;
+
+   		    output = output + "\n\nRunnig adoption history check using API: " + adoptionHistoryAPI + " ...";   
+            try
+		    {
+   			    String adoptionHistoryResults = restTemplate.getForObject(adoptionHistoryAPI, String.class);
+                output = output + "\nResults: OK";
+		    }
+		    catch (Exception e) {}
+
+            output = output + "\n\nRunnig criminal record check using API: " + criminalRecordAPI + " ...";   
+            try
+		    {
+                String criminalRecordResults = restTemplate.getForObject(criminalRecordAPI, String.class);
+                output = output + "\nResults: OK";
+		    }
+		    catch (Exception e) {}
             
-            String summary = "Congratulations!! Candidate " + in + " is clear to adopt their next best friend.\n";
+
+            output = output + "\n\nCongratulations!! Candidate " + in + " is clear to adopt their next best friend.\n";
             
-            return intro+adoptionHistory+backgroundCheck+summary;
+            return output;
         };
     }
 }
