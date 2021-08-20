@@ -24,27 +24,25 @@ public class AdopterCheckFunction {
             
             RestTemplate restTemplate = new RestTemplate();
 
-            String output = "\n\n-----Welcome to " + target + "\n\n" + "Starting background checks for adoption candidate " + in ;
+            String output = "\n\nWelcome to " + target + "\n\n" + "Starting background checks for adoption candidate " + in ;
 
             String adoptionHistoryAPI = "datacheck.tanzu.dekt.io/api/adoption-history?adopterID=" + in;
 
             String criminalRecordAPI = "http://datacheck.tanzu.dekt.io/api/criminal-record/" + in;
 
-   		    output = output + "\n\nRunnig adoption history check using API: " + adoptionHistoryAPI + " ...";   
+   		    output = output + "\n\n=>Running adoption history check using API: " + adoptionHistoryAPI + " ...";   
             try
 		    {
    			    String adoptionHistoryResults = restTemplate.getForObject(adoptionHistoryAPI, String.class);
-                output = output + "\nResults: OK";
 		    }
-		    catch (Exception e) {}
+		    catch (Exception e) {/*check failure*/}
 
-            output = output + "\n\nRunnig criminal record check using API: " + criminalRecordAPI + " ...";   
+            output = output + "\n\n=>Running criminal record check using API: " + criminalRecordAPI + " ...";   
             try
 		    {
                 String criminalRecordResults = restTemplate.getForObject(criminalRecordAPI, String.class);
-                output = output + "\nResults: OK";
 		    }
-		    catch (Exception e) {}
+		    catch (Exception e) {/*check failure*/}
             
 
             output = output + "\n\nCongratulations!! Candidate " + in + " is clear to adopt their next best friend.\n";
