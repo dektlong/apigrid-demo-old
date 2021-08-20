@@ -187,7 +187,7 @@ update-fortune () {
 #adopter-check
 create-adopter-check () {
 
-    kn service create adoption \
+    kn service create adopter-check \
         --image $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/adopter-check:0.0.1 \
         --env TARGET="revision 1 of adopter-check" \
         --revision-name adopter-check-v1 \
@@ -271,17 +271,14 @@ supplychain-dekt4pets() {
     echo "---------------------"
     echo
     echo "${bold}Workload Repositories${normal}"
-    echo "NAME                      URL                                                 STATUS"
-    echo "dekt4pets-source          https://github.com/dektlong/_dekt4pets-demo         Fetched revision: main"
+    echo "NAME                      URL                                               STATUS"
+    echo "dekt4pets-backend         https://github.com/dektlong/dekt4pets-backend     Fetched revision: main"
+    echo "dekt4pets-frontend        https://github.com/dektlong/dekt4pets-frontend    Fetched revision: main"
     echo
     echo "${bold}Workload Images${normal}"
     kp images list -n $APP_NAMESPACE
     echo "${bold}Cluster Builders${normal}"
     kp builder list -n $APP_NAMESPACE
-    echo "${bold}Image Scanners${normal}"
-    echo "NAME              URL"
-    echo "dekt-scanner      https://github.com/quay/clair"
-    echo
     echo "${bold}Delivery${normal}"
     echo "NAME                          KIND                INFO"
     echo "dekt4pets-backend             app                 workload/dekt4petsconfig/dekt4pets-backend-app.yaml"

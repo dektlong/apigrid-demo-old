@@ -1,4 +1,4 @@
-apiVersion: accelerator.tanzu.vmware.com/v1alpha1
+apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
 kind: Accelerator
 metadata:
   name: backend-api-for-online-stores
@@ -8,7 +8,7 @@ spec:
     ref:
       branch: main
 ---
-apiVersion: accelerator.tanzu.vmware.com/v1alpha1
+apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
 kind: Accelerator
 metadata:
   name: frontend-ux-for-online-stores
@@ -18,7 +18,7 @@ spec:
     ref:
       branch: main
 ---
-apiVersion: accelerator.tanzu.vmware.com/v1alpha1
+apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
 kind: Accelerator
 metadata:
   name: api-microservices-workflow
@@ -28,7 +28,7 @@ spec:
     ref:
       branch: main
 ---
-apiVersion: accelerator.tanzu.vmware.com/v1alpha1
+apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
 kind: Accelerator
 metadata:
   name:  simple-workflow
@@ -38,7 +38,7 @@ spec:
     ref:
       branch: main
 ---
-apiVersion: accelerator.tanzu.vmware.com/v1alpha1
+apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
 kind: Accelerator
 metadata:
   name: multicluster-workflow
@@ -48,7 +48,7 @@ spec:
     ref:
       branch: main
 ---
-apiVersion: accelerator.tanzu.vmware.com/v1alpha1
+apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
 kind: Accelerator
 metadata:
   name: hello-function-azure
@@ -58,7 +58,7 @@ spec:
     ref:
       branch: master
 ---
-apiVersion: accelerator.tanzu.vmware.com/v1alpha1
+apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
 kind: Accelerator
 metadata:
   name: hello-fun-new
@@ -68,7 +68,7 @@ spec:
     ref:
       branch: master
 ---
-apiVersion: accelerator.tanzu.vmware.com/v1alpha1
+apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
 kind: Accelerator
 metadata:
   name: ebanking-service
@@ -78,7 +78,7 @@ spec:
     ref:
       branch: master
 ---
-apiVersion: accelerator.tanzu.vmware.com/v1alpha1
+apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
 kind: Accelerator
 metadata:
   name: music-store-steeltoe
@@ -88,7 +88,7 @@ spec:
     ref:
       branch: main
 ---
-apiVersion: accelerator.tanzu.vmware.com/v1alpha1
+apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
 kind: Accelerator
 metadata:
   name: hello-ruby
@@ -98,7 +98,7 @@ spec:
     ref:
       branch: master
 ---
-apiVersion: accelerator.tanzu.vmware.com/v1alpha1
+apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
 kind: Accelerator
 metadata:
   name: todo-service
@@ -108,7 +108,7 @@ spec:
     ref:
       branch: master
 ---
-apiVersion: accelerator.tanzu.vmware.com/v1alpha1
+apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
 kind: Accelerator
 metadata:
   name: dotnet-sqlserver-efcore
@@ -118,7 +118,7 @@ spec:
     ref:
       branch: main
 ---
-apiVersion: accelerator.tanzu.vmware.com/v1alpha1
+apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
 kind: Accelerator
 metadata:
   name: spring-postgres-jpa
@@ -128,7 +128,7 @@ spec:
     ref:
       branch: master
 ---
-apiVersion: accelerator.tanzu.vmware.com/v1alpha1
+apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
 kind: Accelerator
 metadata:
   name: jpa-sqlserver

@@ -13,7 +13,7 @@
     API_PORTAL_NAMESPACE="api-portal-system"
     SBO_NAMESPACE="sbo-system"
     BROWNFIELD_NAMESPACE="brownfield-apis"
-    ACC_INSTALL_BUNDLE="dev.registry.pivotal.io/app-accelerator/acc-install-bundle:0.1.0-snapshot"
+    ACC_INSTALL_BUNDLE="registry.pivotal.io/app-accelerator/acc-install-bundle:0.2.0 -o /tmp/acc-install-bundle"
     ACC_NAMESPACE="accelerator-system" #must be that specific name for now
 
 
@@ -68,9 +68,13 @@
 
         kubectl apply -f https://gist.githubusercontent.com/trisberg/f53bbaa0b8aacba0ec64372a6fb6acdf/raw/44a923959945d64bad5865566e4ee6628c3cdd1f/acc-flux2.yaml
 
-        imgpkg pull -b $ACC_INSTALL_BUNDLE -o /tmp/acc-install-bundle
+        #until k8s secret is supported
+        export acc_registry__server=registry.pivotal.io
+        export acc_registry__username=$TANZU_NETWORK_USER
+        export acc_registry__password=$TANZU_NETWORK_PASSWORD
         
-        export acc_server_service_type=ClusterIP
+        #we use ingress rule
+        #export acc_server_service_type=ClusterIP
 
         ytt -f /tmp/acc-install-bundle/config -f /tmp/acc-install-bundle/values.yml --data-values-env acc  \
             | kbld -f /tmp/acc-install-bundle/.imgpkg/images.yml -f- \
@@ -307,14 +311,6 @@
             --docker-password=$IMG_REGISTRY_PASSWORD \
             --namespace=$SBO_NAMESPACE
 
-        #enable ACC to access registry.pivotal.io
-
-        kubectl create secret docker-registry acc-image-regcred \
-            --docker-server=dev.registry.pivotal.io \
-            --docker-username=$TANZU_NETWORK_USER \
-            --docker-password=$TANZU_NETWORK_PASSWORD \
-            --namespace=$ACC_NAMESPACE 
-        
         #sso secret for dekt4pets-gatway 
         kubectl create secret generic dekt4pets-sso --from-env-file=secrets/dekt4pets-sso.txt -n $APP_NAMESPACE
 
