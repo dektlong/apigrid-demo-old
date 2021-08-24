@@ -288,6 +288,7 @@ supplychain-dekt4pets() {
     echo "dekt4pets-frontend-routes     api-routes          workloads/dekt4pets/frontend/routes/dekt4pets-frontend-routes.yaml"
     echo "dekt4pets-frontend-mapping    route-mapping       workloads/dekt4pets/frontend/routes/dekt4pets-frontend-mapping.yaml"
     echo "dekt4pets-gateway             gateway-config      platform/gateway/config/dekt4pets-gateway.yaml"
+    echo "dekt4pets-ingress             ingress-rule        platform/gateway/config/dekt4pets-ingress.yaml"
     echo
 }
 
