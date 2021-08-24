@@ -280,14 +280,14 @@ supplychain-dekt4pets() {
     echo "${bold}Cluster Builders${normal}"
     kp builder list -n $APP_NAMESPACE
     echo "${bold}Delivery${normal}"
-    echo "NAME                          KIND                INFO"
-    echo "dekt4pets-backend             app                 workload/dekt4petsconfig/dekt4pets-backend-app.yaml"
-    echo "dekt4pets-backend-routes      api-routes          routes/dekt4pets-backend-routes.yaml"
-    echo "dekt4pets-backend-mapping     route-mapping       routes/dekt4pets-backend-mapping.yaml"
-    echo "dekt4pets-frontend            app                 config/dekt4pets-frontend-app.yaml"
-    echo "dekt4pets-frontend-routes     api-routes          routes/dekt4pets-frontend-routes.yaml"
-    echo "dekt4pets-frontend-mapping    route-mapping       routes/dekt4pets-frontend-mapping.yaml"
-    echo "dekt4pets-gateway             gateway-config      config/dekt4pets-gateway.yaml"
+    echo "NAME                          KIND                PATH"
+    echo "dekt4pets-backend             app                 workloads/dekt4pets/backend/config/dekt4pets-backend-app.yaml"
+    echo "dekt4pets-backend-routes      api-routes          workloads/dekt4pets/backend/routes/dekt4pets-backend-routes.yaml"
+    echo "dekt4pets-backend-mapping     route-mapping       workloads/dekt4pets/backend/routes/dekt4pets-backend-mapping.yaml"
+    echo "dekt4pets-frontend            app                 workloads/dekt4pets/frontend/config/dekt4pets-frontend-app.yaml"
+    echo "dekt4pets-frontend-routes     api-routes          workloads/dekt4pets/frontend/routes/dekt4pets-frontend-routes.yaml"
+    echo "dekt4pets-frontend-mapping    route-mapping       workloads/dekt4pets/frontend/routes/dekt4pets-frontend-mapping.yaml"
+    echo "dekt4pets-gateway             gateway-config      platform/gateway/config/dekt4pets-gateway.yaml"
     echo
 }
 
