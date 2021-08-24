@@ -284,11 +284,15 @@ supplychain-dekt4pets() {
     echo "dekt4pets-backend             app                 workloads/dekt4pets/backend/config/dekt4pets-backend-app.yaml"
     echo "dekt4pets-backend-routes      api-routes          workloads/dekt4pets/backend/routes/dekt4pets-backend-routes.yaml"
     echo "dekt4pets-backend-mapping     route-mapping       workloads/dekt4pets/backend/routes/dekt4pets-backend-mapping.yaml"
+    echo
     echo "dekt4pets-frontend            app                 workloads/dekt4pets/frontend/config/dekt4pets-frontend-app.yaml"
     echo "dekt4pets-frontend-routes     api-routes          workloads/dekt4pets/frontend/routes/dekt4pets-frontend-routes.yaml"
     echo "dekt4pets-frontend-mapping    route-mapping       workloads/dekt4pets/frontend/routes/dekt4pets-frontend-mapping.yaml"
+    echo
     echo "dekt4pets-gateway             gateway-config      platform/gateway/config/dekt4pets-gateway.yaml"
     echo "dekt4pets-ingress             ingress-rule        platform/gateway/config/dekt4pets-ingress.yaml"
+    echo "api-portal-ingress            ingress-rule        platform/api-portal/config/api-portal-ingress.yaml"
+    echo "openapi-ingress               ingress-rule        platform/api-portal/config/scg-openapi-ingress.yaml"
     echo
 }
 
