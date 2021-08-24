@@ -270,16 +270,19 @@ supplychain-dekt4pets() {
     echo "${bold}dekt4pets supplychain${normal}"
     echo "---------------------"
     echo
+    echo
     echo "${bold}Workload Repositories${normal}"
     echo
     echo "NAME                      URL                                               STATUS"
     echo "dekt4pets-backend         https://github.com/dektlong/dekt4pets-backend     Fetched revision: main"
     echo "dekt4pets-frontend        https://github.com/dektlong/dekt4pets-frontend    Fetched revision: main"
     echo
+    echo
     echo "${bold}Workload Images${normal}"
     echo
     kp images list -n $APP_NAMESPACE
     echo "${bold}Cluster Builders${normal}"
+    echo
     echo
     kp builder list -n $APP_NAMESPACE
     echo "${bold}Delivery Flow${normal}"
