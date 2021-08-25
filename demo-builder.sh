@@ -66,7 +66,7 @@
         echo "===> Install Tanzu Application Accelerator..."
         echo
 
-        kubectl apply -f https://gist.githubusercontent.com/trisberg/f53bbaa0b8aacba0ec64372a6fb6acdf/raw/44a923959945d64bad5865566e4ee6628c3cdd1f/acc-flux2.yaml
+        kapp deploy -a flux -f https://github.com/fluxcd/flux2/releases/download/v0.15.0/install.yaml
 
         #until k8s secret is supported
         export acc_registry__server=registry.pivotal.io
