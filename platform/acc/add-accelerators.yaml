@@ -4,6 +4,7 @@ metadata:
   name: backend-api-for-online-stores
 spec:
   git:
+    interval: 10s
     url: https://github.com/dektlong/store-backend-api
     ref:
       branch: main
@@ -14,6 +15,7 @@ metadata:
   name: frontend-ux-for-online-stores
 spec:
   git:
+    interval: 10s
     url: https://github.com/dektlong/store-frontend-ux
     ref:
       branch: main
@@ -24,6 +26,7 @@ metadata:
   name: api-microservices-workflow
 spec:
   git:
+    interval: 10s
     url: https://github.com/dektlong/api-microservices-workflow
     ref:
       branch: main
