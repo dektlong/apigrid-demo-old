@@ -43,8 +43,8 @@ It is designed to run on any k8s.
 ## API Grid
 
 ### Installation
-- If you update / first install the core Tanzu services , run ```./demo-builder.sh upgrade core-images```
-- run ```./demo-builder.sh init-aks apigrid```
+- If you update / first install the core Tanzu services , run ```./builder.sh upgrade core-images```
+- run ```./builder.sh init-aks apigrid```
 - This script installs the following products
   - Spring Cloud Gateway
   - App Accelerator
@@ -73,19 +73,19 @@ It is designed to run on any k8s.
   - Select the ```API Driven Microservices workflow``` accelerator 
   - Select the options according to your DevOps policies
   - Generate the zip file and import the folder to your favorite IDE
-  - Show the supply chain created via ```./tanzu-apps.sh supplychain dekt4pets```
+  - Show the supply chain created via ```./pipeline.sh describe```
   - Show boiler-plate generated Build configs
   - Show boiler-plate generated API configs
 
 ### The path-to-prod
-- ```./tanzu-apps.sh workload backend```
+- ```./pipeline.sh backend```
 - Show how build service detects git-repo changes and auto re-build backend-image (if required)
 - Show how the ```dekt4pets-gateway``` micro-gateway starts quickly as just a component of your app
 - Access API Hub on ```api-portal.<SUB_DOMAIN>.<DOMAIN>```
   - Show the dekt4Pets API group auto-populated with the API spec you defined
   - now the frontend team can easily discover and test the backend APIs and reuse
   - Show the other API groups ('brownfield APIs')
-- ```./tanzu-apps.sh workload frontend```
+- ```./pipeline.sh frontend```
 - Access Spring Boot Observer at ```http://sbo.<SUB_DOMAIN>.<DOMAIN>/apps``` to show actuator information on the backend application 
 - Show the new frontend APIs that where auto-populated to the API portal
 - This phase will also add an ingress rule to the gateway, now you can show:
@@ -134,7 +134,7 @@ It is designed to run on any k8s.
 	  }
 
   ```
-  - ```./tanzu-apps.sh workload backend -u ```
+  - ```./pipeline.sh backend -u ```
   - show how build-service is invoking a new image build based on the git-commit-id
   - run the new check-adopter api 
   ```
@@ -142,7 +142,7 @@ It is designed to run on any k8s.
   ```
   - you should see the 'Congratulations...' message with the same token you received following login
 #### Demo brownfield API use via a Cloud Native Runtime function
-  - ```./tanzu-apps workload adopter-check ```
+  - ```./pipeline.sh adopter-check ```
   - call the function via curl
   ```
     curl -w'\n' -H 'Content-Type: text/plain' adopter-check.dekt-apps.cnr.dekt.io \
@@ -160,11 +160,11 @@ It is designed to run on any k8s.
   - show how the function scales to zero after no use for 60 seconds
   ``` kubectl get pods -n dekt-apps ```
   - create a new revision
-  ```./tanzu-apps workload adopter-check -u ```
+  ```./pipeline adopter-check -u ```
   - show how a new revision recieving 20% of the traffic is created
 
 ## Cleanup
 
-- ```./demo-builder.sh cleanup [ aks | tkg ]```
+- ```./builder.sh cleanup [ aks | tkg ]```
 
 # Enjoy!

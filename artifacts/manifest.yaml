@@ -1,0 +1,7 @@
+created: 2021-08-17T20:32:19.230238634Z
+plugins:
+- name: apps
+  description: Applications on Kubernetes
+  versions: []
+version: ""
+coreVersion: v0.1.0
