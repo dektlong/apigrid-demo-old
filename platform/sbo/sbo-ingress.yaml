@@ -13,6 +13,6 @@ spec:
           pathType: Prefix
           backend:
             service:
-              name: spring-boot-observer-server
+              name: application-live-view-server
               port:
                 number: 5112

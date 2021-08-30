@@ -1,0 +1,36 @@
+apiVersion: kontinue.io/v1alpha1
+kind: Workload
+metadata:
+  name: dekt4pets-backend
+  labels:
+    app.tanzu.vmware.com/workload-type: web
+
+spec:
+
+  metadata:
+    java-version: 11
+     
+  git:
+    url: harbor.apps.cf.tanzutime.com/dekt-apps/dekt4pets-backend:1.0.0
+    ref: {branch: main}
+    
+  services:
+    - apiVersion: services.tanzu.vmware.com/v1alpha1
+      kind: db-type
+
+  env:
+    - name: spring.profiles.active
+      value: k8s
+    - name: spring.security.oauth2.resourceserver.jwt.jwk-set-uri
+      valueFrom:
+        secretKeyRef:
+          name: dekt4pets-jwk
+          key: jwk-set-uri
+
+  resources:
+    requests:
+      memory: 1Gi
+      cpu: 100m
+    limits:
+      memory: 1Gi
+      cpu: 4000m

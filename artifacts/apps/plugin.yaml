@@ -1,6 +1,0 @@
-name: apps
-description: Applications on Kubernetes
-version: v0.1.0
-buildSHA: 81080c95324bf2b50d40e391df250e89dda4da41
-group: Build
-completionType: 0

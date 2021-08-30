@@ -16,9 +16,9 @@ spec:
     cors:
       allowedOrigins:
       - http://api-portal.tanzu.dekt.io
-  metrics:
-    wavefront:
-      secret: dekt4pets-observability
-  tracing:
-    wavefront:
-      secret: dekt4pets-observability
+  #metrics:
+  #  wavefront:
+  #    secret: dekt4pets-observability
+  #tracing:
+  #  wavefront:
+  #    secret: dekt4pets-observability

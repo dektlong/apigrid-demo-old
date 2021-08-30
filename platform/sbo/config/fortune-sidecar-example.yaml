@@ -18,10 +18,10 @@ spec:
       imagePullSecrets: 
         - name: imagereg-secret
       containers:
-      - image: harbor.apps.cf.tanzutime.com/dekt-apps/fortune-service:0.0.1
+      - image: gcr.io/dekt-system/fortune-service:0.0.1
         name: fortune-service
         resources: {}
-      - image: harbor.apps.cf.tanzutime.com/dekt-apps/spring-boot-observer-sidecar:0.0.1
+      - image: gcr.io/dekt-system/spring-boot-observer-sidecar:0.0.1
         name: sidecar
         env:
         - name: spring.boot.observer.sidecar.application-name

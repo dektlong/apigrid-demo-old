@@ -11,11 +11,10 @@
     SBO_SIDECAR_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/spring-boot-observer-sidecar:0.0.1
     GW_NAMESPACE="scgw-system"
     API_PORTAL_NAMESPACE="api-portal-system"
-    SBO_NAMESPACE="sbo-system"
+    SBO_NAMESPACE="app-live-view"
     BROWNFIELD_NAMESPACE="brownfield-apis"
     ACC_INSTALL_BUNDLE="registry.pivotal.io/app-accelerator/acc-install-bundle:0.2.0 -o /tmp/acc-install-bundle"
     ACC_NAMESPACE="accelerator-system" #must be that specific name for now
-
 
 #################### core functions ################
 
@@ -130,9 +129,9 @@
         echo "===> Installing Spring Boot Observer..."
         echo
     
-        # Create sbo deployment and ingress rule
-        kubectl apply -f platform/sbo/config/sbo-deployment.yaml -n $SBO_NAMESPACE
-        kubectl apply -f platform/sbo/config/sbo-ingress.yaml -n $SBO_NAMESPACE 
+        ytt -f /tmp/application-live-view-install-bundle/config -f /tmp/application-live-view-install-bundle/values.yml \
+            | kbld -f /tmp/application-live-view-install-bundle/.imgpkg/images.yml -f- \
+            | kapp deploy -y -n $SBO_NAMESPACE -a application-live-view -f-
     }
 
     #install-cnr (cloud native runtime)
@@ -217,7 +216,8 @@
 
         echo "Make sure the docker desktop deamon is running. Press any key to continue..."
         read
-        docker login -u $IMG_REGISTRY_USER -p $IMG_REGISTRY_PASSWORD $IMG_REGISTRY_URL
+        #docker login -u $IMG_REGISTRY_USER -p $IMG_REGISTRY_PASSWORD $IMG_REGISTRY_URL
+        docker login -u _json_key --password-stdin https://gcr.io < secrets/gcr-account.json 
         
         case $1 in
         gateway)
@@ -228,12 +228,15 @@
             ;;
         tbs)
             kbld relocate -f $TBS_INSTALL_DIR/images.lock --lock-output $TBS_INSTALL_DIR/images-relocated.lock --repository $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/build-service
+            
             ;;
         api-portal)
             $API_PORTAL_INSTALL_DIR/scripts/relocate-images.sh $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO
             ;;
         sbo)
-            platform/sbo/build-sbo-images.sh 
+            imgpkg pull -b registry.pivotal.io/app-live-view/application-live-view-install-bundle:0.1.0 \
+                -o /tmp/application-live-view-install-bundle
+            #platform/sbo/build-sbo-images.sh 
             ;;
         cnr)
             imgpkg copy --lock $CNR_INSTALL_DIR/cloud-native-runtimes-1.0.1.lock --to-repo $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/cnr --lock-output $CNR_INSTALL_DIR/relocated.lock --registry-verify-certs=false 
@@ -281,36 +284,37 @@
         kubectl create ns $SBO_NAMESPACE
         kubectl create ns $BROWNFIELD_NAMESPACE
 
+              
         #enable deployments in APP_NS to access private image registry 
         #need to be created with tbs cli and not kubectl to register the secret in TBS
         #can be reused by all other app deployments
-        export REGISTRY_PASSWORD=$IMG_REGISTRY_PASSWORD
+        
+        export REGISTRY_PASSWORD="$IMG_REGISTRY_PASSWORD"
         kp secret create imagereg-secret \
             --registry $IMG_REGISTRY_URL \
             --registry-user $IMG_REGISTRY_USER \
             --namespace $APP_NAMESPACE 
-    
-
+        
         #enable SCGW to access image registry (has to be that specific name)
         kubectl create secret docker-registry spring-cloud-gateway-image-pull-secret \
             --docker-server=$IMG_REGISTRY_URL \
             --docker-username=$IMG_REGISTRY_USER \
-            --docker-password=$IMG_REGISTRY_PASSWORD \
+            --docker-password="$IMG_REGISTRY_PASSWORD" \
             --namespace $GW_NAMESPACE
         
         #enable API-portal to access image registry (has to be that specific name)
         kubectl create secret docker-registry api-portal-image-pull-secret \
             --docker-server=$IMG_REGISTRY_URL \
             --docker-username=$IMG_REGISTRY_USER \
-            --docker-password=$IMG_REGISTRY_PASSWORD \
+            --docker-password="$IMG_REGISTRY_PASSWORD" \
             --namespace $API_PORTAL_NAMESPACE
         
         #enable SBO to access image registry
-        kubectl create secret docker-registry imagereg-secret \
-            --docker-server=$IMG_REGISTRY_URL \
-            --docker-username=$IMG_REGISTRY_USER \
-            --docker-password=$IMG_REGISTRY_PASSWORD \
-            --namespace=$SBO_NAMESPACE
+        kubectl create secret \
+            docker-registry alv-secret-values -n $SBO_NAMESPACE\
+            --docker-server=registry.pivotal.io \
+            --docker-username=$TANZU_NETWORK_USER \
+            --docker-password=$TANZU_NETWORK_PASSWORD
 
         #sso secret for dekt4pets-gatway 
         kubectl create secret generic dekt4pets-sso --from-env-file=secrets/dekt4pets-sso.txt -n $APP_NAMESPACE

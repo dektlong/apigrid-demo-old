@@ -16,9 +16,10 @@ spec:
     cors:
       allowedOrigins:
       - http://api-portal.{HOST_NAME}
-  metrics:
-    wavefront:
+  observability:
+    metrics:
+      wavefront:
       secret: dekt4pets-observability
-  tracing:
-    wavefront:
+    tracing:
+      wavefront:
       secret: dekt4pets-observability
