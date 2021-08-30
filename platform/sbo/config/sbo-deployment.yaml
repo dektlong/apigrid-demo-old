@@ -19,7 +19,7 @@ spec:
       imagePullSecrets: 
       - name: imagereg-secret
       containers:
-      - image: gcr.io/dekt-system/spring-boot-observer-server:0.0.1
+      - image: dektregistry.azurecr.io/dekt-system/spring-boot-observer-server:0.0.1
         name: spring-boot-observer-server
         resources: {}
 ---
