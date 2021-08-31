@@ -10,6 +10,8 @@ spec:
     metadata:
       labels:
         app: dekt4pets-backend
+        #tanzu.app.live.view: "true" #Enable pod to be discovered by connector
+        #tanzu.app.live.view.application.name: dekt4pets-backend-live-view 
     spec:
       imagePullSecrets: 
       - name: imagereg-secret
@@ -32,14 +34,6 @@ spec:
             limits:
               memory: "512Mi"
               cpu: "500m"
-       # - name: spring-observer-sidecar
-       #   image: {OBSERVER_SIDECAR_IMAGE}
-       #   env:
-       #     - name: spring.boot.observer.sidecar.application-name
-       #       value: dekt4pets-backend
-       #     - name: spring.boot.observer.client.host
-       #       value: spring-boot-observer-server.sbo-system.svc.cluster.local
-       #   resources: {} 
 ---
 apiVersion: v1
 kind: Service

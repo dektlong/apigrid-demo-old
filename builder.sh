@@ -7,11 +7,11 @@
     DET4PETS_FRONTEND_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION
     DET4PETS_BACKEND_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION
     FORTUNE_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/fortune-service:0.0.1
-    SBO_SERVER_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/spring-boot-observer-server:0.0.1
-    SBO_SIDECAR_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/spring-boot-observer-sidecar:0.0.1
+    ALV_SERVER_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/spring-boot-observer-server:0.0.1
+    ALV_SIDECAR_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/spring-boot-observer-sidecar:0.0.1
     GW_NAMESPACE="scgw-system"
     API_PORTAL_NAMESPACE="api-portal-system"
-    SBO_NAMESPACE="app-live-view"
+    ALV_NAMESPACE="app-live-view"
     BROWNFIELD_NAMESPACE="brownfield-apis"
     ACC_INSTALL_BUNDLE="registry.pivotal.io/app-accelerator/acc-install-bundle:0.2.0 -o /tmp/acc-install-bundle"
     ACC_NAMESPACE="accelerator-system" #must be that specific name for now
@@ -33,7 +33,7 @@
         
         install-api-portal
         
-        install-sbo
+        install-alv
 
         install-tbs
 
@@ -73,7 +73,7 @@
         export acc_registry__password=$TANZU_NETWORK_PASSWORD
         
         #we use ingress rule
-        #export acc_server_service_type=ClusterIP
+        export acc_server_service_type=ClusterIP
 
         ytt -f /tmp/acc-install-bundle/config -f /tmp/acc-install-bundle/values.yml --data-values-env acc  \
             | kbld -f /tmp/acc-install-bundle/.imgpkg/images.yml -f- \
@@ -122,16 +122,33 @@
     
     }
 
-    #install-sbo (spring boot observer)
-    install-sbo () {
+    #install-tap
+    install-tap() {
+
+        kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.5.3/cert-manager.yaml
+
+        kubectl create namespace cartographer-system
+
+        kapp deploy --yes -a cartographer -f ../cartographer/releases/release.yaml
+
+
+
+    }
+
+    #install-alv
+    install-alv () {
 
         echo
-        echo "===> Installing Spring Boot Observer..."
+        echo "===> Installing App Live View..."
         echo
     
-        ytt -f /tmp/application-live-view-install-bundle/config -f /tmp/application-live-view-install-bundle/values.yml \
+        ytt -f /tmp/application-live-view-install-bundle/config -f /tmp/application-live-view-install-bundle/values.yaml \
             | kbld -f /tmp/application-live-view-install-bundle/.imgpkg/images.yml -f- \
-            | kapp deploy -y -n $SBO_NAMESPACE -a application-live-view -f-
+            | kapp deploy -y -n $ALV_NAMESPACE -a application-live-view -f-
+
+        kubectl apply -f platform/alv/config/alv-ingress.yaml -n $ALV_NAMESPACE 
+
+        kubectl apply -f platform/alv/pet-clinic-alv.yaml -n $ALV_NAMESPACE 
     }
 
     #install-cnr (cloud native runtime)
@@ -159,15 +176,10 @@
     setup-demo-examples() {
 
         echo
-        echo "===> Setup SBO fortune service example..."
-        echo
-        kubectl apply -f platform/sbo/config/fortune-sidecar-example.yaml -n $APP_NAMESPACE 
-
-        echo
         echo "===> Setup App Accelerator examples..."
         echo
         kubectl apply -f platform/acc/add-accelerators.yaml
-        
+
         echo
         echo "===> Setup brownfield APIs examples..."
         echo
@@ -178,37 +190,9 @@
         echo
         kustomize build platform/gateway | kubectl apply -f -
 
-        echo
-        echo "===> Create dekt4pets builder..."
-        echo
-        kp builder create $BUILDER_NAME -n $APP_NAMESPACE \
-        --tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BUILDER_NAME \
-        --order platform/tbs/dekt-builder-order.yaml \
-        --stack full \
-        --store default
-    
-        echo
-        echo "===> Create dekt4pets-backend TBS image..."
-        echo        
-        kp image create $BACKEND_TBS_IMAGE -n $APP_NAMESPACE \
-        --tag $DET4PETS_BACKEND_IMAGE_LOCATION \
-        --git $DEMO_APP_GIT_REPO  \
-        --sub-path ./workloads/dekt4pets/backend \
-        --git-revision main \
-        --wait
-        #--builder $BUILDER_NAME 
+        create-dekt4pets-images
         
-      
-
-        echo
-        echo "===> Create dekt4pets-frontend TBS image..."
-        echo        
-        kp image create $FRONTEND_TBS_IMAGE -n $APP_NAMESPACE \
-        --tag $DET4PETS_FRONTEND_IMAGE_LOCATION \
-        --git $DEMO_APP_GIT_REPO  \
-        --sub-path ./workloads/dekt4pets/frontend \
-        --git-revision main \
-        --wait
+        create-adopter-check-image
     }
 
     #update-core-images
@@ -232,10 +216,9 @@
         api-portal)
             $API_PORTAL_INSTALL_DIR/scripts/relocate-images.sh $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO
             ;;
-        sbo)
+        alv)
             imgpkg pull -b registry.pivotal.io/app-live-view/application-live-view-install-bundle:0.1.0 \
                 -o /tmp/application-live-view-install-bundle
-            #platform/sbo/build-sbo-images.sh 
             ;;
         cnr)
             imgpkg copy --lock $CNR_INSTALL_DIR/cloud-native-runtimes-1.0.1.lock --to-repo $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/cnr --lock-output $CNR_INSTALL_DIR/relocated.lock --registry-verify-certs=false 
@@ -268,6 +251,62 @@
 
 #################### helpers functions #############
 
+    #create dekt4pets images
+    create-dekt4pets-images () {
+
+        echo
+        echo "===> Create dekt4pets builder..."
+        echo
+        kp builder create $BUILDER_NAME -n $APP_NAMESPACE \
+        --tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BUILDER_NAME \
+        --order platform/tbs/dekt-builder-order.yaml \
+        --stack full \
+        --store default
+    
+        echo
+        echo "===> Create dekt4pets-backend TBS image..."
+        echo        
+        kp image create $BACKEND_TBS_IMAGE -n $APP_NAMESPACE \
+        --tag $DET4PETS_BACKEND_IMAGE_LOCATION \
+        --git $DEMO_APP_GIT_REPO  \
+        --sub-path ./workloads/dekt4pets/backend \
+        --git-revision main \
+        --wait
+        #--builder $BUILDER_NAME 
+        
+      
+
+        echo
+        echo "===> Create dekt4pets-frontend TBS image..."
+        echo        
+        kp image create $FRONTEND_TBS_IMAGE -n $APP_NAMESPACE \
+        --tag $DET4PETS_FRONTEND_IMAGE_LOCATION \
+        --git $DEMO_APP_GIT_REPO  \
+        --sub-path ./workloads/dekt4pets/frontend \
+        --git-revision main \
+        --wait
+
+
+    }
+    
+    #create adopter-check image
+    create-adopter-check-image () {
+
+        echo
+        echo "===> Create adopter-check TBS image..."
+        echo 
+
+        kp image save adopter-check -n $APP_NAMESPACE \
+            --tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/adopter-check:0.0.1 \
+            --git $DEMO_APP_GIT_REPO  \
+            --sub-path ./workloads/dekt4pets/adopter-check \
+            --cluster-builder tiny \
+            --env BP_BOOT_NATIVE_IMAGE=1 \
+            --env BP_JVM_VERSION=11 \
+            --env BP_MAVEN_BUILD_ARGUMENTS="-Dmaven.test.skip=true package spring-boot:repackage" \
+            --env BP_BOOT_NATIVE_IMAGE_BUILD_ARGUMENTS="-Dspring.spel.ignore=true -Dspring.xml.ignore=true -Dspring.native.remove-yaml-support=true --enable-all-security-services" \
+            --wait 
+    }
     #create-namespaces-secrets
     create-namespaces-secrets () {
 
@@ -280,7 +319,7 @@
         kubectl create ns $GW_NAMESPACE
         kubectl create ns $API_PORTAL_NAMESPACE
         kubectl create ns $ACC_NAMESPACE
-        kubectl create ns $SBO_NAMESPACE
+        kubectl create ns $ALV_NAMESPACE
         kubectl create ns $BROWNFIELD_NAMESPACE
 
               
@@ -294,6 +333,12 @@
             --registry-user $IMG_REGISTRY_USER \
             --namespace $APP_NAMESPACE 
         
+        kubectl create secret docker-registry imagereg-secret \
+            --docker-server=$IMG_REGISTRY_URL \
+            --docker-username=$IMG_REGISTRY_USER \
+            --docker-password=$IMG_REGISTRY_PASSWORD \
+            --namespace $ALV_NAMESPACE
+
         #enable SCGW to access image registry (has to be that specific name)
         kubectl create secret docker-registry spring-cloud-gateway-image-pull-secret \
             --docker-server=$IMG_REGISTRY_URL \
@@ -308,9 +353,9 @@
             --docker-password=$IMG_REGISTRY_PASSWORD \
             --namespace $API_PORTAL_NAMESPACE
         
-        #enable SBO to access image registry
+        #enable ALV to access image registry
         kubectl create secret \
-            docker-registry alv-secret-values -n $SBO_NAMESPACE\
+            docker-registry alv-secret-values -n $ALV_NAMESPACE\
             --docker-server=registry.pivotal.io \
             --docker-username=$TANZU_NETWORK_USER \
             --docker-password=$TANZU_NETWORK_PASSWORD
@@ -339,15 +384,15 @@
         platform/scripts/replace-tokens.sh "platform/acc" "acc-ingress.yaml" "{HOST_NAME}" "$hostName"
         platform/scripts/replace-tokens.sh "platform/api-portal" "scg-openapi-ingress.yaml" "{HOST_NAME}" "$hostName"
         platform/scripts/replace-tokens.sh "platform/api-portal" "api-portal-ingress.yaml" "{HOST_NAME}" "$hostName"
-        platform/scripts/replace-tokens.sh "platform/sbo" "sbo-deployment.yaml" "{OBSERVER_SERVER_IMAGE}" "$SBO_SERVER_IMAGE_LOCATION"
-        platform/scripts/replace-tokens.sh "platform/sbo" "sbo-ingress.yaml" "{HOST_NAME}" "$hostName"
-        platform/scripts/replace-tokens.sh "platform/sbo" "fortune-sidecar-example.yaml" "{FORTUNE_IMAGE}" "$FORTUNE_IMAGE_LOCATION" "{OBSERVER_SIDECAR_IMAGE}" "$SBO_SIDECAR_IMAGE_LOCATION"
-        platform/scripts/replace-tokens.sh "platform/sbo" "fortune-ingress.yaml" "{HOST_NAME}" "$SUB_DOMAIN.$DOMAIN"
+        #platform/scripts/replace-tokens.sh "platform/alv" "alv-deployment.yaml" "{OBSERVER_SERVER_IMAGE}" "$ALV_SERVER_IMAGE_LOCATION"
+        platform/scripts/replace-tokens.sh "platform/alv" "alv-ingress.yaml" "{HOST_NAME}" "$hostName"
+        #platform/scripts/replace-tokens.sh "platform/alv" "fortune-sidecar-example.yaml" "{FORTUNE_IMAGE}" "$FORTUNE_IMAGE_LOCATION" "{OBSERVER_SIDECAR_IMAGE}" "$ALV_SIDECAR_IMAGE_LOCATION"
+        #platform/scripts/replace-tokens.sh "platform/alv" "fortune-ingress.yaml" "{HOST_NAME}" "$SUB_DOMAIN.$DOMAIN"
         platform/scripts/replace-tokens.sh "platform/api-portal" "datacheck-brownfield-api.yaml" "{HOST_NAME}" "$hostName"
         platform/scripts/replace-tokens.sh "platform/api-portal" "suppliers-brownfield-api.yaml" "{HOST_NAME}" "$hostName"
         platform/scripts/replace-tokens.sh "platform/api-portal" "donations-brownfield-api.yaml" "{HOST_NAME}" "$hostName"
         platform/scripts/replace-tokens.sh "platform/api-portal" "datacheck-ingress.yaml" "{HOST_NAME}" "$hostName"
-        platform/scripts/replace-tokens.sh "workloads/dekt4pets/backend" "dekt4pets-backend-app.yaml" "{BACKEND_IMAGE}" "$DET4PETS_BACKEND_IMAGE_LOCATION" "{OBSERVER_SIDECAR_IMAGE}" "$SBO_SIDECAR_IMAGE_LOCATION"
+        platform/scripts/replace-tokens.sh "workloads/dekt4pets/backend" "dekt4pets-backend-app.yaml" "{BACKEND_IMAGE}" "$DET4PETS_BACKEND_IMAGE_LOCATION" "{OBSERVER_SIDECAR_IMAGE}" "$ALV_SIDECAR_IMAGE_LOCATION"
         #platform/scripts/replace-tokens.sh "workloads/dekt4pets/frontend" "dekt4pets-frontend-app.yaml" "{FRONTEND_IMAGE}" "$DET4PETS_FRONTEND_IMAGE_LOCATION" 
         #workaround for TBS issue
         platform/scripts/replace-tokens.sh "workloads/dekt4pets/frontend" "dekt4pets-frontend-app.yaml" "{FRONTEND_IMAGE}" "springcloudservices/animal-rescue-frontend" 
@@ -392,15 +437,12 @@
         kustomize build legacy-apis | kubectl delete -f -
         helm uninstall spring-cloud-gateway -n $GW_NAMESPACE
         kapp deploy -a tanzu-build-service -y
-        kubectl delete -f platform/sbo/config/sbo-deployment.yaml -n $SBO_NAMESPACE
-        kubectl delete -f platform/sbo/config/sbo-ingress.yaml -n $SBO_NAMESPACE 
+        kubectl delete -f platform/alv/config/alv-deployment.yaml -n $ALV_NAMESPACE
+        kubectl delete -f platform/alv/config/alv-ingress.yaml -n $ALV_NAMESPACE 
         kubectl delete ns dekt-apps
         kubectl delete ns acc-system
         kubectl delete ns scgw-system 
-        kubectl delete ns sbo-system 
-        platform/scripts/stop-app.sh "Python"
-
-        
+        kubectl delete ns alv-system 
     }
 
     #incorrect usage
@@ -426,7 +468,7 @@
         echo "  acc"
         echo "  tbs"
         echo "  api-portal"
-        echo "  sbo"
+        echo "  alv"
         echo "  cnr"
         echo "  examples"
         echo "  configs"
@@ -445,19 +487,6 @@
         docker push $DET4PETS_FRONTEND_IMAGE_LOCATION
     }
 
-    create-adopter-check-image () {
-
-        kp image save adopter-check -n $APP_NAMESPACE \
-            --tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/adopter-check:0.0.1 \
-            --git $DEMO_APP_GIT_REPO  \
-            --sub-path ./workloads/dekt4pets/adopter-check \
-            --cluster-builder tiny \
-            --env BP_BOOT_NATIVE_IMAGE=1 \
-            --env BP_JVM_VERSION=11 \
-            --env BP_MAVEN_BUILD_ARGUMENTS="-Dmaven.test.skip=true package spring-boot:repackage" \
-            --env BP_BOOT_NATIVE_IMAGE_BUILD_ARGUMENTS="-Dspring.spel.ignore=true -Dspring.xml.ignore=true -Dspring.native.remove-yaml-support=true --enable-all-security-services" \
-            --wait 
-    }
 
 #################### main ##########################
 

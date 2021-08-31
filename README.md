@@ -63,19 +63,15 @@ It is designed to run on any k8s.
 - Development curated start 
   - Select ```onlinestore-dev``` tag
   - Select the ```Backend API for online-stores``` accelerator 
-  - Select the options according to the project
-  - Generate the zip file and import the folder to your favorite IDE
-  - Show immediate local build with ```mvn clean spring-boot:build-image```
-  - Show boiler-plate generated code configs
-  - Show boiler-plate generated API configs
+  - Select different deployment options and show generated files
+  - Select different API-grid options and show generated files
+
 - DevOps curated start 
   - Select ```onlinestore-devops``` tag
   - Select the ```API Driven Microservices workflow``` accelerator 
-  - Select the options according to your DevOps policies
-  - Generate the zip file and import the folder to your favorite IDE
+  - Select different deployment options and show generated files
+  - Select different API-grid options and show generated files
   - Show the supply chain created via ```./pipeline.sh describe```
-  - Show boiler-plate generated Build configs
-  - Show boiler-plate generated API configs
 
 ### The path-to-prod
 - ```./pipeline.sh backend```

@@ -19,7 +19,9 @@ spec:
   observability:
     metrics:
       wavefront:
+        enabled: true
+    wavefront:
       secret: dekt4pets-observability
-    tracing:
-      wavefront:
-      secret: dekt4pets-observability
+      source: dekt4pets-gateway
+      application: dekt4pets
+      service: dekt4pets-gateway

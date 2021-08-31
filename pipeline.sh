@@ -205,7 +205,7 @@ delete-workloads() {
 
     kn service delete adopter-check -n $APP_NAMESPACE 
 
-    kn service delete dekt-fortune -n $APP_NAMESPACE 
+    #kn service delete dekt-fortune -n $APP_NAMESPACE 
 
 }
 
