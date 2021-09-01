@@ -147,8 +147,6 @@
             | kapp deploy -y -n $ALV_NAMESPACE -a application-live-view -f-
 
         kubectl apply -f platform/alv/config/alv-ingress.yaml -n $ALV_NAMESPACE 
-
-        kubectl apply -f platform/alv/pet-clinic-alv.yaml -n $ALV_NAMESPACE 
     }
 
     #install-cnr (cloud native runtime)
@@ -190,6 +188,9 @@
         echo
         kustomize build platform/gateway | kubectl apply -f -
 
+
+        kubectl apply -f platform/alv/pet-clinic-alv.yaml -n $APP_NAMESPACE
+
         create-dekt4pets-images
         
         create-adopter-check-image
@@ -217,7 +218,7 @@
             $API_PORTAL_INSTALL_DIR/scripts/relocate-images.sh $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO
             ;;
         alv)
-            imgpkg pull -b registry.pivotal.io/app-live-view/application-live-view-install-bundle:0.1.0 \
+            imgpkg pull -b dev.registry.pivotal.io/app-live-view/application-live-view-install-bundle:0.1.1 \
                 -o /tmp/application-live-view-install-bundle
             ;;
         cnr)
@@ -333,12 +334,6 @@
             --registry-user $IMG_REGISTRY_USER \
             --namespace $APP_NAMESPACE 
         
-        kubectl create secret docker-registry imagereg-secret \
-            --docker-server=$IMG_REGISTRY_URL \
-            --docker-username=$IMG_REGISTRY_USER \
-            --docker-password=$IMG_REGISTRY_PASSWORD \
-            --namespace $ALV_NAMESPACE
-
         #enable SCGW to access image registry (has to be that specific name)
         kubectl create secret docker-registry spring-cloud-gateway-image-pull-secret \
             --docker-server=$IMG_REGISTRY_URL \
@@ -353,10 +348,15 @@
             --docker-password=$IMG_REGISTRY_PASSWORD \
             --namespace $API_PORTAL_NAMESPACE
         
-        #enable ALV to access image registry
+        #enable ALV server and ALV connector to access taznu net for install
         kubectl create secret \
             docker-registry alv-secret-values -n $ALV_NAMESPACE\
-            --docker-server=registry.pivotal.io \
+            --docker-server=dev.registry.pivotal.io \
+            --docker-username=$TANZU_NETWORK_USER \
+            --docker-password=$TANZU_NETWORK_PASSWORD
+        kubectl create secret \
+            docker-registry alv-secret-values -n $APP_NAMESPACE\
+            --docker-server=dev.registry.pivotal.io \
             --docker-username=$TANZU_NETWORK_USER \
             --docker-password=$TANZU_NETWORK_PASSWORD
 

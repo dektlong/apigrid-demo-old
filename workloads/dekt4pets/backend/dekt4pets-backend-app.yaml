@@ -1,17 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  labels:
+    app.kubernetes.io/name: dekt4pets-backend
   name: dekt4pets-backend
 spec:
   selector:
     matchLabels:
-      app: dekt4pets-backend
+      app.kubernetes.io/name: dekt4pets-backend
   template:
     metadata:
       labels:
-        app: dekt4pets-backend
-        #tanzu.app.live.view: "true" #Enable pod to be discovered by connector
-        #tanzu.app.live.view.application.name: dekt4pets-backend-live-view 
+        app.kubernetes.io/name: dekt4pets-backend
+        app.kubernetes.io/part-of: dekt4pets-backend
+        tanzu.app.live.view: "true"
+        tanzu.app.live.view.application.name: dekt4pets-backend-liveview
     spec:
       imagePullSecrets: 
       - name: imagereg-secret
