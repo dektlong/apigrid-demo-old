@@ -258,7 +258,7 @@
         echo
         echo "===> Create dekt4pets builder..."
         echo
-        kp builder create $BUILDER_NAME -n $APP_NAMESPACE \
+        kp builder save $BUILDER_NAME -n $APP_NAMESPACE \
         --tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BUILDER_NAME \
         --order platform/tbs/dekt-builder-order.yaml \
         --stack full \
@@ -267,7 +267,7 @@
         echo
         echo "===> Create dekt4pets-backend TBS image..."
         echo        
-        kp image create $BACKEND_TBS_IMAGE -n $APP_NAMESPACE \
+        kp image save $BACKEND_TBS_IMAGE -n $APP_NAMESPACE \
         --tag $DET4PETS_BACKEND_IMAGE_LOCATION \
         --git $DEMO_APP_GIT_REPO  \
         --sub-path ./workloads/dekt4pets/backend \
@@ -275,12 +275,10 @@
         --wait
         #--builder $BUILDER_NAME 
         
-      
-
         echo
         echo "===> Create dekt4pets-frontend TBS image..."
         echo        
-        kp image create $FRONTEND_TBS_IMAGE -n $APP_NAMESPACE \
+        kp image save $FRONTEND_TBS_IMAGE -n $APP_NAMESPACE \
         --tag $DET4PETS_FRONTEND_IMAGE_LOCATION \
         --git $DEMO_APP_GIT_REPO  \
         --sub-path ./workloads/dekt4pets/frontend \
