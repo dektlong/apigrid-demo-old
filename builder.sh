@@ -273,7 +273,6 @@
         --sub-path ./workloads/dekt4pets/backend \
         --git-revision main \
         --wait
-        #--builder $BUILDER_NAME 
         
         echo
         echo "===> Create dekt4pets-frontend TBS image..."
@@ -352,12 +351,7 @@
             --docker-server=dev.registry.pivotal.io \
             --docker-username=$TANZU_NETWORK_USER \
             --docker-password=$TANZU_NETWORK_PASSWORD
-        kubectl create secret \
-            docker-registry alv-secret-values -n $APP_NAMESPACE\
-            --docker-server=dev.registry.pivotal.io \
-            --docker-username=$TANZU_NETWORK_USER \
-            --docker-password=$TANZU_NETWORK_PASSWORD
-
+     
         #sso secret for dekt4pets-gatway 
         kubectl create secret generic dekt4pets-sso --from-env-file=secrets/dekt4pets-sso.txt -n $APP_NAMESPACE
 
@@ -431,16 +425,11 @@
         kubectl delete -f platform//gateway/config/dekt4pets-ingress.yaml -n $APP_NAMESPACE
         kustomize build platform/gateway | kubectl delete -f -
         #kustomize build acc | kubectl delete -f -
-        kapp delete -n $ACC_NAMESPACE -a accelerator -y
+        kapp delete -n -a accelerator -y
         kustomize build legacy-apis | kubectl delete -f -
         helm uninstall spring-cloud-gateway -n $GW_NAMESPACE
-        kapp deploy -a tanzu-build-service -y
-        kubectl delete -f platform/alv/config/alv-deployment.yaml -n $ALV_NAMESPACE
-        kubectl delete -f platform/alv/config/alv-ingress.yaml -n $ALV_NAMESPACE 
-        kubectl delete ns dekt-apps
-        kubectl delete ns acc-system
-        kubectl delete ns scgw-system 
-        kubectl delete ns alv-system 
+        kapp delete -a tanzu-build-service -y
+        kapp delete -a application-live-view -y
     }
 
     #incorrect usage
