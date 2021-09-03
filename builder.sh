@@ -4,11 +4,9 @@
 
     source secrets/config-values.env
     
-    DET4PETS_FRONTEND_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION
-    DET4PETS_BACKEND_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION
-    FORTUNE_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/fortune-service:0.0.1
-    ALV_SERVER_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/spring-boot-observer-server:0.0.1
-    ALV_SIDECAR_IMAGE_LOCATION=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/spring-boot-observer-sidecar:0.0.1
+    DET4PETS_FRONTEND_IMAGE_LOCATION=$PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION
+    DET4PETS_BACKEND_IMAGE_LOCATION=$PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION
+    TAP_INSTALL_NAMESPACE="tap-install"
     GW_NAMESPACE="scgw-system"
     API_PORTAL_NAMESPACE="api-portal-system"
     ALV_NAMESPACE="app-live-view"
@@ -27,25 +25,78 @@
 
         update-config-values
 
+        install-tap
+
         install-gateway
 
-        install-acc
-        
         install-api-portal
         
-        install-alv
-
-        install-tbs
-
         setup-demo-examples
-
-        install-cnr
 
         echo
         echo "Demo install completed. Enjoy your demo."
         echo
     }
 
+    #install-tap
+    install-tap() {
+
+        #tap package
+        echo
+        echo "===> Installing Tanzu Application Platform packages..."
+        echo
+
+        kapp deploy -y -a kc -f https://github.com/vmware-tanzu/carvel-kapp-controller/releases/latest/download/release.yml
+        kapp deploy -a tap-package-repo -n $TAP_INSTALL_NAMESPACE -f platform/tap/tap-package-repo.yaml -y
+
+        #wait for Reconcile to complete 
+        status=""
+        printf "Waiting for tanzu package repository list to reconcile ."
+        while [ "$status" == "" ]
+        do
+            printf "."
+            status="$(tanzu package repository list -n $TAP_INSTALL_NAMESPACE  -o=json | grep 'succeeded')" 
+            sleep 1
+        done
+        echo
+
+        tanzu package available list -n $TAP_INSTALL_NAMESPACE
+        echo
+
+        #acc package
+        echo
+        echo "===> Install Application Accelerator TAP package..."
+        echo
+        kapp deploy -y -a flux -f https://github.com/fluxcd/flux2/releases/download/v0.15.0/install.yaml
+        tanzu package install app-accelerator -p accelerator.apps.tanzu.vmware.com -v 0.2.0 -n $TAP_INSTALL_NAMESPACE -f platform/acc/config/acc-values.yaml
+        kubectl apply -f platform/acc/config/acc-ingress.yaml -n $ACC_NAMESPACE
+
+        #cnr package
+        echo
+        echo "===> Install Cloud Native Runtime TAP package..."
+        echo
+        tanzu package install cloud-native-runtimes -p cnrs.tanzu.vmware.com -v 1.0.1 -n tap-install -f platform/cnr/config/cnr-values.yaml
+        platform/scripts/update-dns.sh "envoy" "contour-external" "*.cnr"
+
+        #install alv
+        echo
+        echo "===> Install Application Live View TAP package..."
+        echo
+        #tanzu package install app-live-view -p appliveview.tanzu.vmware.com -v 0.1.0 -n tap-install -f platform/alv/config/alv-values.yaml
+        #kubectl apply -f platform/alv/config/alv-ingress.yaml -n $ACC_NAMESPACE
+        
+        #need to wait until seperate ns for the controller is supported in TAP, until then has to be installed seperatly 
+        install-alv 
+        
+        echo
+        echo "===> Installing Tanzu Build Service..."
+        echo
+        #not supported yet as a TAP pacakge    install-tbs #not supported yet as a TAP pacakge
+        install-tbs 
+
+
+    }
+    
     #install-gateway
     install-gateway() {
         
@@ -60,10 +111,6 @@
 
     #install tanzu app accelerator 
     install-acc() {
-
-        echo
-        echo "===> Install Tanzu Application Accelerator..."
-        echo
 
         kapp deploy -y -a flux -f https://github.com/fluxcd/flux2/releases/download/v0.15.0/install.yaml
 
@@ -86,15 +133,11 @@
     #install TBS
     install-tbs() {
         
-        echo
-        echo "===> Installing Tanzu Build Service..."
-        echo
-        
         ytt -f $TBS_INSTALL_DIR/values.yaml \
             -f $TBS_INSTALL_DIR/manifests/ \
-            -v docker_repository="$IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/build-service" \
-            -v docker_username="$IMG_REGISTRY_USER" \
-            -v docker_password="$IMG_REGISTRY_PASSWORD" \
+            -v docker_repository="$PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_SYSTEM_REPO/build-service" \
+            -v docker_username="$PRIVATE_REGISTRY_USER" \
+            -v docker_password="$PRIVATE_REGISTRY_PASSWORD" \
             | kbld -f $TBS_INSTALL_DIR/images-relocated.lock -f- \
             | kapp deploy -a tanzu-build-service -f- -y
 
@@ -122,26 +165,9 @@
     
     }
 
-    #install-tap
-    install-tap() {
-
-        kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.5.3/cert-manager.yaml
-
-        kubectl create namespace cartographer-system
-
-        kapp deploy --yes -a cartographer -f ../cartographer/releases/release.yaml
-
-
-
-    }
-
     #install-alv
     install-alv () {
 
-        echo
-        echo "===> Installing App Live View..."
-        echo
-    
         ytt -f /tmp/application-live-view-install-bundle/config -f /tmp/application-live-view-install-bundle/values.yaml \
             | kbld -f /tmp/application-live-view-install-bundle/.imgpkg/images.yml -f- \
             | kapp deploy -y -n $ALV_NAMESPACE -a application-live-view -f-
@@ -152,16 +178,12 @@
     #install-cnr (cloud native runtime)
     install-cnr() {
 
-        echo
-        echo "===> Installing Tanzu Cloud Native Runtime..."
-        echo
-
         kubectl apply -f https://github.com/vmware-tanzu/carvel-kapp-controller/releases/latest/download/release.yml
 
 
-        export cnr_registry__server=$IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/cnr
-        export cnr_registry__username=$IMG_REGISTRY_USER
-        export cnr_registry__password=$IMG_REGISTRY_PASSWORD
+        export cnr_registry__server=$PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_SYSTEM_REPO/cnr
+        export cnr_registry__username=$PRIVATE_REGISTRY_USER
+        export cnr_registry__password=$PRIVATE_REGISTRY_PASSWORD
         
         $CNR_INSTALL_DIR/bin/install.sh -y
 
@@ -201,28 +223,28 @@
 
         echo "Make sure the docker desktop deamon is running. Press any key to continue..."
         read
-        docker login -u $IMG_REGISTRY_USER -p $IMG_REGISTRY_PASSWORD $IMG_REGISTRY_URL
+        docker login -u $PRIVATE_REGISTRY_USER -p $PRIVATE_REGISTRY_PASSWORD $PRIVATE_REGISTRY_URL
         
         case $1 in
         gateway)
-            $GW_INSTALL_DIR/scripts/relocate-images.sh $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO
+            $GW_INSTALL_DIR/scripts/relocate-images.sh $PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_SYSTEM_REPO
             ;;
         acc)
             imgpkg pull -b $ACC_INSTALL_BUNDLE -o /tmp/acc-install-bundle
             ;;
         tbs)
-            kbld relocate -f $TBS_INSTALL_DIR/images.lock --lock-output $TBS_INSTALL_DIR/images-relocated.lock --repository $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/build-service
+            kbld relocate -f $TBS_INSTALL_DIR/images.lock --lock-output $TBS_INSTALL_DIR/images-relocated.lock --repository $PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_SYSTEM_REPO/build-service
             
             ;;
         api-portal)
-            $API_PORTAL_INSTALL_DIR/scripts/relocate-images.sh $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO
+            $API_PORTAL_INSTALL_DIR/scripts/relocate-images.sh $PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_SYSTEM_REPO
             ;;
         alv)
             imgpkg pull -b dev.registry.pivotal.io/app-live-view/application-live-view-install-bundle:0.1.1 \
                 -o /tmp/application-live-view-install-bundle
             ;;
         cnr)
-            imgpkg copy --lock $CNR_INSTALL_DIR/cloud-native-runtimes-1.0.1.lock --to-repo $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/cnr --lock-output $CNR_INSTALL_DIR/relocated.lock --registry-verify-certs=false 
+            imgpkg copy --lock $CNR_INSTALL_DIR/cloud-native-runtimes-1.0.1.lock --to-repo $PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_SYSTEM_REPO/cnr --lock-output $CNR_INSTALL_DIR/relocated.lock --registry-verify-certs=false 
             imgpkg pull --lock $CNR_INSTALL_DIR/relocated.lock -o $CNR_INSTALL_DIR
             ;;
         configs)
@@ -259,7 +281,7 @@
         echo "===> Create dekt4pets builder..."
         echo
         kp builder save $BUILDER_NAME -n $APP_NAMESPACE \
-        --tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BUILDER_NAME \
+        --tag $PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_APP_REPO/$BUILDER_NAME \
         --order platform/tbs/dekt-builder-order.yaml \
         --stack full \
         --store default
@@ -295,7 +317,7 @@
         echo 
 
         kp image save adopter-check -n $APP_NAMESPACE \
-            --tag $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/adopter-check:0.0.1 \
+            --tag $PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_APP_REPO/adopter-check:0.0.1 \
             --git $DEMO_APP_GIT_REPO  \
             --sub-path ./workloads/dekt4pets/adopter-check \
             --cluster-builder tiny \
@@ -319,30 +341,38 @@
         kubectl create ns $ACC_NAMESPACE
         kubectl create ns $ALV_NAMESPACE
         kubectl create ns $BROWNFIELD_NAMESPACE
+        kubectl create ns $TAP_INSTALL_NAMESPACE
+        
+        #tap install ns
+        kubectl create secret docker-registry tap-registry \
+            -n $TAP_INSTALL_NAMESPACE \
+            --docker-server=$TANZU_NETWORK_REGISTRY \
+            --docker-username=$TANZU_NETWORK_USER \
+            --docker-password=$TANZU_NETWORK_PASSWORD     
 
-              
+  
         #enable deployments in APP_NS to access private image registry 
         #need to be created with tbs cli and not kubectl to register the secret in TBS
         #can be reused by all other app deployments
         
-        export REGISTRY_PASSWORD=$IMG_REGISTRY_PASSWORD
+        export REGISTRY_PASSWORD=$PRIVATE_REGISTRY_PASSWORD
         kp secret create imagereg-secret \
-            --registry $IMG_REGISTRY_URL \
-            --registry-user $IMG_REGISTRY_USER \
+            --registry $PRIVATE_REGISTRY_URL \
+            --registry-user $PRIVATE_REGISTRY_USER \
             --namespace $APP_NAMESPACE 
         
         #enable SCGW to access image registry (has to be that specific name)
         kubectl create secret docker-registry spring-cloud-gateway-image-pull-secret \
-            --docker-server=$IMG_REGISTRY_URL \
-            --docker-username=$IMG_REGISTRY_USER \
-            --docker-password=$IMG_REGISTRY_PASSWORD \
+            --docker-server=$PRIVATE_REGISTRY_URL \
+            --docker-username=$PRIVATE_REGISTRY_USER \
+            --docker-password=$PRIVATE_REGISTRY_PASSWORD \
             --namespace $GW_NAMESPACE
         
         #enable API-portal to access image registry (has to be that specific name)
         kubectl create secret docker-registry api-portal-image-pull-secret \
-            --docker-server=$IMG_REGISTRY_URL \
-            --docker-username=$IMG_REGISTRY_USER \
-            --docker-password=$IMG_REGISTRY_PASSWORD \
+            --docker-server=$PRIVATE_REGISTRY_URL \
+            --docker-username=$PRIVATE_REGISTRY_USER \
+            --docker-password=$PRIVATE_REGISTRY_PASSWORD \
             --namespace $API_PORTAL_NAMESPACE
         
         #enable ALV server and ALV connector to access taznu net for install
@@ -371,23 +401,27 @@
 
         hostName=$SUB_DOMAIN.$DOMAIN
 
+        #gateway
         platform/scripts/replace-tokens.sh "platform/gateway" "dekt4pets-gateway.yaml" "{HOST_NAME}" "$hostName"
         platform/scripts/replace-tokens.sh "platform/gateway" "dekt4pets-ingress.yaml" "{HOST_NAME}" "$hostName"
+        #acc
         platform/scripts/replace-tokens.sh "platform/acc" "acc-ingress.yaml" "{HOST_NAME}" "$hostName"
+        #acc
+        platform/scripts/replace-tokens.sh "platform/cnr" "cnr-values.yaml" "{TANZU-NET-USER}" $TANZU_NETWORK_USER "{TANZU-NET-PASSWORD}" $TANZU_NETWORK_PASSWORD
+        #api-portal
         platform/scripts/replace-tokens.sh "platform/api-portal" "scg-openapi-ingress.yaml" "{HOST_NAME}" "$hostName"
         platform/scripts/replace-tokens.sh "platform/api-portal" "api-portal-ingress.yaml" "{HOST_NAME}" "$hostName"
-        #platform/scripts/replace-tokens.sh "platform/alv" "alv-deployment.yaml" "{OBSERVER_SERVER_IMAGE}" "$ALV_SERVER_IMAGE_LOCATION"
-        platform/scripts/replace-tokens.sh "platform/alv" "alv-ingress.yaml" "{HOST_NAME}" "$hostName"
-        #platform/scripts/replace-tokens.sh "platform/alv" "fortune-sidecar-example.yaml" "{FORTUNE_IMAGE}" "$FORTUNE_IMAGE_LOCATION" "{OBSERVER_SIDECAR_IMAGE}" "$ALV_SIDECAR_IMAGE_LOCATION"
-        #platform/scripts/replace-tokens.sh "platform/alv" "fortune-ingress.yaml" "{HOST_NAME}" "$SUB_DOMAIN.$DOMAIN"
+        #alv
+        platform/scripts/replace-tokens.sh "platform/alv/config" "alv-ingress.yaml" "{HOST_NAME}" "$hostName"
+        #brownfeild-apis
         platform/scripts/replace-tokens.sh "platform/api-portal" "datacheck-brownfield-api.yaml" "{HOST_NAME}" "$hostName"
         platform/scripts/replace-tokens.sh "platform/api-portal" "suppliers-brownfield-api.yaml" "{HOST_NAME}" "$hostName"
         platform/scripts/replace-tokens.sh "platform/api-portal" "donations-brownfield-api.yaml" "{HOST_NAME}" "$hostName"
         platform/scripts/replace-tokens.sh "platform/api-portal" "datacheck-ingress.yaml" "{HOST_NAME}" "$hostName"
+        #dekt4pets
         platform/scripts/replace-tokens.sh "workloads/dekt4pets/backend" "dekt4pets-backend-app.yaml" "{BACKEND_IMAGE}" "$DET4PETS_BACKEND_IMAGE_LOCATION" "{OBSERVER_SIDECAR_IMAGE}" "$ALV_SIDECAR_IMAGE_LOCATION"
-        #platform/scripts/replace-tokens.sh "workloads/dekt4pets/frontend" "dekt4pets-frontend-app.yaml" "{FRONTEND_IMAGE}" "$DET4PETS_FRONTEND_IMAGE_LOCATION" 
-        #workaround for TBS issue
         platform/scripts/replace-tokens.sh "workloads/dekt4pets/frontend" "dekt4pets-frontend-app.yaml" "{FRONTEND_IMAGE}" "springcloudservices/animal-rescue-frontend" 
+            #platform/scripts/replace-tokens.sh "workloads/dekt4pets/frontend" "dekt4pets-frontend-app.yaml" "{FRONTEND_IMAGE}" "$DET4PETS_FRONTEND_IMAGE_LOCATION" 
     
     }
     #install SCGW from source code
@@ -402,12 +436,12 @@
         #tar -xvf build/distributions/spring-cloud-gateway-k8s-0.0.0-$USER.tgz -C build/distributions
 
 
-        #../spring-cloud-gateway-k8s/build/distributions/spring-cloud-gateway-k8s-0.0.0-$USER/scripts/relocate-images.sh $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO
+        #../spring-cloud-gateway-k8s/build/distributions/spring-cloud-gateway-k8s-0.0.0-$USER/scripts/relocate-images.sh $PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_SYSTEM_REPO
 
         ../spring-cloud-gateway-k8s/build/distributions/spring-cloud-gateway-k8s-0.0.0-$USER/scripts/install-spring-cloud-gateway.sh \
          --namespace scgw-system \
-         --operator_image $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/scg-operator:0.0.0-dekt \
-         --gateway_image $IMG_REGISTRY_URL/$IMG_REGISTRY_SYSTEM_REPO/gateway:0.0.0-dekt \
+         --operator_image $PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_SYSTEM_REPO/scg-operator:0.0.0-dekt \
+         --gateway_image $PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_SYSTEM_REPO/gateway:0.0.0-dekt \
          --registry_credentials_secret spring-cloud-gateway-image-pull-secret
 
 

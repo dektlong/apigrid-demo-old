@@ -62,7 +62,7 @@ create-backend() {
     echo
     echo "=========> Apply backend app, service and routes ..."
     echo    
-    #kubectl set image deployment/dekt4pets-backend dekt4pets-backend=$IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION -n $APP_NAMESPACE
+    #kubectl set image deployment/dekt4pets-backend dekt4pets-backend=$PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION -n $APP_NAMESPACE
     kustomize build workloads/dekt4pets/backend | kubectl apply -f -
     
 }
@@ -161,7 +161,7 @@ create-fortune () {
 update-fortune () {
  
     kn service update dekt-fortune \
-        --image $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/fortune-service:0.0.1 \
+        --image $PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_APP_REPO/fortune-service:0.0.1 \
         --env TARGET="revision 2 of dekt-fortune" \
         --revision-name dekt-fortune-v2 \
         --traffic @latest=20,dekt-fortune-v1=80 \
@@ -172,7 +172,7 @@ update-fortune () {
 create-adopter-check () {
 
     kn service create adopter-check \
-        --image $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/adopter-check:0.0.1 \
+        --image $PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_APP_REPO/adopter-check:0.0.1 \
         --env TARGET="revision 1 of adopter-check" \
         --revision-name adopter-check-v1 \
         --namespace $APP_NAMESPACE
@@ -181,7 +181,7 @@ create-adopter-check () {
 update-adopter-check () {
 
     kn service update adopter-check \
-        --image $IMG_REGISTRY_URL/$IMG_REGISTRY_APP_REPO/adopter-check:0.0.1 \
+        --image $PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_APP_REPO/adopter-check:0.0.1 \
         --env TARGET="revision 2 of adopter-check" \
         --revision-name adopter-check-v2 \
         --traffic adopter-check-v2=30,adopter-check-v1=70 \
@@ -251,23 +251,30 @@ usage() {
 #supplychain-dekt4pets
 describe() {
 
+    
+    
     echo
     echo "${bold}dekt4pets supplychain${normal}"
     echo "---------------------"
     echo
-    echo "${bold}1. Workload Repositories${normal}"
+    echo "${bold}TAP installed packages${normal}"
+    echo
+    tanzu package available list -n tap-install
+    echo
+
+    echo "${bold}Workload Repositories${normal}"
     echo
     echo "NAME                      URL                                               STATUS"
     echo "dekt4pets-backend         https://github.com/dektlong/dekt4pets-backend     Fetched revision: main"
     echo "dekt4pets-frontend        https://github.com/dektlong/dekt4pets-frontend    Fetched revision: main"
     echo
-    echo "${bold}2. Workload Images${normal}"
+    echo "${bold}Workload Images${normal}"
     echo
     kp images list -n $APP_NAMESPACE
-    echo "${bold}3. Cluster Builders${normal}"
+    echo "${bold}Cluster Builders${normal}"
     echo
     kp builder list -n $APP_NAMESPACE
-    echo "${bold}4. Delivery Flow${normal}"
+    echo "${bold}Delivery Flow${normal}"
     echo
     echo "NAME                          KIND                PATH"
     echo "dekt4pets-backend             app                 workloads/dekt4pets/backend/config/dekt4pets-backend-app.yaml"
