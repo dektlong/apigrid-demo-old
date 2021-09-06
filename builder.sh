@@ -68,14 +68,14 @@
         echo "===> Install Application Accelerator TAP package..."
         echo
         kapp deploy -y -a flux -f https://github.com/fluxcd/flux2/releases/download/v0.15.0/install.yaml
-        tanzu package install app-accelerator -p accelerator.apps.tanzu.vmware.com -v 0.2.0 -n $TAP_INSTALL_NAMESPACE -f platform/acc/config/acc-values.yaml
+        tanzu package install app-accelerator -p accelerator.apps.tanzu.vmware.com -v 0.2.0 -n $TAP_INSTALL_NAMESPACE -f secrets/tap/acc-values.yaml
         kubectl apply -f platform/acc/config/acc-ingress.yaml -n $ACC_NAMESPACE
 
         #cnr package
         echo
         echo "===> Install Cloud Native Runtime TAP package..."
         echo
-        tanzu package install cloud-native-runtimes -p cnrs.tanzu.vmware.com -v 1.0.1 -n tap-install -f platform/cnr/config/cnr-values.yaml
+        tanzu package install cloud-native-runtimes -p cnrs.tanzu.vmware.com -v 1.0.1 -n tap-install -f secrets/tap/cnr-values.yaml
         platform/scripts/update-dns.sh "envoy" "contour-external" "*.cnr"
 
         #install alv
