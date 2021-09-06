@@ -406,13 +406,11 @@
         platform/scripts/replace-tokens.sh "platform/gateway" "dekt4pets-ingress.yaml" "{HOST_NAME}" "$hostName"
         #acc
         platform/scripts/replace-tokens.sh "platform/acc" "acc-ingress.yaml" "{HOST_NAME}" "$hostName"
-        #acc
-        platform/scripts/replace-tokens.sh "platform/cnr" "cnr-values.yaml" "{TANZU-NET-USER}" $TANZU_NETWORK_USER "{TANZU-NET-PASSWORD}" $TANZU_NETWORK_PASSWORD
-        #api-portal
+               #api-portal
         platform/scripts/replace-tokens.sh "platform/api-portal" "scg-openapi-ingress.yaml" "{HOST_NAME}" "$hostName"
         platform/scripts/replace-tokens.sh "platform/api-portal" "api-portal-ingress.yaml" "{HOST_NAME}" "$hostName"
         #alv
-        platform/scripts/replace-tokens.sh "platform/alv/config" "alv-ingress.yaml" "{HOST_NAME}" "$hostName"
+        platform/scripts/replace-tokens.sh "platform/alv" "alv-ingress.yaml" "{HOST_NAME}" "$hostName"
         #brownfeild-apis
         platform/scripts/replace-tokens.sh "platform/api-portal" "datacheck-brownfield-api.yaml" "{HOST_NAME}" "$hostName"
         platform/scripts/replace-tokens.sh "platform/api-portal" "suppliers-brownfield-api.yaml" "{HOST_NAME}" "$hostName"
