@@ -75,7 +75,7 @@
         echo
         echo "===> Install Cloud Native Runtime TAP package..."
         echo
-        tanzu package install cloud-native-runtimes -p cnrs.tanzu.vmware.com -v 1.0.1 -n tap-install -f secrets/tap/cnr-values.yaml
+        tanzu package install cloud-native-runtimes -p cnrs.tanzu.vmware.com -v 1.0.1 -n tap-install -f platform/cnr/config/cnr-values.yaml
         platform/scripts/update-dns.sh "envoy" "contour-external" "*.cnr"
 
         #install alv
@@ -168,7 +168,14 @@
     #install-alv
     install-alv () {
 
-        ytt -f /tmp/application-live-view-install-bundle/config -f /tmp/application-live-view-install-bundle/values.yaml \
+          #enable ALV server and ALV connector to access taznu net for install
+        kubectl create secret \
+            docker-registry alv-secret-values -n $ALV_NAMESPACE\
+            --docker-server=dev.registry.pivotal.io \
+            --docker-username=$TANZU_NETWORK_USER \
+            --docker-password=$TANZU_NETWORK_PASSWORD
+
+        ytt -f /tmp/application-live-view-install-bundle/config -f secrets/tap/alv-values.yaml \
             | kbld -f /tmp/application-live-view-install-bundle/.imgpkg/images.yml -f- \
             | kapp deploy -y -n $ALV_NAMESPACE -a application-live-view -f-
 
@@ -198,7 +205,7 @@
         echo
         echo "===> Setup App Accelerator examples..."
         echo
-        kubectl apply -f platform/acc/add-accelerators.yaml
+        kubectl apply -f platform/acc/add-accelerators.yaml -n $ACC_NAMESPACE
 
         echo
         echo "===> Setup brownfield APIs examples..."
@@ -374,14 +381,7 @@
             --docker-username=$PRIVATE_REGISTRY_USER \
             --docker-password=$PRIVATE_REGISTRY_PASSWORD \
             --namespace $API_PORTAL_NAMESPACE
-        
-        #enable ALV server and ALV connector to access taznu net for install
-        kubectl create secret \
-            docker-registry alv-secret-values -n $ALV_NAMESPACE\
-            --docker-server=dev.registry.pivotal.io \
-            --docker-username=$TANZU_NETWORK_USER \
-            --docker-password=$TANZU_NETWORK_PASSWORD
-     
+      
         #sso secret for dekt4pets-gatway 
         kubectl create secret generic dekt4pets-sso --from-env-file=secrets/dekt4pets-sso.txt -n $APP_NAMESPACE
 
