@@ -49,16 +49,7 @@
         kapp deploy -y -a kc -f https://github.com/vmware-tanzu/carvel-kapp-controller/releases/latest/download/release.yml
         kapp deploy -a tap-package-repo -n $TAP_INSTALL_NAMESPACE -f platform/tap/tap-package-repo.yaml -y
 
-        #wait for Reconcile to complete 
-        status=""
-        printf "Waiting for tanzu package repository list to reconcile ."
-        while [ "$status" == "" ]
-        do
-            printf "."
-            status="$(tanzu package repository list -n $TAP_INSTALL_NAMESPACE  -o=json | grep 'succeeded')" 
-            sleep 1
-        done
-        echo
+        wait-for-reconciler
 
         tanzu package available list -n $TAP_INSTALL_NAMESPACE
         echo
@@ -504,6 +495,19 @@
         docker pull springcloudservices/animal-rescue-frontend
         docker tag springcloudservices/animal-rescue-frontend:latest $DET4PETS_FRONTEND_IMAGE_LOCATION
         docker push $DET4PETS_FRONTEND_IMAGE_LOCATION
+    }
+
+    wait-for-reconciler () {
+        #wait for Reconcile to complete 
+        status=""
+        printf "Waiting for tanzu package repository list to reconcile ."
+        while [ "$status" == "" ]
+        do
+            printf "."
+            status="$(tanzu package repository list -n $TAP_INSTALL_NAMESPACE  -o=json | grep 'succeeded')" 
+            sleep 1
+        done
+        echo
     }
 
 
