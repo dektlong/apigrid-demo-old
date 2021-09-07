@@ -65,6 +65,7 @@
         echo
         tanzu package install cloud-native-runtimes -p cnrs.tanzu.vmware.com -v 1.0.1 -n tap-install -f secrets/tap/cnr-values.yaml
         platform/scripts/update-dns.sh "envoy" "contour-external" "*.cnr"
+        kubectl apply -f platform/cnr/cnr-domain-conifg.yaml
 
         #install alv
         echo
@@ -204,7 +205,7 @@
         echo
         echo "===> Setup App Accelerator examples..."
         echo
-        kubectl apply -f platform/acc/add-accelerators.yaml -n $ACC_NAMESPACE
+        kubectl apply -f platform/acc/add-accelerators.yaml -n accelerator-system #ns need to match secrets/tap/acc-values.yaml watched_namespace
 
         echo
         echo "===> Setup brownfield APIs examples..."
@@ -347,7 +348,7 @@
         kubectl create ns $API_PORTAL_NAMESPACE
         kubectl create ns $BROWNFIELD_NAMESPACE
         
-        #tap install ns
+        #tap secret
         kubectl create secret docker-registry tap-registry \
             -n $TAP_INSTALL_NAMESPACE \
             --docker-server=$TANZU_NETWORK_REGISTRY \
@@ -355,32 +356,31 @@
             --docker-password=$TANZU_NETWORK_PASSWORD     
 
   
-        #enable deployments in APP_NS to access private image registry 
-        #need to be created with tbs cli and not kubectl to register the secret in TBS
-        #can be reused by all other app deployments
-        
+        #apps secret        
         export REGISTRY_PASSWORD=$PRIVATE_REGISTRY_PASSWORD
         kp secret create imagereg-secret \
             --registry $PRIVATE_REGISTRY_URL \
             --registry-user $PRIVATE_REGISTRY_USER \
             --namespace $APP_NAMESPACE 
         
-        #enable SCGW to access image registry (has to be that specific name)
+        #scgw
         kubectl create secret docker-registry spring-cloud-gateway-image-pull-secret \
             --docker-server=$PRIVATE_REGISTRY_URL \
             --docker-username=$PRIVATE_REGISTRY_USER \
             --docker-password=$PRIVATE_REGISTRY_PASSWORD \
             --namespace $GW_NAMESPACE
         
-        #enable API-portal to access image registry (has to be that specific name)
+        #api-portal
         kubectl create secret docker-registry api-portal-image-pull-secret \
             --docker-server=$PRIVATE_REGISTRY_URL \
             --docker-username=$PRIVATE_REGISTRY_USER \
             --docker-password=$PRIVATE_REGISTRY_PASSWORD \
             --namespace $API_PORTAL_NAMESPACE
       
-        #sso secret for dekt4pets-gatway 
+        #sso secret for gatwway and portal
         kubectl create secret generic dekt4pets-sso --from-env-file=secrets/dekt4pets-sso.txt -n $APP_NAMESPACE
+        kubectl create secret generic sso-credentials --from-env-file=secrets/dekt4pets-sso.txt -n $API_PORTAL_NAMESPACE
+
 
         #jwt secret for dekt4pets backend app
         kubectl create secret generic dekt4pets-jwk --from-env-file=secrets/dekt4pets-jwk.txt -n $APP_NAMESPACE
