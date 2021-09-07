@@ -63,7 +63,7 @@
         echo
         echo "===> Install Cloud Native Runtime TAP package..."
         echo
-        tanzu package install cloud-native-runtimes -p cnrs.tanzu.vmware.com -v 1.0.1 -n tap-install -f platform/cnr/config/cnr-values.yaml
+        tanzu package install cloud-native-runtimes -p cnrs.tanzu.vmware.com -v 1.0.1 -n tap-install -f secrets/tap/cnr-values.yaml
         platform/scripts/update-dns.sh "envoy" "contour-external" "*.cnr"
 
         #install alv
