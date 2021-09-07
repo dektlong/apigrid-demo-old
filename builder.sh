@@ -9,10 +9,7 @@
     TAP_INSTALL_NAMESPACE="tap-install"
     GW_NAMESPACE="scgw-system"
     API_PORTAL_NAMESPACE="api-portal-system"
-    ALV_NAMESPACE="app-live-view"
     BROWNFIELD_NAMESPACE="brownfield-apis"
-    ACC_INSTALL_BUNDLE="registry.pivotal.io/app-accelerator/acc-install-bundle:0.2.0 -o /tmp/acc-install-bundle"
-    ACC_NAMESPACE="accelerator-system" #must be that specific name for now
 
 #################### core functions ################
 
@@ -60,7 +57,7 @@
         echo
         kapp deploy -y -a flux -f https://github.com/fluxcd/flux2/releases/download/v0.15.0/install.yaml
         tanzu package install app-accelerator -p accelerator.apps.tanzu.vmware.com -v 0.2.0 -n $TAP_INSTALL_NAMESPACE -f secrets/tap/acc-values.yaml
-        kubectl apply -f platform/acc/config/acc-ingress.yaml -n $ACC_NAMESPACE
+        kubectl apply -f platform/acc/config/acc-ingress.yaml -n accelerator-system #ns need to match secrets/tap/acc-values.yaml watched_namespace
 
         #cnr package
         echo
@@ -74,7 +71,7 @@
         echo "===> Install Application Live View TAP package..."
         echo
         #tanzu package install app-live-view -p appliveview.tanzu.vmware.com -v 0.1.0 -n tap-install -f platform/alv/config/alv-values.yaml
-        #kubectl apply -f platform/alv/config/alv-ingress.yaml -n $ACC_NAMESPACE
+        #kubectl apply -f platform/alv/config/alv-ingress.yaml -n app-live-view #ns need to match secrets/tap/alv-values.yaml server_namespace
         
         #need to wait until seperate ns for the controller is supported in TAP, until then has to be installed seperatly 
         install-alv 
@@ -100,8 +97,12 @@
         $GW_INSTALL_DIR/scripts/install-spring-cloud-gateway.sh --namespace $GW_NAMESPACE
     }
 
-    #install tanzu app accelerator 
+    #install tanzu app accelerator (deprecated when using TAP)
     install-acc() {
+
+        acc_ns="accelerator-system"
+
+        kubectl create ns $acc_ns
 
         kapp deploy -y -a flux -f https://github.com/fluxcd/flux2/releases/download/v0.15.0/install.yaml
 
@@ -115,9 +116,9 @@
 
         ytt -f /tmp/acc-install-bundle/config -f /tmp/acc-install-bundle/values.yml --data-values-env acc  \
             | kbld -f /tmp/acc-install-bundle/.imgpkg/images.yml -f- \
-            | kapp deploy -y -n $ACC_NAMESPACE  -a accelerator -f-
+            | kapp deploy -y -n $acc_ns -a accelerator -f-
 
-        kubectl apply -f platform/acc/config/acc-ingress.yaml -n $ACC_NAMESPACE
+        kubectl apply -f platform/acc/config/acc-ingress.yaml -n $acc_ns
 
     }
 
@@ -156,25 +157,32 @@
     
     }
 
-    #install-alv
+    #install-alv (deprecated when using TAP)
     install-alv () {
 
-          #enable ALV server and ALV connector to access taznu net for install
+        alv_ns="app-live-view"
+
+        kubeclt create ns $alv_ns
+
+        #enable ALV server and ALV connector to access taznu net for install
         kubectl create secret \
-            docker-registry alv-secret-values -n $ALV_NAMESPACE\
+            docker-registry alv-secret-values -n $alv_ns\
             --docker-server=dev.registry.pivotal.io \
             --docker-username=$TANZU_NETWORK_USER \
             --docker-password=$TANZU_NETWORK_PASSWORD
 
         ytt -f /tmp/application-live-view-install-bundle/config -f secrets/tap/alv-values.yaml \
             | kbld -f /tmp/application-live-view-install-bundle/.imgpkg/images.yml -f- \
-            | kapp deploy -y -n $ALV_NAMESPACE -a application-live-view -f-
+            | kapp deploy -y -n $alv_ns-a application-live-view -f-
 
-        kubectl apply -f platform/alv/config/alv-ingress.yaml -n $ALV_NAMESPACE 
+        kubectl apply -f platform/alv/config/alv-ingress.yaml -n $alv_ns
     }
 
-    #install-cnr (cloud native runtime)
+    #install-cnr (deprecated when using TAP)
     install-cnr() {
+
+        
+        cnr_install_dir="/Users/dekt-code/code/servercloud-native-runtimes"
 
         kubectl apply -f https://github.com/vmware-tanzu/carvel-kapp-controller/releases/latest/download/release.yml
 
@@ -333,13 +341,11 @@
         echo
         
         #namespaces
+        kubectl create ns $TAP_INSTALL_NAMESPACE
         kubectl create ns $APP_NAMESPACE
         kubectl create ns $GW_NAMESPACE
         kubectl create ns $API_PORTAL_NAMESPACE
-        kubectl create ns $ACC_NAMESPACE
-        kubectl create ns $ALV_NAMESPACE
         kubectl create ns $BROWNFIELD_NAMESPACE
-        kubectl create ns $TAP_INSTALL_NAMESPACE
         
         #tap install ns
         kubectl create secret docker-registry tap-registry \

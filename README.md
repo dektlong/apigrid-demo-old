@@ -29,12 +29,18 @@ It is designed to run on any k8s.
 
 - Create a folder named ```secrets``` in the APIGridDemo root directory
 
-- Create ```dekt4pets-jwk.txt``` and ```dekt4pets-sso.txt``` credential files and place them in the ```secrets``` directory
-  
-- Copy ```config-values-UPDATE_ME``` to ```secrets``` directory and renamed it to ```config-values.env```
+- Copy ```platform/config-values-UPDATE_ME``` to ```secrets``` directory and renamed it to ```config-values.env```
 
 - Set all variables in ```config-values.env```
   - Note: all yaml files that are updated in runtime will be copied to ```config``` sub-directory in their respective directories during the demo-builder phase
+
+- create a folder ```secrets/tap``` and create all the ```TAP_PACKAGE_NAME-values.yaml``` files (see TAP documentations)
+  - currently the following products are installed as TAP packages
+    * App accelerator
+    * App live view
+    * Cloud native runtime
+
+- Create ```dekt4pets-jwk.txt``` and ```dekt4pets-sso.txt``` credential files and place them in the ```secrets``` directory
 
 - The ingress setup is based on GoDaddy DNS, if you are using a different one, please modify the ```update-dns``` function in ```demo-builder.sh``` 
 
