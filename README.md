@@ -40,7 +40,7 @@ It is designed to run on any k8s.
     * App live view
     * Cloud native runtime
 
-- Create ```dekt4pets-jwk.txt``` and ```dekt4pets-sso.txt``` credential files and place them in the ```secrets``` directory
+- Create ```sso-creds.txt```, ```wavefront-creds.txt``` and ```jwt-credts.txt``` credential files and place them in the ```secrets``` directory
 
 - The ingress setup is based on GoDaddy DNS, if you are using a different one, please modify the ```update-dns``` function in ```demo-builder.sh``` 
 
