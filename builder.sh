@@ -163,7 +163,7 @@
 
         alv_ns="app-live-view"
 
-        kubeclt create ns $alv_ns
+        kubectl create ns $alv_ns
 
         #enable ALV server and ALV connector to access taznu net for install
         kubectl create secret \
@@ -215,7 +215,8 @@
         echo
         echo "===> Start dekt4pets micro-gateway with public access..."
         echo
-        kustomize build platform/gateway | kubectl apply -f -
+        kubectl apply -f workloads/dekt4pets/gateway/config/dekt4pets-gateway.yaml -n $APP_NAMESPACE
+        kubectl apply -f workloads/dekt4pets/gateway/config/dekt4pets-ingress.yaml -n $APP_NAMESPACE
 
 
         kubectl apply -f platform/alv/pet-clinic-alv.yaml -n $APP_NAMESPACE
@@ -380,7 +381,7 @@
       
         #sso secret for gatwway and portal
         kubectl create secret generic sso-secret --from-env-file=secrets/sso-creds.txt -n $APP_NAMESPACE
-        #kubectl create secret generic sso-credentials --from-env-file=secrets/dekt-apigrid-sso.txt -n $API_PORTAL_NAMESPACE
+        kubectl create secret generic sso-credentials --from-env-file=secrets/sso-creds.txt -n $API_PORTAL_NAMESPACE
 
 
         #jwt secret for dekt4pets backend app
@@ -400,12 +401,9 @@
 
         hostName=$SUB_DOMAIN.$DOMAIN
 
-        #gateway
-        platform/scripts/replace-tokens.sh "platform/gateway" "dekt4pets-gateway.yaml" "{HOST_NAME}" "$hostName"
-        platform/scripts/replace-tokens.sh "platform/gateway" "dekt4pets-ingress.yaml" "{HOST_NAME}" "$hostName"
         #acc
         platform/scripts/replace-tokens.sh "platform/acc" "acc-ingress.yaml" "{HOST_NAME}" "$hostName"
-               #api-portal
+        #api-portal
         platform/scripts/replace-tokens.sh "platform/api-portal" "scg-openapi-ingress.yaml" "{HOST_NAME}" "$hostName"
         platform/scripts/replace-tokens.sh "platform/api-portal" "api-portal-ingress.yaml" "{HOST_NAME}" "$hostName"
         #alv
@@ -413,7 +411,9 @@
         #dekt4pets
         platform/scripts/replace-tokens.sh "workloads/dekt4pets/backend" "dekt4pets-backend-app.yaml" "{BACKEND_IMAGE}" "$DET4PETS_BACKEND_IMAGE_LOCATION" "{OBSERVER_SIDECAR_IMAGE}" "$ALV_SIDECAR_IMAGE_LOCATION"
         platform/scripts/replace-tokens.sh "workloads/dekt4pets/frontend" "dekt4pets-frontend-app.yaml" "{FRONTEND_IMAGE}" "springcloudservices/animal-rescue-frontend" 
-            #platform/scripts/replace-tokens.sh "workloads/dekt4pets/frontend" "dekt4pets-frontend-app.yaml" "{FRONTEND_IMAGE}" "$DET4PETS_FRONTEND_IMAGE_LOCATION" 
+        platform/scripts/replace-tokens.sh "workloads/dekt4pets/gateway" "dekt4pets-gateway.yaml" "{HOST_NAME}" "$hostName"
+        platform/scripts/replace-tokens.sh "workloads/dekt4pets/gateway" "dekt4pets-ingress.yaml" "{HOST_NAME}" "$hostName"
+        #platform/scripts/replace-tokens.sh "workloads/dekt4pets/frontend" "dekt4pets-frontend-app.yaml" "{FRONTEND_IMAGE}" "$DET4PETS_FRONTEND_IMAGE_LOCATION" 
     
     }
     #install SCGW from source code

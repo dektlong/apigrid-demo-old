@@ -38,7 +38,7 @@ public class AnimalController {
 		}
 		return principal.getName();
 	}
-	
+
 	@GetMapping("/animals")
 	public Iterable<Animal> getAllAnimals() {
 		LOGGER.info("Received get all animals request");

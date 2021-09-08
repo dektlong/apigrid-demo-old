@@ -27,14 +27,6 @@ workload () {
     fitness)
         create-fitness
         ;;
-    fortune)
-        if [ "$2" == "-u" ]
-        then
-            update-fortune
-        else
-            create-fortune
-        fi
-        ;;
     *)
   	    usage
   	    ;;
@@ -63,7 +55,9 @@ create-backend() {
     echo "=========> Apply backend app, service and routes ..."
     echo    
     #kubectl set image deployment/dekt4pets-backend dekt4pets-backend=$PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION -n $APP_NAMESPACE
-    kustomize build workloads/dekt4pets/backend | kubectl apply -f -
+    kubectl apply -f workloads/dekt4pets/backend/config/dekt4pets-backend-app.yaml -n $APP_NAMESPACE
+    kubectl apply -f workloads/dekt4pets/backend/routes/dekt4pets-backend-routes.yaml -n $APP_NAMESPACE
+    kubectl apply -f workloads/dekt4pets/backend/routes/dekt4pets-backend-mapping.yaml -n $APP_NAMESPACE
     
 }
 
@@ -73,8 +67,9 @@ create-frontend() {
     echo
     echo "=========> Apply frontend app, service and routes ..."
     echo
-	
-    kustomize build workloads/dekt4pets/frontend | kubectl apply -f -
+	kubectl apply -f workloads/dekt4pets/frontend/config/dekt4pets-frontend-app.yaml -n $APP_NAMESPACE
+    kubectl apply -f workloads/dekt4pets/frontend/routes/dekt4pets-frontend-routes.yaml -n $APP_NAMESPACE
+    kubectl apply -f workloads/dekt4pets/frontend/routes/dekt4pets-frontend-mapping.yaml -n $APP_NAMESPACE
 
 }
 
@@ -116,11 +111,9 @@ patch-backend() {
     echo
     echo "=========> Apply changes to backend app, service and routes ..."
     echo
-    
-    #workaround for image refresh issue
-    kubectl delete -f workloads/dekt4pets/backend/dekt4pets-backend-app.yaml -n $APP_NAMESPACE > /dev/null 
-        
-    kustomize build workloads/dekt4pets/backend | kubectl apply -f -
+    kubectl apply -f workloads/dekt4pets/backend/config/dekt4pets-backend-app.yaml -n $APP_NAMESPACE
+    kubectl apply -f workloads/dekt4pets/backend/routes/dekt4pets-backend-routes.yaml -n $APP_NAMESPACE
+    kubectl apply -f workloads/dekt4pets/backend/routes/dekt4pets-backend-mapping.yaml -n $APP_NAMESPACE
 
 }
 
