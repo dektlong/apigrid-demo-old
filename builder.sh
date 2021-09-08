@@ -24,7 +24,7 @@
 
         install-tap
 
-        install-gateway
+        install-gw-operator
 
         install-api-portal
         
@@ -86,8 +86,8 @@
 
     }
     
-    #install-gateway
-    install-gateway() {
+    #install-gw-operator
+    install-gw-operator() {
         
         echo
         echo "===> Installing Spring Cloud Gateway operator..."
