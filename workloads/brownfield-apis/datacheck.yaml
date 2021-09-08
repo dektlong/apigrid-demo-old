@@ -15,25 +15,34 @@ spec:
         - RateLimit=3,60s
       title: "Verify a clean pet adotion history"
       description: "Verify a clean pet adoption history for a given adoper's social security / taxId number "
+      tags:
+        - Compatibility
+    - predicates:
+        - Path=/api/good-credit
+        - Method=GET
+        - Query=adopterID
+      ssoEnabled: true
+      title: "Verify a good credit score"
+      description: "Verify a good credit score for a given adoper's social security / taxId number "
+      tags:
+        - Identity
     - predicates:
         - Path=/api/criminal-record/*
         - Method=GET
       ssoEnabled: true
       tokenRelay: true
-      title: "Run a criminal record check"
+      title: "Run criminal-record check"
+      description: "Run a criminal record check for a given adoper's social security / taxId number"
+      tags:
+        - Identity
     - predicates:
         - Path=/api/house-visit-request/*/date/**
         - Method=POST,PUT,DELETE
       ssoEnabled: true
       tokenRelay: true
       title: "Manage house-visits requests"
-    - uri: https://opentdb.com
-      predicates:
-        - Path=/api.php
-        - Method=GET
-        - Query=difficulty
-      title: "Generate check-adoper question"
-      description: "Generate a random true/false animal's related question for adopter knowledge check. Difficulty choices: easy, medium, hard "
+      tags:
+        - Compatibility
 ---
 apiVersion: "tanzu.vmware.com/v1"
 kind: SpringCloudGateway
@@ -42,13 +51,13 @@ metadata:
 spec:
   count: 1
   api:
-    serverUrl: http://datacheck.{HOST_NAME}
-    title: Background Check Services
-    description: APIs to help with background checks on pet adopters
+    serverUrl: http://datacheck.tanzu.dekt.io
+    title: User Verification Services
+    description: External API approved for use to provide various user verification ser
     version: 0.5.0
     cors:
       allowedOrigins:
-      - http://api-portal.{HOST_NAME}
+      - http://api-portal.tanzu.dekt.io
 ---
 apiVersion: v1
 kind: Service

@@ -1,13 +1,13 @@
 apiVersion: "tanzu.vmware.com/v1"
 kind: SpringCloudGatewayRouteConfig
 metadata:
-  name: donations-routes-config
+  name: insurance-routes-config
 spec:
   service: 
-    name: donations-brownfield-proxy
+    name: insurance-brownfield-proxy
   routes:
     - predicates:
-        - Path=/list-donations
+        - Path=/list-insurance
         - Method=GET
       ssoEnabled: true
     - predicates:
@@ -15,27 +15,27 @@ spec:
         - Method=POST
       ssoEnabled: true
       filters:
-      - CircuitBreaker="donationsCircuitBreaker,forward:/alternate-donation-service"
+      - CircuitBreaker="insuranceCircuitBreaker,forward:/alternate-donation-service"
 ---
 apiVersion: "tanzu.vmware.com/v1"
 kind: SpringCloudGateway
 metadata:
-  name: donations-gateway
+  name: insurance-gateway
 spec:
   count: 1
   api:
-    serverUrl: http://donations.{HOST_NAME}
-    title: Donation Processing 
-    description: APIs to help with processing donations
+    serverUrl: http://insurance.tanzu.dekt.io
+    title: Insurace Quotes
+    description: APIs to help with self-service application for an insurance quote
     version: 0.5.0
     cors:
       allowedOrigins:
-      - http://api-portal.{HOST_NAME}
+      - http://api-portal.tanzu.dekt.io
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: donations-brownfield-proxy
+  name: insurance-brownfield-proxy
 spec:
   ports:
     - port: 80
@@ -44,9 +44,9 @@ spec:
 apiVersion: "tanzu.vmware.com/v1"
 kind: SpringCloudGatewayMapping
 metadata:
-  name: donations-routes-mapping
+  name: insurance-routes-mapping
 spec:
   gatewayRef:
-    name: donations-gateway
+    name: insurance-gateway
   routeConfigRef:
-    name: donations-routes-config
+    name: insurance-routes-config

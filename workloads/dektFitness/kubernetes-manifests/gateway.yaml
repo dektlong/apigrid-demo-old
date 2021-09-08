@@ -5,9 +5,9 @@ metadata:
 spec:
   api:
     serverUrl: http://acme.tanzu.dekt.io
-    title: "ACME Fitness Gateway"
-    description: "ACME Fitness application for Spring Cloud Gateway commercial product demos."
-    documentation: "https://github.com/spring-cloud-services-samples/acme_fitness_demo/"
+    title: "ACME Fitness Store"
+    description: "Micro Gateway to control API-driven microservices in the ACME Fitness Store"
+    documentation: "https://vmware.wavefront.com/u/pZqvsbb9p6?t=vmware"
     version: "1.0.0-K8s"
     cors:
       allowedOrigins:
@@ -17,6 +17,15 @@ spec:
       - "PUT"
       - "POST"
       - "DELETE"
+  observability:
+    metrics:
+      wavefront:
+        enabled: true
+    wavefront:
+      secret: wavefront-secret
+      source: gateway-acme
+      application: ACME Fitness Store
+      service: acme-fitness
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress

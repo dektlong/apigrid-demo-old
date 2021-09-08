@@ -5,7 +5,7 @@ metadata:
 spec:
   count: 2
   sso:
-    secret: dekt4pets-sso
+    secret: sso-secret
   api:
     serverUrl: http://dekt4pets.{HOST_NAME}
     title: Dekt4Pets
@@ -21,7 +21,7 @@ spec:
       wavefront:
         enabled: true
     wavefront:
-      secret: dekt4pets-observability
+      secret: wavefront-secret
       source: dekt4pets-gateway
       application: dekt4pets
       service: dekt4pets-gateway

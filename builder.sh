@@ -208,9 +208,9 @@
         kubectl apply -f platform/acc/add-accelerators.yaml -n accelerator-system #ns need to match secrets/tap/acc-values.yaml watched_namespace
 
         echo
-        echo "===> Setup brownfield APIs examples..."
+        echo "===> Add brownfield APIs examples..."
         echo
-        kustomize build platform/api-portal | kubectl apply -f -
+        kustomize build workloads/brownfield-apis | kubectl apply -f -
 
         echo
         echo "===> Start dekt4pets micro-gateway with public access..."
@@ -347,6 +347,7 @@
         kubectl create ns $GW_NAMESPACE
         kubectl create ns $API_PORTAL_NAMESPACE
         kubectl create ns $BROWNFIELD_NAMESPACE
+        kubectl create ns acme-fitness
         
         #tap secret
         kubectl create secret docker-registry tap-registry \
@@ -378,15 +379,16 @@
             --namespace $API_PORTAL_NAMESPACE
       
         #sso secret for gatwway and portal
-        kubectl create secret generic dekt4pets-sso --from-env-file=secrets/dekt4pets-sso.txt -n $APP_NAMESPACE
-        kubectl create secret generic sso-credentials --from-env-file=secrets/dekt4pets-sso.txt -n $API_PORTAL_NAMESPACE
+        kubectl create secret generic sso-secret --from-env-file=secrets/sso-creds.txt -n $APP_NAMESPACE
+        #kubectl create secret generic sso-credentials --from-env-file=secrets/dekt-apigrid-sso.txt -n $API_PORTAL_NAMESPACE
 
 
         #jwt secret for dekt4pets backend app
-        kubectl create secret generic dekt4pets-jwk --from-env-file=secrets/dekt4pets-jwk.txt -n $APP_NAMESPACE
+        kubectl create secret generic jwk-secret --from-env-file=secrets/jwk-creds.txt -n $APP_NAMESPACE
 
-        #wavefront secret for dekt4pets apps
-        kubectl create secret generic dekt4pets-observability --from-env-file=secrets/dekt4pets-observability-creds.txt -n $APP_NAMESPACE
+        #wavefront secret for dekt4pets and acme-fitness app
+        kubectl create secret generic wavefront-secret --from-env-file=secrets/wavefront-creds.txt -n $APP_NAMESPACE
+        kubectl create secret generic wavefront-secret --from-env-file=secrets/wavefront-creds.txt -n acme-fitness
     }
 
     #update-config-values
@@ -408,11 +410,6 @@
         platform/scripts/replace-tokens.sh "platform/api-portal" "api-portal-ingress.yaml" "{HOST_NAME}" "$hostName"
         #alv
         platform/scripts/replace-tokens.sh "platform/alv" "alv-ingress.yaml" "{HOST_NAME}" "$hostName"
-        #brownfeild-apis
-        platform/scripts/replace-tokens.sh "platform/api-portal" "datacheck-brownfield-api.yaml" "{HOST_NAME}" "$hostName"
-        platform/scripts/replace-tokens.sh "platform/api-portal" "suppliers-brownfield-api.yaml" "{HOST_NAME}" "$hostName"
-        platform/scripts/replace-tokens.sh "platform/api-portal" "donations-brownfield-api.yaml" "{HOST_NAME}" "$hostName"
-        platform/scripts/replace-tokens.sh "platform/api-portal" "datacheck-ingress.yaml" "{HOST_NAME}" "$hostName"
         #dekt4pets
         platform/scripts/replace-tokens.sh "workloads/dekt4pets/backend" "dekt4pets-backend-app.yaml" "{BACKEND_IMAGE}" "$DET4PETS_BACKEND_IMAGE_LOCATION" "{OBSERVER_SIDECAR_IMAGE}" "$ALV_SIDECAR_IMAGE_LOCATION"
         platform/scripts/replace-tokens.sh "workloads/dekt4pets/frontend" "dekt4pets-frontend-app.yaml" "{FRONTEND_IMAGE}" "springcloudservices/animal-rescue-frontend" 
