@@ -6,12 +6,12 @@ resources:
   - datacheck.yaml
   - donations.yaml
   - suppliers.yaml
-  - atms.yaml
-  - personal-loans.yaml
-  - business-loans.yaml
-  - credit.yaml
+  #- atms.yaml
+  #- personal-loans.yaml
+  #- business-loans.yaml
+  #- credit.yaml
   - insurance.yaml
-  - mortages.yaml
+  #- mortages.yaml
   - payments.yaml
   - sms.yaml
   - locations.yaml

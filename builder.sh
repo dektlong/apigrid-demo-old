@@ -86,6 +86,22 @@
 
     }
     
+    #install-carto
+    install-carto () {
+
+        kapp deploy --yes -a cert-manager -f https://github.com/jetstack/cert-manager/releases/download/v1.2.0/cert-manager.yaml
+
+        kubectl create namespace cartographer-system
+
+        kapp deploy --yes -a cartographer -f ../cartographer/releases/release.yaml
+
+        pushd workloads/dekt4pets/adopter-check/carto
+
+        ytt --ignore-unknown-comments -f . | kapp deploy --yes -a adopter-check-carto -f- -n dekt-apps
+
+
+    }
+    
     #install-gw-operator
     install-gw-operator() {
         
@@ -304,7 +320,7 @@
         kp image save adopter-check -n $APP_NAMESPACE \
             --tag $PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_APP_REPO/adopter-check:0.0.1 \
             --git $DEMO_APP_GIT_REPO  \
-            --sub-path ./workloads/dekt4pets/adopter-check \
+            --sub-path ./workloads/dekt4pets/adopter-check/java-native \
             --cluster-builder tiny \
             --env BP_BOOT_NATIVE_IMAGE=1 \
             --env BP_JVM_VERSION=11 \
