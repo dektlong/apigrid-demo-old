@@ -11,18 +11,17 @@ spec:
       labels:
         app: dekt4pets-frontend
     spec:
-      imagePullSecrets: 
-      - name: imagereg-secret
       containers:
         - name: dekt4pets-frontend
-          image: {FRONTEND_IMAGE}
+          image: springcloudservices/animal-rescue-frontend
           ports:
             - containerPort: 8080
+      restartPolicy: Always
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: dekt4pets-frontend-service
+  name: dekt4pets-frontend
 spec:
   ports:
     - port: 80

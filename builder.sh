@@ -8,7 +8,7 @@
     DET4PETS_BACKEND_IMAGE_LOCATION=$PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION
     TAP_INSTALL_NAMESPACE="tap-install"
     GW_NAMESPACE="scgw-system"
-    API_PORTAL_NAMESPACE="api-portal-system"
+    API_PORTAL_NAMESPACE="api-portal"
     BROWNFIELD_NAMESPACE="brownfield-apis"
 
 #################### core functions ################
@@ -145,7 +145,7 @@
         echo "===> Installing API portal..."
         echo
 
-        $API_PORTAL_INSTALL_DIR/scripts/install-api-portal.sh $API_PORTAL_NAMESPACE
+        $API_PORTAL_INSTALL_DIR/scripts/install-api-portal.sh
         
         kubectl set env deployment.apps/api-portal-server API_PORTAL_SOURCE_URLS=http://scg-openapi.$SUB_DOMAIN.$DOMAIN/openapi -n $API_PORTAL_NAMESPACE
 
@@ -174,7 +174,7 @@
 
         ytt -f /tmp/application-live-view-install-bundle/config -f secrets/tap/alv-values.yaml \
             | kbld -f /tmp/application-live-view-install-bundle/.imgpkg/images.yml -f- \
-            | kapp deploy -y -n $alv_ns-a application-live-view -f-
+            | kapp deploy -y -n $alv_ns -a application-live-view -f-
 
         kubectl apply -f platform/alv/config/alv-ingress.yaml -n $alv_ns
     }
@@ -203,21 +203,11 @@
     setup-demo-examples() {
 
         echo
-        echo "===> Setup App Accelerator examples..."
+        echo "===> Setup APIGrid demo examples..."
         echo
         kubectl apply -f platform/acc/add-accelerators.yaml -n accelerator-system #ns need to match secrets/tap/acc-values.yaml watched_namespace
 
-        echo
-        echo "===> Add brownfield APIs examples..."
-        echo
         kustomize build workloads/brownfield-apis | kubectl apply -f -
-
-        echo
-        echo "===> Start dekt4pets micro-gateway with public access..."
-        echo
-        kubectl apply -f workloads/dekt4pets/gateway/config/dekt4pets-gateway.yaml -n $APP_NAMESPACE
-        kubectl apply -f workloads/dekt4pets/gateway/config/dekt4pets-ingress.yaml -n $APP_NAMESPACE
-
 
         kubectl apply -f platform/alv/pet-clinic-alv.yaml -n $APP_NAMESPACE
 
@@ -285,18 +275,12 @@
     #create dekt4pets images
     create-dekt4pets-images () {
 
-        echo
-        echo "===> Create dekt4pets builder..."
-        echo
         kp builder save $BUILDER_NAME -n $APP_NAMESPACE \
         --tag $PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_APP_REPO/$BUILDER_NAME \
         --order platform/tbs/dekt-builder-order.yaml \
         --stack full \
         --store default
     
-        echo
-        echo "===> Create dekt4pets-backend TBS image..."
-        echo        
         kp image save $BACKEND_TBS_IMAGE -n $APP_NAMESPACE \
         --tag $DET4PETS_BACKEND_IMAGE_LOCATION \
         --git $DEMO_APP_GIT_REPO  \
@@ -304,9 +288,6 @@
         --git-revision main \
         --wait
         
-        echo
-        echo "===> Create dekt4pets-frontend TBS image..."
-        echo        
         kp image save $FRONTEND_TBS_IMAGE -n $APP_NAMESPACE \
         --tag $DET4PETS_FRONTEND_IMAGE_LOCATION \
         --git $DEMO_APP_GIT_REPO  \
@@ -319,10 +300,6 @@
     
     #create adopter-check image
     create-adopter-check-image () {
-
-        echo
-        echo "===> Create adopter-check TBS image..."
-        echo 
 
         kp image save adopter-check -n $APP_NAMESPACE \
             --tag $PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_APP_REPO/adopter-check:0.0.1 \

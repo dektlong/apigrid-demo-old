@@ -38,6 +38,12 @@ workload () {
 #create-backend 
 create-backend() {
 	
+    
+    echo
+    echo "=========> Create dekt4pets micro-gateway (and enable external access) ..."
+    echo 
+    kustomize build workloads/dekt4pets/gateway | kubectl apply -f -
+    
     echo
     echo "=========> Sync local code with remote git $DEMO_APP_GIT_REPO ..."
     echo
@@ -54,10 +60,7 @@ create-backend() {
     echo
     echo "=========> Apply backend app, service and routes ..."
     echo    
-    #kubectl set image deployment/dekt4pets-backend dekt4pets-backend=$PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION -n $APP_NAMESPACE
-    kubectl apply -f workloads/dekt4pets/backend/config/dekt4pets-backend-app.yaml -n $APP_NAMESPACE
-    kubectl apply -f workloads/dekt4pets/backend/routes/dekt4pets-backend-routes.yaml -n $APP_NAMESPACE
-    kubectl apply -f workloads/dekt4pets/backend/routes/dekt4pets-backend-mapping.yaml -n $APP_NAMESPACE
+    kustomize build workloads/dekt4pets/backend | kubectl apply -f -
     
 }
 
@@ -67,9 +70,7 @@ create-frontend() {
     echo
     echo "=========> Apply frontend app, service and routes ..."
     echo
-	kubectl apply -f workloads/dekt4pets/frontend/config/dekt4pets-frontend-app.yaml -n $APP_NAMESPACE
-    kubectl apply -f workloads/dekt4pets/frontend/routes/dekt4pets-frontend-routes.yaml -n $APP_NAMESPACE
-    kubectl apply -f workloads/dekt4pets/frontend/routes/dekt4pets-frontend-mapping.yaml -n $APP_NAMESPACE
+	kustomize build workloads/dekt4pets/frontend | kubectl apply -f -
 
 }
 
@@ -141,25 +142,6 @@ create-dekt4pets-native () {
         -n dekt-apps
 }
 
-#dekt-fortune
-create-fortune () {
-
-    kn service create dekt-fortune \
-        --image harbor.apps.cf.tanzutime.com/dekt-apps/fortune-service:0.0.1 \
-        --env TARGET="revision 1 of dekt-fortune" \
-        --revision-name dekt-fortune-v1 \
-        --namespace $APP_NAMESPACE
-}
-
-update-fortune () {
- 
-    kn service update dekt-fortune \
-        --image $PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_APP_REPO/fortune-service:0.0.1 \
-        --env TARGET="revision 2 of dekt-fortune" \
-        --revision-name dekt-fortune-v2 \
-        --traffic @latest=20,dekt-fortune-v1=80 \
-        --namespace $APP_NAMESPACE 
-}
 
 #adopter-check
 create-adopter-check () {
@@ -183,6 +165,7 @@ update-adopter-check () {
     kn service describe adopter-check -n $APP_NAMESPACE
 }
 
+
 #delete-workloads
 delete-workloads() {
 
@@ -190,8 +173,8 @@ delete-workloads() {
     echo "=========> Remove all workloads..."
     echo
 
-    kustomize build workloads/dekt4pets/backend | kubectl delete -f -
-
+    kustomize build workloads/dekt4pets/gateway | kubectl delete -f -  
+    kustomize build workloads/dekt4pets/backend | kubectl delete -f -  
     kustomize build workloads/dekt4pets/frontend | kubectl delete -f -  
 
     kustomize build workloads/dektFitness/kubernetes-manifests/ | kubectl delete -f -  
@@ -278,8 +261,8 @@ describe() {
     echo "dekt4pets-frontend-routes     api-routes          workloads/dekt4pets/frontend/routes/dekt4pets-frontend-routes.yaml"
     echo "dekt4pets-frontend-mapping    route-mapping       workloads/dekt4pets/frontend/routes/dekt4pets-frontend-mapping.yaml"
     echo
-    echo "dekt4pets-gateway             gateway-config      platform/gateway/config/dekt4pets-gateway.yaml"
-    echo "dekt4pets-ingress             ingress-rule        platform/gateway/config/dekt4pets-ingress.yaml"
+    echo "dekt4pets-gateway             gateway-config      workloads/dekt4pets/gateway/config/dekt4pets-gateway.yaml"
+    echo "dekt4pets-ingress             ingress-rule        workloads/dekt4pets/gateway/config/dekt4pets-ingress.yaml"
     echo "api-portal-ingress            ingress-rule        platform/api-portal/config/api-portal-ingress.yaml"
     echo "openapi-ingress               ingress-rule        platform/api-portal/config/scg-openapi-ingress.yaml"
     echo
