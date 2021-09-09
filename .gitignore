@@ -5,10 +5,10 @@
 secrets
 
 # Ignore config folders
-platform/gateway/config
 platform/api-portal/config
 platform/alv/config
 platform/acc/config
+workloads/dekt4pets/gateway/config
 workloads/dekt4pets/backend/config
 workloads/dekt4pets/frontend/config
 

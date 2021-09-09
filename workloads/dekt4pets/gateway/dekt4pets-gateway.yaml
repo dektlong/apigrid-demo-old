@@ -4,7 +4,7 @@ metadata:
   name: dekt4pets-gateway
 spec:
   api:
-    serverUrl: http://animal-rescue.tanzu.dekt.io #do not change animal-rescue due to a hard code bug in the app
+    serverUrl: http://dekt4pets.{HOST_NAME} #do not change animal-rescue due to a hard code bug in the app
     title: "Dekt4pets"
     description: "Micro Gateway to control internal APIs for building the dekt4pets online store"
     documentation: "https://vmware.wavefront.com/u/xNrc03cJ7L?t=vmware"

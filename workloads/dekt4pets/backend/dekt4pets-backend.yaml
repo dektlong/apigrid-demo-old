@@ -1,19 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  labels:
+    app.kubernetes.io/name: dekt4pets-backend
   name: dekt4pets-backend
 spec:
+  replicas: 1
   selector:
     matchLabels:
-      app: dekt4pets-backend
+      app.kubernetes.io/name: dekt4pets-backend
   template:
     metadata:
       labels:
-        app: dekt4pets-backend
+        app.kubernetes.io/name: dekt4pets-backend
+        app.kubernetes.io/part-of: dekt4pets-backend
+        tanzu.app.live.view: "true"
+        tanzu.app.live.view.application.name: dekt4pets-backend-liveview
     spec:
+      imagePullSecrets: 
+      - name: imagereg-secret
       containers:
         - name: dekt4pets-backend
-          image: springcloudservices/animal-rescue-backend
+          image: {BACKEND_IMAGE}
           env:
             - name: spring.profiles.active
               value: k8s
@@ -39,4 +47,4 @@ spec:
     - port: 80
       targetPort: 8080
   selector:
-    app: dekt4pets-backend
+    app.kubernetes.io/name: dekt4pets-backend

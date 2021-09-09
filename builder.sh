@@ -386,11 +386,12 @@
         #alv
         platform/scripts/replace-tokens.sh "platform/alv" "alv-ingress.yaml" "{HOST_NAME}" "$hostName"
         #dekt4pets
-        platform/scripts/replace-tokens.sh "workloads/dekt4pets/backend" "dekt4pets-backend-app.yaml" "{BACKEND_IMAGE}" "$DET4PETS_BACKEND_IMAGE_LOCATION" "{OBSERVER_SIDECAR_IMAGE}" "$ALV_SIDECAR_IMAGE_LOCATION"
-        platform/scripts/replace-tokens.sh "workloads/dekt4pets/frontend" "dekt4pets-frontend-app.yaml" "{FRONTEND_IMAGE}" "springcloudservices/animal-rescue-frontend" 
+        platform/scripts/replace-tokens.sh "workloads/dekt4pets/backend" "dekt4pets-backend.yaml" "{BACKEND_IMAGE}" "$DET4PETS_BACKEND_IMAGE_LOCATION"
+        #platform/scripts/replace-tokens.sh "workloads/dekt4pets/frontend" "dekt4pets-frontend.yaml" "{FRONTEND_IMAGE}" "$DET4PETS_FRONTEND_IMAGE_LOCATION" 
+        platform/scripts/replace-tokens.sh "workloads/dekt4pets/frontend" "dekt4pets-frontend.yaml" "{FRONTEND_IMAGE}" "springcloudservices/animal-rescue-frontend" 
         platform/scripts/replace-tokens.sh "workloads/dekt4pets/gateway" "dekt4pets-gateway.yaml" "{HOST_NAME}" "$hostName"
         platform/scripts/replace-tokens.sh "workloads/dekt4pets/gateway" "dekt4pets-ingress.yaml" "{HOST_NAME}" "$hostName"
-        #platform/scripts/replace-tokens.sh "workloads/dekt4pets/frontend" "dekt4pets-frontend-app.yaml" "{FRONTEND_IMAGE}" "$DET4PETS_FRONTEND_IMAGE_LOCATION" 
+        
     
     }
     #install SCGW from source code

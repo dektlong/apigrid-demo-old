@@ -253,11 +253,11 @@ describe() {
     echo "${bold}Delivery Flow${normal}"
     echo
     echo "NAME                          KIND                PATH"
-    echo "dekt4pets-backend             app                 workloads/dekt4pets/backend/config/dekt4pets-backend-app.yaml"
+    echo "dekt4pets-backend             app                 workloads/dekt4pets/backend/config/dekt4pets-backend.yaml"
     echo "dekt4pets-backend-routes      api-routes          workloads/dekt4pets/backend/routes/dekt4pets-backend-routes.yaml"
     echo "dekt4pets-backend-mapping     route-mapping       workloads/dekt4pets/backend/routes/dekt4pets-backend-mapping.yaml"
     echo
-    echo "dekt4pets-frontend            app                 workloads/dekt4pets/frontend/config/dekt4pets-frontend-app.yaml"
+    echo "dekt4pets-frontend            app                 workloads/dekt4pets/frontend/config/dekt4pets-frontend.yaml"
     echo "dekt4pets-frontend-routes     api-routes          workloads/dekt4pets/frontend/routes/dekt4pets-frontend-routes.yaml"
     echo "dekt4pets-frontend-mapping    route-mapping       workloads/dekt4pets/frontend/routes/dekt4pets-frontend-mapping.yaml"
     echo

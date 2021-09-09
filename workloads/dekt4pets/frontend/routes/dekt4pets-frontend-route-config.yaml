@@ -15,7 +15,7 @@ spec:
         - RedirectTo=302, /rescue
       order: 0
       tags:
-        - sso
+        - Adoptions
       title: "Animal Rescue login link"
       description: "SSO enabled path used by the login button"
     - predicates:
@@ -25,7 +25,7 @@ spec:
         - StripPrefix=1
       order: 1000
       tags:
-        - ui
+        - Pets
       title: "Animal Rescue home page"
       description: "Animal Rescue home page that doesn't require SSO login"
 
