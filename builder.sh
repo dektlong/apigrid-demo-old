@@ -71,11 +71,11 @@
         echo
         echo "===> Install Application Live View TAP package..."
         echo
-        #tanzu package install app-live-view -p appliveview.tanzu.vmware.com -v 0.1.0 -n tap-install -f platform/alv/config/alv-values.yaml
-        #kubectl apply -f platform/alv/config/alv-ingress.yaml -n app-live-view #ns need to match secrets/tap/alv-values.yaml server_namespace
+        tanzu package install app-live-view -p appliveview.tanzu.vmware.com -v 0.1.0 -n tap-install -f secrets/tap/alv-values.yaml
+        kubectl apply -f platform/alv/config/alv-ingress.yaml -n app-live-view #ns need to match secrets/tap/alv-values.yaml server_namespace
         
         #need to wait until seperate ns for the controller is supported in TAP, until then has to be installed seperatly 
-        install-alv 
+        #install-alv 
         
         echo
         echo "===> Installing Tanzu Build Service..."
@@ -97,9 +97,19 @@
 
         pushd workloads/dekt4pets/adopter-check/carto
 
+        kubectl create clusterrolebinding gitops-toolkit-admin \
+            --clusterrole=cluster-admin \
+            --serviceaccount=gitops-toolkit:default
+
+        #make sure flux is not installed prior
+        kapp deploy --yes -a gitops-toolkit \
+            --into-ns gitops-toolkit \
+            -f https://github.com/fluxcd/source-controller/releases/download/v0.15.3/source-controller.crds.yaml \
+            -f https://github.com/fluxcd/source-controller/releases/download/v0.15.3/source-controller.deployment.yaml
+
         ytt --ignore-unknown-comments -f . | kapp deploy --yes -a adopter-check-carto -f- -n dekt-apps
 
-
+        pushd
     }
     
     #install-gw-operator
@@ -188,8 +198,8 @@
             --docker-username=$TANZU_NETWORK_USER \
             --docker-password=$TANZU_NETWORK_PASSWORD
 
-        ytt -f /tmp/application-live-view-install-bundle/config -f secrets/tap/alv-values.yaml \
-            | kbld -f /tmp/application-live-view-install-bundle/.imgpkg/images.yml -f- \
+        ytt -f $ALV_INSTALL_DIR/config -f secrets/tap/alv-values.yaml \
+            | kbld -f $ALV_INSTALL_DIR/.imgpkg/images.yml -f- \
             | kapp deploy -y -n $alv_ns -a application-live-view -f-
 
         kubectl apply -f platform/alv/config/alv-ingress.yaml -n $alv_ns
@@ -254,8 +264,8 @@
             $API_PORTAL_INSTALL_DIR/scripts/relocate-images.sh $PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_SYSTEM_REPO
             ;;
         alv)
-            imgpkg pull -b dev.registry.pivotal.io/app-live-view/application-live-view-install-bundle:0.1.1 \
-                -o /tmp/application-live-view-install-bundle
+            imgpkg pull -b dev.registry.pivotal.io/app-live-view/application-live-view-install-bundle:0.2.0-SNAPSHOT\
+                -o $ALV_INSTALL_DIR
             ;;
         cnr)
             imgpkg copy --lock $CNR_INSTALL_DIR/cloud-native-runtimes-1.0.1.lock --to-repo $PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_SYSTEM_REPO/cnr --lock-output $CNR_INSTALL_DIR/relocated.lock --registry-verify-certs=false 

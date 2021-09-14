@@ -5,6 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
+import java.util.concurrent.TimeUnit;
 
 import java.util.function.Function;
 
@@ -34,6 +35,7 @@ public class AdopterCheckFunction {
             try
 		    {
    			    String adoptionHistoryResults = restTemplate.getForObject(adoptionHistoryAPI, String.class);
+                TimeUnit.SECONDS.sleep(2);
 		    }
 		    catch (Exception e) {/*check failure*/}
 
@@ -41,6 +43,7 @@ public class AdopterCheckFunction {
             try
 		    {
                 String criminalRecordResults = restTemplate.getForObject(criminalRecordAPI, String.class);
+                TimeUnit.SECONDS.sleep(3);
 		    }
 		    catch (Exception e) {/*check failure*/}
             

@@ -7,7 +7,7 @@ spec:
     serverUrl: http://dekt4pets.{HOST_NAME} #do not change animal-rescue due to a hard code bug in the app
     title: "Dekt4pets"
     description: "Micro Gateway to control internal APIs for building the dekt4pets online store"
-    documentation: "https://vmware.wavefront.com/u/xNrc03cJ7L?t=vmware"
+    documentation: "https://vmware.wavefront.com/u/1RyhnsRys4?t=vmware"
     version: "1.0.0-K8s"
     cors:
       allowedOrigins:

@@ -40,7 +40,7 @@ create-backend() {
 	
     
     echo
-    echo "=========> Create dekt4pets micro-gateway (and enable external access) ..."
+    echo "=========> Create dekt4pets micro-gateway..."
     echo 
     kustomize build workloads/dekt4pets/gateway | kubectl apply -f -
     
