@@ -38,22 +38,16 @@ workload () {
 #create-backend 
 create-backend() {
 	
-    echo
-    echo "=========> Sync local code with remote git $DEMO_APP_GIT_REPO ..."
+    echo "Syncing local code with remote git..."
+    echo "$DEMO_APP_GIT_REPO/backend remote git synced (no change)"
     echo
     #git-push "local-development-completed"
     #codechanges=$?
 
-    echo
-    echo "=========> Invoke image build (if needed)..."
-    echo
     kp image patch $BACKEND_TBS_IMAGE -n $APP_NAMESPACE
-    echo
-    kp build list $BACKEND_TBS_IMAGE -n $APP_NAMESPACE
     
     echo
-    echo "=========> Apply backend app, service and routes ..."
-    echo    
+    echo "Apply backend app, service and routes ..."
     kustomize build workloads/dekt4pets/backend | kubectl apply -f -
     
 }
@@ -61,14 +55,14 @@ create-backend() {
 #create-frontend 
 create-frontend() {
 	
+    echo "Syncing local code with remote git..."
+    echo "$DEMO_APP_GIT_REPO/frontend remote git synced (no change)"
     echo
-    echo "=========> Invoke image build (if needed)..."
-    echo
+
     kp image patch $FRONTEND_TBS_IMAGE -n $APP_NAMESPACE
 
     echo
-    echo "=========> Apply frontend app, service and routes ..."
-    echo
+    echo "Apply frontend app, service and routes ..."
 	kustomize build workloads/dekt4pets/frontend | kubectl apply -f -
 
 }
@@ -120,11 +114,22 @@ patch-backend() {
 #dekt4pets
 dekt4pets() {
 
+    echo
+    echo "${bold}Deploying dekt4pets supplychain${normal}"
+    echo "-------------------------------"
+
+    echo
+    echo "=========> dekt4pets backend microservice..."
+    echo
     workload backend
+
+    echo
+    echo "=========> dekt4pets frontend microservice..."
+    echo
     workload frontend
 
     echo
-    echo "=========> Deploy dekt4pets micro-gateway (and enable external traffic)..."
+    echo "=========> dekt4pets micro-gateway (w/ external traffic)..."
     echo
     kustomize build workloads/dekt4pets/gateway | kubectl apply -f -
 }
