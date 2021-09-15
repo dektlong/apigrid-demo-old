@@ -72,7 +72,7 @@
         echo "===> Install Application Live View TAP package..."
         echo
         tanzu package install app-live-view -p appliveview.tanzu.vmware.com -v 0.1.0 -n tap-install -f secrets/tap/alv-values.yaml
-        kubectl apply -f platform/alv/config/alv-ingress.yaml -n app-live-view #ns need to match secrets/tap/alv-values.yaml server_namespace
+        kubectl apply -f platform/alv/config/alv-ingress.yaml -n tap-install #ns need to match secrets/tap/alv-values.yaml server_namespace
         
         #need to wait until seperate ns for the controller is supported in TAP, until then has to be installed seperatly 
         #install-alv 
@@ -198,7 +198,7 @@
             --docker-username=$TANZU_NETWORK_USER \
             --docker-password=$TANZU_NETWORK_PASSWORD
 
-        ytt -f $ALV_INSTALL_DIR/config -f secrets/tap/alv-values.yaml \
+        ytt -f $ALV_INSTALL_DIR/config -f $ALV_INSTALL_DIR/values.yaml \
             | kbld -f $ALV_INSTALL_DIR/.imgpkg/images.yml -f- \
             | kapp deploy -y -n $alv_ns -a application-live-view -f-
 
@@ -235,7 +235,9 @@
 
         kustomize build workloads/brownfield-apis | kubectl apply -f -
 
-        kubectl apply -f platform/alv/pet-clinic-alv.yaml -n $APP_NAMESPACE
+        kubectl apply -f platform/alv/pet-clinic-alv.yaml -n tap-install #temp workaround
+
+        kustomize build workloads/dekt4pets/gateway | kubectl apply -f -
 
         create-dekt4pets-images
         
@@ -358,7 +360,12 @@
             -n $TAP_INSTALL_NAMESPACE \
             --docker-server=$TANZU_NETWORK_REGISTRY \
             --docker-username=$TANZU_NETWORK_USER \
-            --docker-password=$TANZU_NETWORK_PASSWORD     
+            --docker-password=$TANZU_NETWORK_PASSWORD
+        kubectl create secret docker-registry imagereg-secret \
+            --docker-server=$PRIVATE_REGISTRY_URL \
+            --docker-username=$PRIVATE_REGISTRY_USER \
+            --docker-password=$PRIVATE_REGISTRY_PASSWORD \
+            --namespace $TAP_INSTALL_NAMESPACE  
 
   
         #apps secret        

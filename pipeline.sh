@@ -38,12 +38,6 @@ workload () {
 #create-backend 
 create-backend() {
 	
-    
-    echo
-    echo "=========> Create dekt4pets micro-gateway..."
-    echo 
-    kustomize build workloads/dekt4pets/gateway | kubectl apply -f -
-    
     echo
     echo "=========> Sync local code with remote git $DEMO_APP_GIT_REPO ..."
     echo
@@ -173,7 +167,7 @@ delete-workloads() {
     echo "=========> Remove all workloads..."
     echo
 
-    kustomize build workloads/dekt4pets/gateway | kubectl delete -f -  
+    #kustomize build workloads/dekt4pets/gateway | kubectl delete -f -  
     kustomize build workloads/dekt4pets/backend | kubectl delete -f -  
     kustomize build workloads/dekt4pets/frontend | kubectl delete -f -  
 
