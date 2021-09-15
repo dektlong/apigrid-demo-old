@@ -64,32 +64,33 @@ It is designed to run on any k8s.
   - Det4Pets backend TBS image
   - Det4Pets frontend TBS image
 
-### The starting experience
+### Inner loop
 - Access app accelerator developer instance  on ```acc.<SUB_DOMAIN>.<DOMAIN>```
 - Development curated start 
   - Select ```onlinestore-dev``` tag
   - Select the ```Backend API for online-stores``` accelerator 
   - Select different deployment options and show generated files
   - Select different API-grid options and show generated files
-
-- DevOps curated start 
-  - Select ```onlinestore-devops``` tag
-  - Select the ```API Driven Microservices workflow``` accelerator 
-  - Select different deployment options and show generated files
-  - Select different API-grid options and show generated files
-  - Show the supply chain created via ```./pipeline.sh describe```
-
-### The path-to-prod
-- ```./pipeline.sh backend```
+- ```./demo.sh backend```
 - Show how build service detects git-repo changes and auto re-build backend-image (if required)
 - Show how the ```dekt4pets-gateway``` micro-gateway starts quickly as just a component of your app
 - Access API Hub on ```api-portal.<SUB_DOMAIN>.<DOMAIN>```
   - Show the dekt4Pets API group auto-populated with the API spec you defined
   - now the frontend team can easily discover and test the backend APIs and reuse
   - Show the other API groups ('brownfield APIs')
-- ```./pipeline.sh frontend```
-- Access Spring Boot Observer at ```http://sbo.<SUB_DOMAIN>.<DOMAIN>/apps``` to show actuator information on the backend application 
+- ```./demo.sh frontend```
+- Access Spring Boot Observer at ```http://alv.<SUB_DOMAIN>.<DOMAIN>/apps``` to show actuator information on the backend application 
 - Show the new frontend APIs that where auto-populated to the API portal
+
+### Outer loop
+- DevOps curated start 
+  - Select ```onlinestore-devops``` tag
+  - Select the ```API Driven Microservices workflow``` accelerator 
+  - Select different deployment options and show generated files
+  - Select different API-grid options and show generated files
+  - Show the supply chain created via ```./demo.sh describe```
+- ```./demo.sh dekt4pets```
+  - show how the full supplychain for taking the app to production is manifested
 - This phase will also add an ingress rule to the gateway, now you can show:
   - External traffic can only routed via the micro-gateway
   - Frontend and backend microservices still cannot be accessed directly) 
@@ -136,7 +137,7 @@ It is designed to run on any k8s.
 	  }
 
   ```
-  - ```./pipeline.sh backend -u ```
+  - ```./demo.sh backend -u ```
   - show how build-service is invoking a new image build based on the git-commit-id
   - run the new check-adopter api 
   ```
@@ -144,7 +145,7 @@ It is designed to run on any k8s.
   ```
   - you should see the 'Congratulations...' message with the same token you received following login
 #### Demo brownfield API use via a Cloud Native Runtime function
-  - ```./pipeline.sh adopter-check ```
+  - ```./demo.sh adopter-check ```
   - call the function via curl
   ```
     curl -w'\n' -H 'Content-Type: text/plain' adopter-check.dekt-apps.cnr.dekt.io \
@@ -162,7 +163,7 @@ It is designed to run on any k8s.
   - show how the function scales to zero after no use for 60 seconds
   ``` kubectl get pods -n dekt-apps ```
   - create a new revision
-  ```./pipeline adopter-check -u ```
+  ```./demo adopter-check -u ```
   - show how a new revision recieving 20% of the traffic is created
 
 ## Cleanup
