@@ -169,7 +169,7 @@
 
         $API_PORTAL_INSTALL_DIR/scripts/install-api-portal.sh
         
-        kubectl set env deployment.apps/api-portal-server API_PORTAL_SOURCE_URLS=https://scg-openapi.$SUB_DOMAIN.$DOMAIN/openapi -n $API_PORTAL_NAMESPACE
+        kubectl set env deployment.apps/api-portal-server API_PORTAL_SOURCE_URLS=http://scg-openapi.$SUB_DOMAIN.$DOMAIN/openapi -n $API_PORTAL_NAMESPACE
 
         kubectl set env deployment.apps/api-portal-server API_PORTAL_SOURCE_URLS_CACHE_TTL_SEC=10 -n $API_PORTAL_NAMESPACE #so frontend apis will appear faster, just for this demo
 
