@@ -126,8 +126,15 @@ patch-backend() {
 dekt4pets() {
 
     echo
-    echo "${bold}Deploying dekt4pets supplychain${normal}"
-    echo "-------------------------------"
+    echo "${bold}Dekt4pets supply-chain components${normal}"
+    echo "-------------------------------------"
+
+    supply-chain-components
+
+    echo
+    echo "${bold}Hit any key to start deploying dekt4pets workloads to production...${normal}"
+    echo
+    read
 
     echo
     echo "=========> dekt4pets backend microservice..."
@@ -158,13 +165,13 @@ create-dekt4pets-native () {
 
     kn service create dekt4pets-frontend \
         --image springcloudservices/animal-rescue-frontend  \
-        --env TARGET="revision 1 of dekt4pets-native-frontend" \
+        --env REV="revision 1 of dekt4pets-native-frontend" \
         --revision-name dekt4pets-frontend-v1 \
         -n dekt-apps 
 
     kn service create dekt4pets-backend \
         --image harbor.apps.cf.tanzutime.com/dekt-apps/dekt4pets-backend:1.0.0\
-        --env TARGET="revision 1 of dekt4pets-native-backend" \
+        --env REV="revision 1 of dekt4pets-native-backend" \
         --revision-name dekt4pets-backend-v1 \
         -n dekt-apps
 }
@@ -175,7 +182,7 @@ create-adopter-check () {
 
     kn service create adopter-check \
         --image $PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_APP_REPO/adopter-check:0.0.1 \
-        --env REV="revision 1 of adopter-check" \
+        --env REV="1.0" \
         --revision-name adopter-check-v1 \
         --namespace $APP_NAMESPACE
 }
@@ -184,9 +191,9 @@ update-adopter-check () {
 
     kn service update adopter-check \
         --image $PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_APP_REPO/adopter-check:0.0.1 \
-        --env REV="revision 2 of adopter-check" \
+        --env REV="2.0" \
         --revision-name adopter-check-v2 \
-        --traffic adopter-check-v2=30,adopter-check-v1=70 \
+        --traffic adopter-check-v2=70,adopter-check-v1=30 \
         --namespace $APP_NAMESPACE
 
     kn service describe adopter-check -n $APP_NAMESPACE
@@ -234,8 +241,6 @@ usage() {
     echo
 	echo "A mockup script to illustrate upcoming App Stack concepts. Please specify one of the following:"
 	echo
-    echo "${bold}describe${normal} - describe the dekt4pets pipeline/supplychain" 
-    echo
     echo "${bold}backend${normal} - deploy the dekt4pets backend service and APIs"
     echo
     echo "${bold}frontend${normal} - deploy the dekt4pets frotend service and APIs"
@@ -254,13 +259,8 @@ usage() {
 }
 
 #supplychain-dekt4pets
-describe() {
+supply-chain-components() {
 
-    
-    
-    echo
-    echo "${bold}dekt4pets supplychain${normal}"
-    echo "---------------------"
     echo
     echo "${bold}TAP installed packages${normal}"
     echo
@@ -305,9 +305,6 @@ bold=$(tput bold)
 normal=$(tput sgr0)
 
 case $1 in
-describe)
-	describe
-    ;;
 backend)
 	workload backend $2
     ;;
