@@ -8,6 +8,7 @@
     DET4PETS_BACKEND_IMAGE_LOCATION=$PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION
     TAP_INSTALL_NAMESPACE="tap-install"
     GW_NAMESPACE="scgw-system"
+    CARTO_NAMESPACE="cartographer-system"
     API_PORTAL_NAMESPACE="api-portal"
     BROWNFIELD_NAMESPACE="brownfield-apis"
 
@@ -21,6 +22,8 @@
         create-namespaces-secrets
 
         update-config-values
+
+        install-carto #remove post tap beta2
 
         install-tap
 
@@ -91,25 +94,18 @@
 
         kapp deploy --yes -a cert-manager -f https://github.com/jetstack/cert-manager/releases/download/v1.2.0/cert-manager.yaml
 
-        kubectl create namespace cartographer-system
+        imgpkg copy \
+            --tar secrets/tap/carto-bundle.tar \
+            --to-repo $PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_SYSTEM_REPO/cartographer-bundle \
+            --lock-output secrets/tap/cartographer-bundle.lock.yaml
+        
+        imgpkg pull \
+            --lock secrets/tap/cartographer-bundle.lock.yaml \
+            --output secrets/tap/cartographer-bundle
 
-        kapp deploy --yes -a cartographer -f ../cartographer/releases/release.yaml
 
-        pushd workloads/dekt4pets/adopter-check/carto
+        kapp deploy -y -a cartographer -f <(kbld -f secrets/tap/cartographer-bundle)
 
-        kubectl create clusterrolebinding gitops-toolkit-admin \
-            --clusterrole=cluster-admin \
-            --serviceaccount=gitops-toolkit:default
-
-        #make sure flux is not installed prior
-        kapp deploy --yes -a gitops-toolkit \
-            --into-ns gitops-toolkit \
-            -f https://github.com/fluxcd/source-controller/releases/download/v0.15.3/source-controller.crds.yaml \
-            -f https://github.com/fluxcd/source-controller/releases/download/v0.15.3/source-controller.deployment.yaml
-
-        ytt --ignore-unknown-comments -f . | kapp deploy --yes -a adopter-check-carto -f- -n dekt-apps
-
-        pushd
     }
     
     #install-gw-operator
@@ -173,7 +169,7 @@
 
         $API_PORTAL_INSTALL_DIR/scripts/install-api-portal.sh
         
-        kubectl set env deployment.apps/api-portal-server API_PORTAL_SOURCE_URLS=http://scg-openapi.$SUB_DOMAIN.$DOMAIN/openapi -n $API_PORTAL_NAMESPACE
+        kubectl set env deployment.apps/api-portal-server API_PORTAL_SOURCE_URLS=https://scg-openapi.$SUB_DOMAIN.$DOMAIN/openapi -n $API_PORTAL_NAMESPACE
 
         kubectl set env deployment.apps/api-portal-server API_PORTAL_SOURCE_URLS_CACHE_TTL_SEC=10 -n $API_PORTAL_NAMESPACE #so frontend apis will appear faster, just for this demo
 
@@ -329,16 +325,18 @@
     #create adopter-check image
     create-adopter-check-image () {
 
+        
         kp image save adopter-check -n $APP_NAMESPACE \
             --tag $PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_APP_REPO/adopter-check:0.0.1 \
-            --git $DEMO_APP_GIT_REPO  \
-            --sub-path ./workloads/dekt4pets/adopter-check/java-native \
+            --git https://github.com/dektlong/adopter-check \
             --cluster-builder tiny \
-            --env BP_BOOT_NATIVE_IMAGE=1 \
-            --env BP_JVM_VERSION=11 \
-            --env BP_MAVEN_BUILD_ARGUMENTS="-Dmaven.test.skip=true package spring-boot:repackage" \
-            --env BP_BOOT_NATIVE_IMAGE_BUILD_ARGUMENTS="-Dspring.spel.ignore=true -Dspring.xml.ignore=true -Dspring.native.remove-yaml-support=true --enable-all-security-services" \
-            --wait 
+            --wait #\
+            #--sub-path ./workloads/dekt4pets/adopter-check/java-native \
+            #--env BP_BOOT_NATIVE_IMAGE=1 \
+            #--env BP_JVM_VERSION=11 \
+            #--env BP_MAVEN_BUILD_ARGUMENTS="-Dmaven.test.skip=true package spring-boot:repackage" \
+            #--env BP_BOOT_NATIVE_IMAGE_BUILD_ARGUMENTS="-Dspring.spel.ignore=true -Dspring.xml.ignore=true -Dspring.native.remove-yaml-support=true --enable-all-security-services" \
+            
     }
     #create-namespaces-secrets
     create-namespaces-secrets () {
@@ -351,6 +349,7 @@
         kubectl create ns $TAP_INSTALL_NAMESPACE
         kubectl create ns $APP_NAMESPACE
         kubectl create ns $GW_NAMESPACE
+        kubectl create ns $CARTO_NAMESPACE
         kubectl create ns $API_PORTAL_NAMESPACE
         kubectl create ns $BROWNFIELD_NAMESPACE
         kubectl create ns acme-fitness
@@ -366,7 +365,11 @@
             --docker-username=$PRIVATE_REGISTRY_USER \
             --docker-password=$PRIVATE_REGISTRY_PASSWORD \
             --namespace $TAP_INSTALL_NAMESPACE  
-
+        kubectl create secret docker-registry private-registry-credentials \
+            --docker-server=$PRIVATE_REGISTRY_URL \
+            --docker-username=$PRIVATE_REGISTRY_USER \
+            --docker-password=$PRIVATE_REGISTRY_PASSWORD \
+            --namespace $CARTO_NAMESPACE  
   
         #apps secret        
         export REGISTRY_PASSWORD=$PRIVATE_REGISTRY_PASSWORD
@@ -374,6 +377,10 @@
             --registry $PRIVATE_REGISTRY_URL \
             --registry-user $PRIVATE_REGISTRY_USER \
             --namespace $APP_NAMESPACE 
+          kp secret create imagereg-secret \
+            --registry $PRIVATE_REGISTRY_URL \
+            --registry-user $PRIVATE_REGISTRY_USER \
+            --namespace $BROWNFIELD_NAMESPACE 
         
         #scgw
         kubectl create secret docker-registry spring-cloud-gateway-image-pull-secret \

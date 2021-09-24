@@ -23,6 +23,17 @@ spec:
 apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
 kind: Accelerator
 metadata:
+  name: brownfield-api-for-online-stores
+spec:
+  git:
+    interval: 10s
+    url: https://github.com/dektlong/store-brownfield-api
+    ref:
+      branch: main
+---
+apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
+kind: Accelerator
+metadata:
   name: api-microservices-workflow
 spec:
   git:

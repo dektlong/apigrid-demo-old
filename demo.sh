@@ -35,9 +35,20 @@ workload () {
 
 #################### core functions #######################
 
+#TAP experimental workflow for adopter-check
+adopter-check-tap()
+    {
+        #backend workload
+        tanzu apps workload create adopter-check -f workloads/dekt4pets/adopter-check/carto/workload.yaml -y
+        tanzu apps workload tail adopter-check --since 1h
+
+        #verify workload deployments
+        tanzu apps workload list
+    }
+
 #create-backend 
 create-backend() {
-	
+
     echo "Syncing local code with remote git..."
     echo "$DEMO_APP_GIT_REPO/backend remote git synced (no change)"
     echo
@@ -164,7 +175,7 @@ create-adopter-check () {
 
     kn service create adopter-check \
         --image $PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_APP_REPO/adopter-check:0.0.1 \
-        --env TARGET="revision 1 of adopter-check" \
+        --env REV="revision 1 of adopter-check" \
         --revision-name adopter-check-v1 \
         --namespace $APP_NAMESPACE
 }
@@ -173,7 +184,7 @@ update-adopter-check () {
 
     kn service update adopter-check \
         --image $PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_APP_REPO/adopter-check:0.0.1 \
-        --env TARGET="revision 2 of adopter-check" \
+        --env REV="revision 2 of adopter-check" \
         --revision-name adopter-check-v2 \
         --traffic adopter-check-v2=30,adopter-check-v1=70 \
         --namespace $APP_NAMESPACE
