@@ -27,7 +27,7 @@ metadata:
 spec:
   git:
     interval: 10s
-    url: https://github.com/dektlong/store-brownfield-api
+    url: https://github.com/dektlong/store-brownfield-funtion
     ref:
       branch: main
 ---
