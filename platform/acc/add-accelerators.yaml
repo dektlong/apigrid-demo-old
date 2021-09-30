@@ -1,7 +1,7 @@
 apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
 kind: Accelerator
 metadata:
-  name: backend-api-for-online-stores
+  name: 1-backend-api-for-online-stores
 spec:
   git:
     interval: 10s
@@ -12,7 +12,7 @@ spec:
 apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
 kind: Accelerator
 metadata:
-  name: frontend-ux-for-online-stores
+  name: 2-frontend-ux-for-online-stores
 spec:
   git:
     interval: 10s
@@ -23,7 +23,7 @@ spec:
 apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
 kind: Accelerator
 metadata:
-  name: brownfield-api-for-online-stores
+  name: 3-brownfield-api-for-online-stores
 spec:
   git:
     interval: 10s

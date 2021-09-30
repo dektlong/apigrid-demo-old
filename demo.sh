@@ -272,6 +272,7 @@ supply-chain-components() {
     echo "NAME                      URL                                               STATUS"
     echo "dekt4pets-backend         https://github.com/dektlong/dekt4pets-backend     Fetched revision: main"
     echo "dekt4pets-frontend        https://github.com/dektlong/dekt4pets-frontend    Fetched revision: main"
+    echo "adopter-check             https://github.com/dektlong/adopter-check         Fetched revision: main"
     echo
     echo "${bold}Workload Images${normal}"
     echo
@@ -294,6 +295,8 @@ supply-chain-components() {
     echo "dekt4pets-ingress             ingress-rule        workloads/dekt4pets/gateway/config/dekt4pets-ingress.yaml"
     echo "api-portal-ingress            ingress-rule        platform/api-portal/config/api-portal-ingress.yaml"
     echo "openapi-ingress               ingress-rule        platform/api-portal/config/scg-openapi-ingress.yaml"
+    echo
+    echo "adopter-check                 knative function    "
     echo
 }
 
