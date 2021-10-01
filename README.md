@@ -50,13 +50,15 @@ It is designed to run on any k8s.
 
 ### Installation
 - If you update / first install the core Tanzu services , run ```./builder.sh upgrade core-images```
-- run ```./builder.sh init-aks apigrid```
+- run ```./builder.sh init```
 - This script installs the following products
-  - Spring Cloud Gateway
-  - App Accelerator
-  - Api portal
-  - Spring Boot Observer
+  - TAP with the following packages
+    - Clound Native Runtime
+    - App Accelerator
+    - App Live View
   - Build Service
+  - Spring Cloud Gateway
+  - API portal
 - This script setup the following examples
   - Fortune sidecar for Spring Boot Observer
   - App Accelerators generators and accelerators

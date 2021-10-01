@@ -14,6 +14,36 @@
 
 #################### core functions ################
 
+    #init menu
+    init () {
+
+        case $1 in
+        blank)
+            platform/scripts/install-nginx.sh
+            ;;
+        all)
+            install-all
+            ;;
+        acc)
+            platform/scripts/install-nginx.sh
+            create-namespaces-secrets
+            install-acc
+            setup-demo-examples
+            ;;
+        api)
+            platform/scripts/install-nginx.sh
+            create-namespaces-secrets
+            install-acc
+            install-gw-operator
+            install-api-portal
+            setup-demo-examples
+            ;;
+        *)
+            install-all
+            ;;
+        esac
+
+    }
     #install all demo components
     install-all () {
 
@@ -289,7 +319,7 @@
             remove-examples
             ;;
         *)
-            incorrect-usage
+            platform/scripts/build-aks-cluster.sh delete $CLUSTER_NAME 
             ;;
         esac
     }
@@ -485,10 +515,11 @@
         echo
         echo "Incorrect usage. Please specify one of the following commands"
         echo
-        echo "${bold}init-aks${normal}"
+        echo "${bold}init${normal}"
         echo "  blank"
-        echo "  apigrid"
-        echo "  cnr"
+        echo "  all"
+        echo "  acc"
+        echo "  api"
         echo
         echo "${bold}init-tkg${normal}"
         echo "  blank"
@@ -535,13 +566,9 @@
 #################### main ##########################
 
 case $1 in
-init-aks)
+init)
     platform/scripts/build-aks-cluster.sh create $CLUSTER_NAME
-    install-all 
-    ;;
-init-tkg)
-    platform/scripts/build-tkg-cluster.sh tkg-i $CLUSTER_NAME_APIGRID $TKGI_CLUSTER_PLAN 1 10
-    install-all 
+    init $2 
     ;;
 update-core-images)
     update-core-images $2   
