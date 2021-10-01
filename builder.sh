@@ -23,7 +23,6 @@
             platform/scripts/install-nginx.sh
             ;;
         all)
-            platform/scripts/build-aks-cluster.sh create $CLUSTER_NAME 7
             install-all
             ;;
         acc)
@@ -51,6 +50,8 @@
     #install all demo components
     install-all () {
 
+        platform/scripts/build-aks-cluster.sh create $CLUSTER_NAME 7
+        
         platform/scripts/install-nginx.sh
         
         create-namespaces-secrets
