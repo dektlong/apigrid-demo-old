@@ -14,23 +14,27 @@
 
 #################### core functions ################
 
-    #init menu
-    init () {
+    #init demo env
+    init-demo-env () {
 
         case $1 in
         blank)
+            platform/scripts/build-aks-cluster.sh create $CLUSTER_NAME 3
             platform/scripts/install-nginx.sh
             ;;
         all)
+            platform/scripts/build-aks-cluster.sh create $CLUSTER_NAME 7
             install-all
             ;;
         acc)
+            platform/scripts/build-aks-cluster.sh create $CLUSTER_NAME 3
             platform/scripts/install-nginx.sh
             create-namespaces-secrets
             install-acc
             setup-demo-examples
             ;;
         api)
+            platform/scripts/build-aks-cluster.sh create $CLUSTER_NAME 5
             platform/scripts/install-nginx.sh
             create-namespaces-secrets
             install-acc
@@ -567,8 +571,7 @@
 
 case $1 in
 init)
-    platform/scripts/build-aks-cluster.sh create $CLUSTER_NAME
-    init $2 
+    init-demo-env $2 
     ;;
 update-core-images)
     update-core-images $2   

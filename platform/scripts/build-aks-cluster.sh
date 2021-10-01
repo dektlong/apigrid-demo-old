@@ -7,7 +7,8 @@ create-cluster() {
 	
 	clusterName=$1
 	
-	numberOfNodes=7
+	numberOfNodes=$2
+	
 	nodeSize="Standard_DS3_v2" # 4 vCPU, 14GB memory, 28GB temp disk
 	
 	echo
