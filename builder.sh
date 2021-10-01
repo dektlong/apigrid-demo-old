@@ -23,8 +23,6 @@
             ;;
         all)
             setup-core-cluster 7
-            install-carto #remove post tap beta2
-            install-tap-package-manager
             install-tap-acc-package
             install-tap-cnr-package
             install-tap-alv-package
@@ -35,13 +33,11 @@
             ;;
         acc)
             setup-core-cluster 3
-            install-tap-package-manager
             install-tap-acc-package
             setup-demo-examples
             ;;
         api)
             setup-core-cluster 5
-            install-tap-package-manager
             install-tap-acc-package
             install-gw-operator
             install-api-portal
@@ -68,6 +64,11 @@
         create-namespaces-secrets
         
         update-config-values
+
+        install-carto #remove post tap beta2
+        
+        install-tap-package-manager
+
     }
     #install-tap-package-manager
     install-tap-package-manager() {
