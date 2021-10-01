@@ -23,7 +23,19 @@
             platform/scripts/install-nginx.sh
             ;;
         all)
-            install-all
+            platform/scripts/build-aks-cluster.sh create $CLUSTER_NAME 7
+            platform/scripts/install-nginx.sh
+            create-namespaces-secrets
+            update-config-values
+            install-carto #remove post tap beta2
+            install-tap-package-manager
+            install-tap-acc-package
+            install-tap-cnr-package
+            install-tap-alv-package
+            install-tbs
+            install-gw-operator
+            install-api-portal
+            setup-demo-examples
             ;;
         acc)
             platform/scripts/build-aks-cluster.sh create $CLUSTER_NAME 3
@@ -36,49 +48,29 @@
             platform/scripts/build-aks-cluster.sh create $CLUSTER_NAME 5
             platform/scripts/install-nginx.sh
             create-namespaces-secrets
-            install-acc
+            install-tap-package-manager
+            install-tap-acc-package
             install-gw-operator
             install-api-portal
             setup-demo-examples
             ;;
         *)
-            install-all
+            incorrect-usage
             ;;
         esac
-
-    }
-    #install all demo components
-    install-all () {
-
-        platform/scripts/build-aks-cluster.sh create $CLUSTER_NAME 7
-        
-        platform/scripts/install-nginx.sh
-        
-        create-namespaces-secrets
-
-        update-config-values
-
-        install-carto #remove post tap beta2
-
-        install-tap
-
-        install-gw-operator
-
-        install-api-portal
-        
-        setup-demo-examples
 
         echo
         echo "Demo install completed. Enjoy your demo."
         echo
-    }
 
-    #install-tap
-    install-tap() {
+    }
+    
+    #install-tap-package-manager
+    install-tap-package-manager() {
 
         #tap package
         echo
-        echo "===> Installing Tanzu Application Platform packages..."
+        echo "===> Installing TAP package manager..."
         echo
 
         kapp deploy -y -a kc -f https://github.com/vmware-tanzu/carvel-kapp-controller/releases/latest/download/release.yml
@@ -88,42 +80,41 @@
 
         tanzu package available list -n $TAP_INSTALL_NAMESPACE
         echo
+    }
 
-        #acc package
+    #install-tap-acc-package
+    install-tap-acc-package() {
+
         echo
         echo "===> Install Application Accelerator TAP package..."
         echo
         kapp deploy -y -a flux -f https://github.com/fluxcd/flux2/releases/download/v0.15.0/install.yaml
         tanzu package install app-accelerator -p accelerator.apps.tanzu.vmware.com -v 0.2.0 -n $TAP_INSTALL_NAMESPACE -f secrets/tap/acc-values.yaml
         kubectl apply -f platform/acc/config/acc-ingress.yaml -n accelerator-system #ns need to match secrets/tap/acc-values.yaml watched_namespace
+    }
 
-        #cnr package
+    #install-tap-cnr-package
+    install-tap-cnr-package() {
+
         echo
         echo "===> Install Cloud Native Runtime TAP package..."
         echo
         tanzu package install cloud-native-runtimes -p cnrs.tanzu.vmware.com -v 1.0.1 -n tap-install -f secrets/tap/cnr-values.yaml
         platform/scripts/update-dns.sh "envoy" "contour-external" "*.cnr"
         kubectl apply -f platform/cnr/cnr-domain-conifg.yaml
+    }
 
-        #install alv
+    #install-tap-alv-package 
+    install-tap-alv-package() {
+
         echo
         echo "===> Install Application Live View TAP package..."
         echo
         tanzu package install app-live-view -p appliveview.tanzu.vmware.com -v 0.1.0 -n tap-install -f secrets/tap/alv-values.yaml
         kubectl apply -f platform/alv/config/alv-ingress.yaml -n tap-install #ns need to match secrets/tap/alv-values.yaml server_namespace
-        
-        #need to wait until seperate ns for the controller is supported in TAP, until then has to be installed seperatly 
-        #install-alv 
-        
-        echo
-        echo "===> Installing Tanzu Build Service..."
-        echo
-        #not supported yet as a TAP pacakge    install-tbs #not supported yet as a TAP pacakge
-        install-tbs 
 
-
-    }
-    
+    }        
+        
     #install-carto
     install-carto () {
 

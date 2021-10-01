@@ -46,7 +46,7 @@ It is designed to run on any k8s.
 
 ### Installation
 - If you update / first install the core Tanzu services , run ```./builder.sh upgrade core-images```
-- run ```./builder.sh init```
+- run ```./builder.sh init all```
 - This script installs the following products
   - TAP with the following packages
     - Clound Native Runtime
