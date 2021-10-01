@@ -19,14 +19,10 @@
 
         case $1 in
         blank)
-            platform/scripts/build-aks-cluster.sh create $CLUSTER_NAME 3
-            platform/scripts/install-nginx.sh
+            setup-core-cluster 3
             ;;
         all)
-            platform/scripts/build-aks-cluster.sh create $CLUSTER_NAME 7
-            platform/scripts/install-nginx.sh
-            create-namespaces-secrets
-            update-config-values
+            setup-core-cluster 7
             install-carto #remove post tap beta2
             install-tap-package-manager
             install-tap-acc-package
@@ -38,16 +34,13 @@
             setup-demo-examples
             ;;
         acc)
-            platform/scripts/build-aks-cluster.sh create $CLUSTER_NAME 3
-            platform/scripts/install-nginx.sh
-            create-namespaces-secrets
-            install-acc
+            setup-core-cluster 3
+            install-tap-package-manager
+            install-tap-acc-package
             setup-demo-examples
             ;;
         api)
-            platform/scripts/build-aks-cluster.sh create $CLUSTER_NAME 5
-            platform/scripts/install-nginx.sh
-            create-namespaces-secrets
+            setup-core-cluster 5
             install-tap-package-manager
             install-tap-acc-package
             install-gw-operator
@@ -65,6 +58,17 @@
 
     }
     
+    #setup-core-cluster
+    setup-core-cluster () {
+        
+        platform/scripts/build-aks-cluster.sh create $CLUSTER_NAME $1
+        
+        platform/scripts/install-nginx.sh
+        
+        create-namespaces-secrets
+        
+        update-config-values
+    }
     #install-tap-package-manager
     install-tap-package-manager() {
 
