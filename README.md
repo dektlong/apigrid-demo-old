@@ -35,10 +35,6 @@ It is designed to run on any k8s.
   - Note: all yaml files that are updated in runtime will be copied to ```config``` sub-directory in their respective directories during the demo-builder phase
 
 - create a folder ```secrets/tap``` and create all the ```TAP_PACKAGE_NAME-values.yaml``` files (see TAP documentations)
-  - currently the following products are installed as TAP packages
-    * App accelerator
-    * App live view
-    * Cloud native runtime
 
 - Create ```sso-creds.txt```, ```wavefront-creds.txt``` and ```jwt-credts.txt``` credential files and place them in the ```secrets``` directory
 
