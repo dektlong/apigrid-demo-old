@@ -61,6 +61,7 @@ It is designed to run on any k8s.
   - Brownfield APIs examples for API portal
   - Det4Pets backend TBS image
   - Det4Pets frontend TBS image
+  - adopter-check function TBS image
 
 ### Inner loop
 - Access app accelerator developer instance  on ```acc.<SUB_DOMAIN>.<DOMAIN>```
