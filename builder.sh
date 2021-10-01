@@ -73,7 +73,6 @@
     #install-tap-package-manager
     install-tap-package-manager() {
 
-        #tap package
         echo
         echo "===> Installing TAP package manager..."
         echo
@@ -82,9 +81,6 @@
         kapp deploy -a tap-package-repo -n $TAP_INSTALL_NAMESPACE -f platform/tap/tap-package-repo.yaml -y
 
         wait-for-reconciler
-
-        tanzu package available list -n $TAP_INSTALL_NAMESPACE
-        echo
     }
 
     #install-tap-acc-package
