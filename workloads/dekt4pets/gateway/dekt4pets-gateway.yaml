@@ -4,9 +4,9 @@ metadata:
   name: dekt4pets-gateway
 spec:
   api:
-    serverUrl: http://dekt4pets.{HOST_NAME} #do not change animal-rescue due to a hard code bug in the app
+    serverUrl: http://dekt4pets.{HOST_NAME} 
     title: "Dekt4pets"
-    description: "Micro Gateway to control internal APIs for building the dekt4pets online store"
+    description: "Micro Gateway to control internal and external APIs for operating the dekt4pets online store"
     documentation: "https://vmware.wavefront.com/u/1RyhnsRys4?t=vmware"
     version: "1.0.0-K8s"
     cors:

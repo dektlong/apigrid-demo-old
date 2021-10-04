@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+#################### configs #######################
+
+    source secrets/config-values.env
+    ADOPTER_CHECK_IMAGE_LOCATION=$PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_APP_REPO/$ADOPTER_CHECK_TBS_IMAGE:$APP_VERSION
+
 #################### menu functions #######################
 
 workload () {
@@ -137,14 +142,14 @@ dekt4pets() {
     read
 
     echo
-    echo "=========> dekt4pets backend microservice..."
+    echo "=========> dekt4pets-backend route mapping change to production gateway ..."
     echo
-    workload backend
+    kubectl apply -f workloads/dekt4pets/backend/routes/dekt4pets-backend-mapping.yaml -n $APP_NAMESPACE
 
     echo
-    echo "=========> dekt4pets frontend microservice..."
+    echo "=========> dekt4pets-frontend route mapping change to production gateway..."
     echo
-    workload frontend
+    kubectl apply -f workloads/dekt4pets/frontend/routes/dekt4pets-frontend-mapping.yaml -n $APP_NAMESPACE
 
     echo
     echo "=========> dekt4pets micro-gateway (w/ external traffic)..."
@@ -181,7 +186,7 @@ create-dekt4pets-native () {
 create-adopter-check () {
 
     kn service create adopter-check \
-        --image $PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_APP_REPO/adopter-check:0.0.1 \
+        --image $ADOPTER_CHECK_IMAGE_LOCATION \
         --env REV="1.0" \
         --revision-name adopter-check-v1 \
         --namespace $APP_NAMESPACE
@@ -189,8 +194,18 @@ create-adopter-check () {
 
 update-adopter-check () {
 
-    kn service update adopter-check \
-        --image $PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_APP_REPO/adopter-check:0.0.1 \
+    echo
+
+    wait-for-tbs $ADOPTER_CHECK_TBS_IMAGE
+
+    echo
+    echo "Starting to tail build logs ..."
+    echo
+
+    kp build logs $ADOPTER_CHECK_TBS_IMAGE -n $APP_NAMESPACE
+
+    kn service update $ADOPTER_CHECK_TBS_IMAGE \
+        --image $ADOPTER_CHECK_IMAGE_LOCATION \
         --env REV="2.0" \
         --revision-name adopter-check-v2 \
         --traffic adopter-check-v2=70,adopter-check-v1=30 \
@@ -210,6 +225,8 @@ delete-workloads() {
     #kustomize build workloads/dekt4pets/gateway | kubectl delete -f -  
     kustomize build workloads/dekt4pets/backend | kubectl delete -f -  
     kustomize build workloads/dekt4pets/frontend | kubectl delete -f -  
+    kubectl delete -f workloads/dekt4pets/backend/routes/dekt4pets-backend-mapping.yaml -n $APP_NAMESPACE
+    kubectl delete -f workloads/dekt4pets/frontend/routes/dekt4pets-frontend-mapping.yaml -n $APP_NAMESPACE
 
     kustomize build workloads/dektFitness/kubernetes-manifests/ | kubectl delete -f -  
 
@@ -234,6 +251,22 @@ git-push() {
 	
     _latestCommitId="$(git rev-parse HEAD)"
 }
+
+wait-for-tbs () {
+
+    image_name=$1
+
+    status=""
+    printf "Waiting for tanzu build service to start building $image_name image."
+    while [ "$status" == "" ]
+    do
+        printf "."
+        status="$(kp image status $image_name -n dekt-apps | grep 'Building')" 
+        sleep 1
+    done
+    echo
+}
+
 
 #usage
 usage() {
@@ -303,7 +336,6 @@ supply-chain-components() {
 
 #################### main #######################
 
-source secrets/config-values.env
 bold=$(tput bold)
 normal=$(tput sgr0)
 

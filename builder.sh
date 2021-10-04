@@ -6,6 +6,7 @@
     
     DET4PETS_FRONTEND_IMAGE_LOCATION=$PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_APP_REPO/$FRONTEND_TBS_IMAGE:$APP_VERSION
     DET4PETS_BACKEND_IMAGE_LOCATION=$PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_APP_REPO/$BACKEND_TBS_IMAGE:$APP_VERSION
+    ADOPTER_CHECK_IMAGE_LOCATION=$PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_APP_REPO/$ADOPTER_CHECK_TBS_IMAGE:$APP_VERSION
     TAP_INSTALL_NAMESPACE="tap-install"
     GW_NAMESPACE="scgw-system"
     CARTO_NAMESPACE="cartographer-system"
@@ -360,8 +361,8 @@
     create-adopter-check-image () {
 
         
-        kp image save adopter-check -n $APP_NAMESPACE \
-            --tag $PRIVATE_REGISTRY_URL/$PRIVATE_REGISTRY_APP_REPO/adopter-check:0.0.1 \
+        kp image save $ADOPTER_CHECK_TBS_IMAGE -n $APP_NAMESPACE \
+            --tag $ADOPTER_CHECK_IMAGE_LOCATION \
             --git https://github.com/dektlong/adopter-check \
             --cluster-builder tiny \
             --wait #\
@@ -464,7 +465,9 @@
         #platform/scripts/replace-tokens.sh "workloads/dekt4pets/frontend" "dekt4pets-frontend.yaml" "{FRONTEND_IMAGE}" "$DET4PETS_FRONTEND_IMAGE_LOCATION" 
         platform/scripts/replace-tokens.sh "workloads/dekt4pets/frontend" "dekt4pets-frontend.yaml" "{FRONTEND_IMAGE}" "springcloudservices/animal-rescue-frontend" 
         platform/scripts/replace-tokens.sh "workloads/dekt4pets/gateway" "dekt4pets-gateway.yaml" "{HOST_NAME}" "$hostName"
+        platform/scripts/replace-tokens.sh "workloads/dekt4pets/gateway" "dekt4pets-gateway-dev.yaml" "{HOST_NAME}" "$hostName"
         platform/scripts/replace-tokens.sh "workloads/dekt4pets/gateway" "dekt4pets-ingress.yaml" "{HOST_NAME}" "$hostName"
+        platform/scripts/replace-tokens.sh "workloads/dekt4pets/gateway" "dekt4pets-ingress-dev.yaml" "{HOST_NAME}" "$hostName"
         
     
     }

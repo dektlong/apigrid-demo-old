@@ -4,5 +4,5 @@ namespace: dekt-apps
 
 resources:
   - config/dekt4pets-backend.yaml
-  - routes/dekt4pets-backend-mapping.yaml
+  - routes/dekt4pets-backend-mapping-dev.yaml
   - routes/dekt4pets-backend-route-config.yaml
