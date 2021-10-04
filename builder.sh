@@ -22,14 +22,7 @@
             setup-core-cluster 3
             ;;
         all)
-            setup-core-cluster 7
-            install-tap-acc-package
-            install-tap-cnr-package
-            install-tap-alv-package
-            install-tbs
-            install-gw-operator
-            install-api-portal
-            setup-demo-examples
+            init-all
             ;;
         acc)
             setup-core-cluster 3
@@ -44,7 +37,7 @@
             setup-demo-examples
             ;;
         *)
-            incorrect-usage
+            init-all
             ;;
         esac
 
@@ -52,6 +45,18 @@
         echo "Demo install completed. Enjoy your demo."
         echo
 
+    }
+    
+    #init-all
+    init-all() {
+        setup-core-cluster 7
+        install-tap-acc-package
+        install-tap-cnr-package
+        install-tap-alv-package
+        install-tbs
+        install-gw-operator
+        install-api-portal
+        setup-demo-examples
     }
     
     #setup-core-cluster
@@ -254,7 +259,9 @@
         echo
         echo "===> Setup APIGrid demo examples..."
         echo
-        kubectl apply -f platform/acc/add-accelerators.yaml -n accelerator-system #ns need to match secrets/tap/acc-values.yaml watched_namespace
+        #ns need to match secrets/tap/acc-values.yaml watched_namespace
+        kubectl apply -f platform/acc/dev-accelerators.yaml -n accelerator-system 
+        kubectl apply -f platform/acc/devops-accelerators.yaml -n accelerator-system 
 
         kustomize build workloads/brownfield-apis | kubectl apply -f -
 

@@ -34,120 +34,79 @@ spec:
 apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
 kind: Accelerator
 metadata:
-  name: api-microservices-workflow
+  name: dotnet-web-api
 spec:
   git:
-    interval: 10s
-    url: https://github.com/dektlong/api-microservices-workflow
+    url: https://github.com/macsux/dotnet-accelerator
+    ref:
+      branch: dev
+---
+apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
+kind: Accelerator
+metadata:
+  name: weatherforecast-csharp
+spec:
+  git:
+    url: https://github.com/sample-accelerators/csharp-weatherforecast
     ref:
       branch: main
 ---
 apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
 kind: Accelerator
 metadata:
-  name:  simple-workflow
+  name: weatherforecast-fsharp
 spec:
   git:
-    url: https://github.com/dektlong/simple-workflow
+    url: https://github.com/sample-accelerators/fsharp-weatherforecast
     ref:
       branch: main
 ---
 apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
 kind: Accelerator
 metadata:
-  name: multicluster-workflow
+  name: weatherforecast-steeltoe
 spec:
   git:
-    url: https://github.com/dektlong/multicluster-workflow
+    url: https://github.com/sample-accelerators/steeltoe-weatherforecast
     ref:
       branch: main
 ---
 apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
 kind: Accelerator
 metadata:
-  name: hello-function-azure
+  name: node-express
 spec:
   git:
-    url: https://github.com/simple-starters/hello-fun
-    ref:
-      branch: master
----
-apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
-kind: Accelerator
-metadata:
-  name: hello-fun-new
-spec:
-  git:
-    url: https://github.com/trisberg/hello-fun
-    ref:
-      branch: master
----
-apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
-kind: Accelerator
-metadata:
-  name: ebanking-service
-spec:
-  git:
-    url: https://github.com/ddobrin/ebanking-api
-    ref:
-      branch: master
----
-apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
-kind: Accelerator
-metadata:
-  name: music-store-steeltoe
-spec:
-  git:
-    url: https://github.com/SteeltoeOSS/Samples/tree/main/MusicStore
+    url: https://github.com/sample-accelerators/node-express
     ref:
       branch: main
 ---
 apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
 kind: Accelerator
 metadata:
-  name: hello-ruby
+  name: spring-sql-jpa
 spec:
   git:
-    url: https://github.com/simple-starters/hello-ruby
-    ref:
-      branch: master
----
-apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
-kind: Accelerator
-metadata:
-  name: todo-service
-spec:
-  git:
-    url: https://github.com/markpollack/todos-api
-    ref:
-      branch: master
----
-apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
-kind: Accelerator
-metadata:
-  name: dotnet-sqlserver-efcore
-spec:
-  git:
-    url: https://github.com/dektlong/dotnet-SQLServer-EFCore
+    url: https://github.com/sample-accelerators/spring-sql-jpa
     ref:
       branch: main
 ---
 apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
 kind: Accelerator
 metadata:
-  name: spring-postgres-jpa
+  name: spring-cloud-function
 spec:
   git:
-    url: https://github.com/markpollack/docker-compose-postgres
+    url: https://github.com/sample-accelerators/hello-fun
     ref:
-      branch: master
+      branch: main
 ---
 apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
 kind: Accelerator
 metadata:
-  name: jpa-sqlserver
+  name: spring-petclinic
 spec:
   git:
-    url: https://github.com/markpollack/gs-accessing-data-mysql
+    url: https://github.com/sample-accelerators/spring-petclinic
     ref:
-      branch: master
+      branch: main

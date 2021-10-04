@@ -1,0 +1,40 @@
+apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
+kind: Accelerator
+metadata:
+  name: api-microservices-workflow
+spec:
+  git:
+    interval: 10s
+    url: https://github.com/dektlong/api-microservices-workflow
+    ref:
+      branch: main
+---
+apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
+kind: Accelerator
+metadata:
+  name:  simple-workflow
+spec:
+  git:
+    url: https://github.com/dektlong/simple-workflow
+    ref:
+      branch: main
+---
+apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
+kind: Accelerator
+metadata:
+  name: multicluster-workflow
+spec:
+  git:
+    url: https://github.com/dektlong/multicluster-workflow
+    ref:
+      branch: main
+---
+apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
+kind: Accelerator
+metadata:
+  name: hello-ytt
+spec:
+  git:
+    url: https://github.com/sample-accelerators/hello-ytt
+    ref:
+      branch: main
