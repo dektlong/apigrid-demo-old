@@ -20,25 +20,28 @@
 
         case $1 in
         blank)
-            setup-core-cluster 3
+            platform/scripts/build-aks-cluster.sh create $CLUSTER_NAME 3
             ;;
         all)
-            init-all
+            platform/scripts/build-aks-cluster.sh create $CLUSTER_NAME 7
+            install-all
             ;;
         acc)
-            setup-core-cluster 3
+            platform/scripts/build-aks-cluster.sh create $CLUSTER_NAME 3
+            setup-core-cluster
             install-tap-acc-package
             setup-demo-examples
             ;;
         api)
-            setup-core-cluster 5
+            platform/scripts/build-aks-cluster.sh create $CLUSTER_NAME 5
+            setup-core-cluster 
             install-tap-acc-package
             install-gw-operator
             install-api-portal
             setup-demo-examples
             ;;
         *)
-            init-all
+            incorrect-usage
             ;;
         esac
 
@@ -48,9 +51,9 @@
 
     }
     
-    #init-all
-    init-all() {
-        setup-core-cluster 7
+    #install-all
+    install-all () {
+
         install-tap-acc-package
         install-tap-cnr-package
         install-tap-alv-package
@@ -62,8 +65,6 @@
     
     #setup-core-cluster
     setup-core-cluster () {
-        
-        platform/scripts/build-aks-cluster.sh create $CLUSTER_NAME $1
         
         platform/scripts/install-nginx.sh
         
